@@ -7,12 +7,13 @@ Command_Jail:
         - if !<player.is_op||<context.server>> || <player.groups.find[supremewarden]||null> == null:
             - narrate "<red>You do not have permission for that command."
             - stop
+        - define action <context.args.get[1]>
         - define name <context.args.get[2]>
         - define jail_name "jail_<[name]>"
         - if <[jail_name].ends_with[_spawn]>:
             - narrate "<red> Error. Invalid jail name. Please don't use _spawn in your jail name."
             - stop
-        - if <context.args.get[1]> == new:
+        - if <[action]> == create:
             - define x1 <context.args.get[3]>
             - define y1 <context.args.get[4]>
             - define z1 <context.args.get[5]>
@@ -21,14 +22,14 @@ Command_Jail:
             - define z2 <context.args.get[8]>
             - if <location[<[x1]>,<[y1]>,<[z1]>,world]||null> != null && <location[<[x2]>,<[y2]>,<[z2]>,world]||null> != null:
                 - if <cuboid[<[jail_name]>]||null> != null:
-                    - narrate "<red> The name is used by other jail"
+                    - narrate "<red> The name is used by other jail."
                     - stop
                 - note <cuboid[<location[<[x1]>,<[y1]>,<[z1]>,world]>|<location[<[x2]>,<[y2]>,<[z2]>,world]>]> as:<[jail_name]>
                 - narrate "<green> Jail <[name]> created!"
                 - stop
             - narrate "<red> The location of the jail is invalid."
             - stop
-        - if <context.args.get[1]> == delete:
+        - if <[action]> == delete:
             - if <cuboid[<[jail_name]>]||null> == null:
                 - narrate "<red> That jail doesn't exist."
                 - stop
