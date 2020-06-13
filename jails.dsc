@@ -1,8 +1,12 @@
+# /jail Usage
+# /jail create <name> x1 y1 z1 x2 y2 z2
+# /jail delete <name>
+
 Command_Jail:
     type: command
     name: jail
     description: Minecraft Jail system.
-    usage: /jail <&lt>create/delete<&gt> <&lt>name<&gt> <&lt>x1<&gt> <&lt>y1<&gt> <&lt>z1<&gt> <&lt>x2<&gt> <&lt>y2<&gt> <&lt>z2<&gt>
+    usage: /jail
     script:
         - if !<player.is_op||<context.server>> || <player.groups.find[supremewarden]||null> == null:
             - narrate "<red>You do not have permission for that command."
@@ -31,9 +35,10 @@ Command_Jail:
             - stop
         - if <[action]> == delete:
             - if <cuboid[<[jail_name]>]||null> == null:
-                - narrate "<red> That jail doesn't exist."
+                - narrate "<red> Jail <[name]> doesn't exist."
                 - stop
             - note remove as:<[jail_name]>
+            - note remove as:<[jail_name]>_spawn
             - narrate "<green> Jail <[name]> deleted!"
             - stop
         - narrate "<red> Error. Follow the command syntax:"
