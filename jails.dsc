@@ -41,6 +41,6 @@ Command_Jail:
             - note remove as:<[jail_name]>_spawn
             - narrate "<green> Jail <[name]> deleted!"
             - stop
-        - narrate "<red> Error. Follow the command syntax:"
-        - narrate  "<yellow> To create a jail: /jails create name x1 y1 z1 x2 y2 z2"
-        - narrate  "<yellow> To delete a jail: /jails delete name"
+        - narrate "<red> ERROR: Follow the command syntax:"
+        - narrate  "<yellow> To create a jail: /jail create name x1 y1 z1 x2 y2 z2"
+        - narrate  "<yellow> To delete a jail: /jail delete name"
