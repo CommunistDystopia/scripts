@@ -1,7 +1,7 @@
 Command_Jail:
     type: command
     name: jail
-    description: Minecraft Towny Raid.
+    description: Minecraft Jail system.
     usage: /jail <&lt>create/delete<&gt> <&lt>name<&gt> <&lt>x1<&gt> <&lt>y1<&gt> <&lt>z1<&gt> <&lt>x2<&gt> <&lt>y2<&gt> <&lt>z2<&gt>
     script:
         - if !<player.is_op||<context.server>> || <player.groups.find[supremewarden]||null> == null:
@@ -9,6 +9,9 @@ Command_Jail:
             - stop
         - define name <context.args.get[2]>
         - define jail_name "jail_<[name]>"
+        - if <[jail_name].ends_with[_spawn]>:
+            - narrate "<red> Error. Invalid jail name. Please don't use _spawn in your jail name."
+            - stop
         - if <context.args.get[1]> == new:
             - define x1 <context.args.get[3]>
             - define y1 <context.args.get[4]>
