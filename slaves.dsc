@@ -88,7 +88,7 @@ Slave_Script:
                     - hurt <player> 5
                     - narrate "<red> You tried to escape... But you got caught and punched by the guards."
         after player respawns:
-            - if <player.groups.find[slave]||null> != null && <player.has_flag[owner]>:
+            - if <player.groups.find[slave]> != -1 && <player.has_flag[owner]>:
                 - define owner_name <player.flag[owner]>
                 - teleport <player> <location[<[owner_name]>]>
                 - narrate "<red> You died but you're a slave. Now you're with your owner."
