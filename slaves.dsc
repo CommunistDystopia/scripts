@@ -1,7 +1,7 @@
 # /slaves Usage
 # /slaves jail <jailname> spawn - Sets the spawn point of the slave in the player position.
 # /slaves jail <jailname> list <#> - List the slaves in this jail.
-# /slaves jail <jailaname> add <username> - Add a player to this jail and forces them to spawn in the jail spawn (OP only)
+# /slaves jail pickaxe - Replaces your hand with a slave pickaxe.
 # WIP:
 # /slaves user <username> list - List the slaves of this user.
 
@@ -14,15 +14,19 @@ Command_Slaves:
         - if !<player.is_op||<context.server>> || <player.groups.find[supremewarden]||null> == null:
             - narrate "<red>You do not have permission for that command."
             - stop
-        - if <context.args.size> < 3:
+        - if <context.args.size> < 2:
             - narrate "<red> ERROR: Not enough arguments. Follow the command syntax:"
             - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
             - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
+            - narrate "<red> /slaves jail pickaxe"
             - stop
         - define target <context.args.get[1]>
         - define name <context.args.get[2]>
         - define action <context.args.get[3]>
         - if <[target]> == jail:
+            - if <[name]> == pickaxe:
+                - equip <player> hand:slave_pickaxe
+                - stop
             - define jail_name "jail_<[name]>"
             - if <cuboid[<[jail_name]>]||null> == null:
                 - narrate "<red> Jail <[name]> doesn't exist."
@@ -58,6 +62,7 @@ Command_Slaves:
                                 - narrate "<green> Slave <[loop_index]>: <red> <[slave].name>"
                                 - foreach stop
                             - narrate "<green> Slave <[list_page]><[loop_index]>: <red> <[slave].name>"
+                        - flag player slave_num_min:!
                         - flag player slave_num_max:!
                     - if <[jail_slaves].size> <= 10:
                         - foreach <[jail_slaves]> as:slave:
@@ -69,6 +74,7 @@ Command_Slaves:
         - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
             - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
             - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
+            - narrate "<red> /slaves jail pickaxe"
 
 Slave_Script:
     type: world
@@ -92,9 +98,8 @@ slave_pickaxe:
     material: iron_pickaxe
     mechanisms:
         repair_cost: 99
-        hides: attributes|enchants|unbreakable
-        enchantments: unbreaking,1
-        unbreakable: true
+        hides: attributes|enchants
+        enchantments: unbreaking,3
     display name: <red>Slave Pickaxe
     lore:
         - <gray>Mine with this
