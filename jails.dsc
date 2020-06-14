@@ -6,6 +6,7 @@
 
 Command_Jail:
     type: command
+    debug: false
     name: jail
     description: Minecraft Jail system.
     usage: /jail
@@ -54,13 +55,13 @@ Command_Jail:
             - note remove as:<[jail_name]>_spawn
             - define jail_slaves "<[jail_name]>_slaves"
             - define jail_soldiers "<[jail_name]>_soldiers"
-            - if server.has_flag[<[jail_slaves]>]:
+            - if <server.has_flag[<[jail_slaves]>]>:
                 - foreach <server.flag[<[jail_slaves]>]> as:slave:
                     - execute as_server "lp user <[slave].name> parent remove slave" silent
                     - flag <[slave]> owner:!
                     - flag <[slave]> slave_timer:!
                 - flag server <[jail_slaves]>:!
-            - if server.has_flag[<[jail_soldiers]>]:
+            - if <server.has_flag[<[jail_soldiers]>]>:
                 - foreach <server.flag[<[jail_slaves]>]> as:soldier:
                     - flag <[soldier]> soldier_jail:!
                 - flag server <[jail_soldiers]>:!
