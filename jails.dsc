@@ -1,6 +1,6 @@
 # /jail Usage
-# /jail create <name> x1 y1 z1 x2 y2 z2
-# /jail delete <name>
+# /jail create <jailname> x1 y1 z1 x2 y2 z2 - Adds a jail (works like WorldEdit coordinates)
+# /jail delete <jailname> - Removes a jail
 
 Command_Jail:
     type: command
@@ -18,6 +18,10 @@ Command_Jail:
             - narrate "<red> ERROR: Invalid jail name. Please don't use _spawn in your jail name."
             - stop
         - if <[action]> == create:
+            - if <context.args.size> < 8:
+                - narrate "<red> ERROR: Not enough arguments."
+                - narrate  "<red> To create a jail: /jail create <yellow>jailname x1 y1 z1 x2 y2 z2"
+                - stop
             - define x1 <context.args.get[3]>
             - define y1 <context.args.get[4]>
             - define z1 <context.args.get[5]>
@@ -47,6 +51,6 @@ Command_Jail:
             - note remove as:<[jail_name]>_spawn
             - narrate "<green> Jail <blue><[name]> <red>deleted!"
             - stop
-        - narrate "<red> ERROR: Follow the command syntax:"
-        - narrate  "<yellow> To create a jail: /jail create name x1 y1 z1 x2 y2 z2"
-        - narrate  "<yellow> To delete a jail: /jail delete name"
+        - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
+        - narrate  "<red> To create a jail: /jail create <yellow>jailname x1 y1 z1 x2 y2 z2"
+        - narrate  "<red> To delete a jail: /jail delete <yellow>jailname"
