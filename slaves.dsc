@@ -11,7 +11,7 @@ Command_Slaves:
     description: Minecraft slave system.
     usage: /slaves
     script:
-        - if !<player.is_op||<context.server>> || <player.groups.find[supremewarden]||null> == null:
+        - if !<player.is_op||<context.server>> || <player.groups.find[supremewarden]> == -1:
             - narrate "<red>You do not have permission for that command."
             - stop
         - if <context.args.size> < 2:
@@ -82,7 +82,7 @@ Slave_Script:
         on player exits notable cuboid:
             - if !<context.cuboids.parse[notable_name].filter[starts_with[jail]].is_empty>:
                 - define jail <context.cuboids.parse[notable_name].filter[starts_with[jail]].first>
-                - if <player.groups.find[slave]||null> != null:
+                - if <player.groups.find[slave]> != -1:
                     - define jail_spawn "<[jail]>_spawn"
                     - teleport <player> <location[<[jail_spawn]>]>
                     - hurt <player> 5
