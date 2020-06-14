@@ -24,14 +24,20 @@ Command_Jail:
             - define x2 <context.args.get[6]>
             - define y2 <context.args.get[7]>
             - define z2 <context.args.get[8]>
-            - if <location[<[x1]>,<[y1]>,<[z1]>,world]||null> != null && <location[<[x2]>,<[y2]>,<[z2]>,world]||null> != null:
-                - if <cuboid[<[jail_name]>]||null> != null:
-                    - narrate "<red> ERROR: The name is used by other jail."
-                    - stop
-                - note <cuboid[<location[<[x1]>,<[y1]>,<[z1]>,world]>|<location[<[x2]>,<[y2]>,<[z2]>,world]>]> as:<[jail_name]>
-                - narrate "<green> Jail <blue><[name]> <green>created!"
+            - if <location[<[x1]>,<[y1]>,<[z1]>,world]||null> == null && <location[<[x2]>,<[y2]>,<[z2]>,world]||null> == null:
+                - narrate "<red> ERROR: The location of the jail is invalid."
                 - stop
-            - narrate "<red> ERROR: The location of the jail is invalid."
+            - if <cuboid[<[jail_name]>]||null> != null:
+                - narrate "<red> ERROR: The name is used by other jail."
+                - stop
+            - define jail <cuboid[<location[<[x1]>,<[y1]>,<[z1]>,world]>|<location[<[x2]>,<[y2]>,<[z2]>,world]>]>
+            - define jails <server.list_notables[cuboids].parse[notable_name].filter[starts_with[jail]]>
+            - foreach <[jails]> as:other_jail:
+                - if <[jail].intersects[<cuboid[<[other_jail]>]>]>:
+                    - narrate "<red> ERROR: Your jail conflicts with other jail. Try to change the location of your jail."
+                    - stop
+            - note <[jail]> as:<[jail_name]>
+            - narrate "<green> Jail <blue><[name]> <green>created!"
             - stop
         - if <[action]> == delete:
             - if <cuboid[<[jail_name]>]||null> == null:
