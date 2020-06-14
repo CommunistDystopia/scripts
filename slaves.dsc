@@ -14,7 +14,7 @@ Command_Slaves:
         - if !<player.is_op||<context.server>> || <player.groups.find[supremewarden]||null> == null:
             - narrate "<red>You do not have permission for that command."
             - stop
-        - if <context.args.size> <= 3:
+        - if <context.args.size> < 3:
             - narrate "<red> ERROR: Not enough arguments. Follow the command syntax:"
             - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
             - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
