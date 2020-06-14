@@ -2,6 +2,12 @@
 # /soldier add <jailname> <username> - Adds a soldier to a jail.
 # /soldier remove <jailname> <username> - Removes a soldier to a jail.
 # /soldier jailstick - Replaces your hand with a jailstick.
+# Player flags created here
+# - slave_timer [Used in Jails, Slaves] [WIP]
+# - owner [Used in Jails, Slaves] [WIP]
+# - soldier_jail [Used in Jails]
+# Notables created here
+# - jail_<name>_soldiers [Used in Jails]
 
 Command_Soldier:
     type: command
@@ -10,7 +16,7 @@ Command_Soldier:
     usage: /soldiers
     script:
         - if !<player.is_op||<context.server>>:
-            - if <player.groups.find[supremewarden]> == -1:
+            - if !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
         - define action <context.args.get[1]>
@@ -31,19 +37,22 @@ Command_Soldier:
             - if <cuboid[<[jail_name]>]||null> == null:
                 - narrate "<red> ERROR: Jail <[name]> doesn't exist."
                 - stop
-            - define username <context.args.get[3]>
-            - if <player[<[username]>]||null> == null:
+            - define username <server.match_player[<context.args.get[3]>]||null>
+            - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username."
                 - stop
-            - if <player[<[username]>].groups.find[soldier]> == -1:
+            - if !<[username].in_group[soldier]>:
                 - narrate "<red> ERROR: This player isn't a soldier."
                 - stop
+            - define jail_soldiers "<[jail_name]>_soldiers"
             - if <[action]> == add:
-                - flag <player[<[username]>]> soldier_jail:<[jail_name]>
-                - narrate "<green> Soldier <blue><[username]> <green>added!"
+                - flag <[username]> soldier_jail:<[jail_name]>
+                - flag server <[jail_soldiers]>:|:<[username]>
+                - narrate "<green> Soldier <blue><[username].name> <green>added!"
             - if <[action]> == remove:
-                - flag <player[<[username]>]> soldier_jail:!
-                - narrate "<green> Soldier <blue><[username]> <green>removed!"
+                - flag <[username]> soldier_jail:!
+                - flag server <[jail_soldiers]>:<-:<[username]>
+                - narrate "<green> Soldier <blue><[username].name> <green>removed!"
             - stop
         - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
         - narrate  "<red> To add a soldier to a jail: /soldier add <yellow>jailname username"
@@ -64,4 +73,11 @@ jailstick:
         - <gray>Use this to make someone a slave
         - <gray>in the jail that you belong.
         - <red>Lost on death
+
+Soldier_Script:
+    type: world
+    events:
+        on player right clicks entity with:jailstick:
+            - narrate Hi
+
 

@@ -1,9 +1,12 @@
 # /slaves Usage
 # /slaves jail <jailname> spawn - Sets the spawn point of the slave in the player position.
 # /slaves jail <jailname> list <#> - List the slaves in this jail.
+# /slaves jail <jailname> remove <username> - Removes a slaves from a Jail.
 # /slaves jail pickaxe - Replaces your hand with a slave pickaxe.
 # WIP:
 # /slaves user <username> list - List the slaves of this user.
+# Notables created here
+# - jail_<name>_spawn [Used in Jails]
 
 Command_Slaves:
     type: command
@@ -19,6 +22,7 @@ Command_Slaves:
             - narrate "<red> ERROR: Not enough arguments. Follow the command syntax:"
             - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
             - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
+            - narrate "<red> /slaves jail <yellow>jailname <red>spawn <yellow>username"
             - narrate "<red> /slaves jail pickaxe"
             - stop
         - define target <context.args.get[1]>
@@ -77,6 +81,8 @@ Command_Slaves:
                 - if !<[username].in_group[slave]>:
                     - narrate "<red> ERROR: This player isn't a slave."
                     - stop
+                - define jail_slaves "<[jail_name]>_slaves"
+                - flag server <[jail_slaves]>:<-:<[username]>
                 - flag <[username]> owner:!
                 - flag <[username]> slave_timer:!
                 - execute as_server "lp user <[username].name> parent remove slave" silent
@@ -88,6 +94,7 @@ Command_Slaves:
         - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
             - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
             - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
+            - narrate "<red> /slaves jail <yellow>jailname <red>spawn <yellow>username"
             - narrate "<red> /slaves jail pickaxe"
 
 Slave_Script:

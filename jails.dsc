@@ -1,6 +1,8 @@
 # /jail Usage
 # /jail create <jailname> x1 y1 z1 x2 y2 z2 - Adds a jail (works like WorldEdit coordinates)
 # /jail delete <jailname> - Removes a jail
+# Notables created here
+# - jail_<name> [Used in Soldiers, Slaves]
 
 Command_Jail:
     type: command
@@ -51,10 +53,17 @@ Command_Jail:
             - note remove as:<[jail_name]>
             - note remove as:<[jail_name]>_spawn
             - define jail_slaves "<[jailname]>_slaves"
+            - define jail_soldiers "<[jailname]>_soldiers"
             - if server.has_flag[<[jail_slaves]>]:
                 - foreach <server.flag[<[jail_slaves]>]> as:slave:
-                - execute as_server "lp user <[slave].name> parent remove slave" silent
+                    - execute as_server "lp user <[slave].name> parent remove slave" silent
+                    - flag <[slave]> owner:!
+                    - flag <[slave]> slave_timer:!
                 - flag server <[jail_slaves]>:!
+            - if server.has_flag[<[jail_soldiers]>]:
+                - foreach <server.flag[<[jail_slaves]>]> as:soldier:
+                    - flag <[soldier]> soldier_jail:!
+                - flag server <[jail_soldiers]>:!
             - narrate "<green> Jail <blue><[name]> <red>deleted!"
             - stop
         - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
