@@ -10,6 +10,7 @@
 
 Command_Slaves:
     type: command
+    debug: false
     name: slaves
     description: Minecraft slave system.
     usage: /slaves
@@ -64,14 +65,14 @@ Command_Slaves:
                             - flag player slave_num_min:++
                         - foreach <[jail_slaves].get[<player.flag[slave_num_min]>].to[<player.flag[slave_num_max]>]> as:slave:
                             - if <[loop_index]> == 10:
-                                - narrate "<green> Slave <[loop_index]>: <red> <[slave].name>"
+                                - narrate "<green> Slave <[loop_index]>: <red><[slave].name>"
                                 - foreach stop
-                            - narrate "<green> Slave <[list_page]><[loop_index]>: <red> <[slave].name>"
+                            - narrate "<green> Slave <[list_page]><[loop_index]>: <red><[slave].name>"
                         - flag player slave_num_min:!
                         - flag player slave_num_max:!
                     - if <[jail_slaves].size> <= 10:
                         - foreach <[jail_slaves]> as:slave:
-                            - narrate "<green> Slave <[loop_index]>: <red> <[slave].name>"
+                            - narrate "<green> Slave <[loop_index]>: <red><[slave].name>"
                     - stop
             - if <[action]> == remove && <context.args.size> == 4:
                 - define username <server.match_player[<context.args.get[4]>]||null>
@@ -92,13 +93,14 @@ Command_Slaves:
             - define "<yellow> Do something..."
             - stop
         - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
-            - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
-            - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
-            - narrate "<red> /slaves jail <yellow>jailname <red>spawn <yellow>username"
-            - narrate "<red> /slaves jail pickaxe"
+        - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
+        - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
+        - narrate "<red> /slaves jail <yellow>jailname <red>spawn <yellow>username"
+        - narrate "<red> /slaves jail pickaxe"
 
 Slave_Script:
     type: world
+    debug: false
     events:
         on player exits notable cuboid:
             - if !<context.cuboids.parse[notable_name].filter[starts_with[jail]].is_empty>:
