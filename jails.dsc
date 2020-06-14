@@ -31,11 +31,11 @@ Command_Jail:
                 - note <cuboid[<location[<[x1]>,<[y1]>,<[z1]>,world]>|<location[<[x2]>,<[y2]>,<[z2]>,world]>]> as:<[jail_name]>
                 - narrate "<green> Jail <blue><[name]> <green>created!"
                 - stop
-            - narrate "<red> The location of the jail is invalid."
+            - narrate "<red> ERROR: The location of the jail is invalid."
             - stop
         - if <[action]> == delete:
             - if <cuboid[<[jail_name]>]||null> == null:
-                - narrate "<red> Jail <[name]> doesn't exist."
+                - narrate "<red> ERROR: Jail <[name]> doesn't exist."
                 - stop
             - note remove as:<[jail_name]>
             - note remove as:<[jail_name]>_spawn
