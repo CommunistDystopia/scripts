@@ -52,8 +52,8 @@ Command_Jail:
                 - stop
             - note remove as:<[jail_name]>
             - note remove as:<[jail_name]>_spawn
-            - define jail_slaves "<[jailname]>_slaves"
-            - define jail_soldiers "<[jailname]>_soldiers"
+            - define jail_slaves "<[jail_name]>_slaves"
+            - define jail_soldiers "<[jail_name]>_soldiers"
             - if server.has_flag[<[jail_slaves]>]:
                 - foreach <server.flag[<[jail_slaves]>]> as:slave:
                     - execute as_server "lp user <[slave].name> parent remove slave" silent
