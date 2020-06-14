@@ -11,9 +11,10 @@ Command_Slaves:
     description: Minecraft slave system.
     usage: /slaves
     script:
-        - if !<player.is_op||<context.server>> || <player.groups.find[supremewarden]> == -1:
-            - narrate "<red>You do not have permission for that command."
-            - stop
+        - if !<player.is_op||<context.server>>:
+            - if <player.groups.find[supremewarden]> == -1:
+                - narrate "<red>You do not have permission for that command."
+                - stop
         - if <context.args.size> < 2:
             - narrate "<red> ERROR: Not enough arguments. Follow the command syntax:"
             - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
