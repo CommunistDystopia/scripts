@@ -21,10 +21,10 @@ Command_Slaves:
                 - stop
         - if <context.args.size> < 2:
             - narrate "<red> ERROR: Not enough arguments. Follow the command syntax:"
-            - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
-            - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
-            - narrate "<red> /slaves jail <yellow>jailname <red>spawn <yellow>username"
-            - narrate "<red> /slaves jail pickaxe"
+            - narrate "<red> To add a slave to a jail: /slaves jail <yellow>jailname <red>spawn"
+            - narrate "<red> To remove a slave from a jail: /slaves jail <yellow>jailname <red>remove <yellow>username"
+            - narrate "<red> To show a list of slaves from a jail: /slaves jail <yellow>jailname <red>list <yellow>number"
+            - narrate "<red> To get a slave pickaxe /slaves jail pickaxe"
             - stop
         - define target <context.args.get[1]>
         - define name <context.args.get[2]>
@@ -93,10 +93,10 @@ Command_Slaves:
             - define "<yellow> Do something..."
             - stop
         - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
-        - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
-        - narrate "<red> /slaves jail <yellow>jailname <red>spawn <yellow>username"
-        - narrate "<red> /slaves jail pickaxe"
+        - narrate "<red> To add a slave to a jail: /slaves jail <yellow>jailname <red>spawn"
+        - narrate "<red> To remove a slave from a jail: /slaves jail <yellow>jailname <red>remove <yellow>username"
+        - narrate "<red> To show a list of slaves from a jail: /slaves jail <yellow>jailname <red>list <yellow>number"
+        - narrate "<red> To get a slave pickaxe /slaves jail pickaxe"
 
 Slave_Script:
     type: world

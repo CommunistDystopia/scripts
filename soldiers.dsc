@@ -29,6 +29,7 @@ Command_Soldier:
             - narrate "<red> ERROR: Not enough arguments."
             - narrate  "<red> To add a soldier to a jail: /soldiers add <yellow>jailname username"
             - narrate  "<red> To remove a soldier from a jail: /soldiers remove <yellow>jailname username"
+            - narrate "<red> To show a list of soldiers from a jail: /soldiers list <yellow>jailname <yellow>number"
             - stop
         - define name <context.args.get[2]>
         - define jail_name "jail_<[name]>"
@@ -89,6 +90,7 @@ Command_Soldier:
         - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
         - narrate  "<red> To add a soldier to a jail: /soldiers add <yellow>jailname username"
         - narrate  "<red> To remove a soldier from a jail: /soldiers remove <yellow>jailname username"
+        - narrate "<red> To show a list of soldiers from a jail: /soldiers list <yellow>jailname <yellow>number"
         - narrate "<red> To get a jailstick: /soldiers jailstick"
 
 jailstick:
@@ -108,7 +110,6 @@ jailstick:
 
 Soldier_Script:
     type: world
-    debug: false
     events:
         on player right clicks player with:jailstick:
             - if !<player.in_group[soldier]> || !<player.has_flag[soldier_jail]>:
@@ -138,3 +139,13 @@ Soldier_Script:
                 - narrate "<green> Welcome to the jail <red>SLAVE!" targets:<context.entity>
                 - narrate "<green> Good job Soldier! You caught <red><context.entity.name> <green>breaking the rules."
                 - cooldown 10s script:Soldier_Script
+        on player kills player:
+            - if !<context.damager.in_group[soldier]> || !<context.damager.has_flag[soldier_jail]>:
+                - stop
+            - if !<context.entity.in_group[insurgent]>:
+                - stop
+            - define jail <context.damager.flag[soldier_jail]>
+            - execute as_server "lp user <context.entity.name> parent set slave" silent
+            - flag <context.entity> owner:<[jail]>
+            - flag <context.entity> slave_timer:120
+            - narrate "<red> Welcome to the jail <yellow>INSURGENT!"
