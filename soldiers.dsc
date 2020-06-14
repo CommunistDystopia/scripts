@@ -4,14 +4,15 @@
 # /soldier list <jailname> <#> - List the soldiers in this jail.
 # /soldier jailstick - Replaces your hand with a jailstick.
 # Player flags created here
-# - slave_timer [Used in Jails, Slaves] [WIP]
-# - owner [Used in Jails, Slaves] [WIP]
+# - slave_timer [Used in Jails, Slaves]
+# - owner [Used in Jails, Slaves]
 # - soldier_jail [Used in Jails]
 # Notables created here
 # - jail_<name>_soldiers [Used in Jails]
 
 Command_Soldier:
     type: command
+    debug: false
     name: soldiers
     description: Minecraft Soldiers (Jail) system.
     usage: /soldiers
@@ -107,8 +108,33 @@ jailstick:
 
 Soldier_Script:
     type: world
+    debug: false
     events:
-        on player right clicks entity with:jailstick:
-            - narrate Hi
-
-
+        on player right clicks player with:jailstick:
+            - if !<player.in_group[soldier]> || !<player.has_flag[soldier_jail]>:
+                - narrate "<red>What are you trying to do? You can't caught someone. <blue>Only JAIL SOLDIERS can!
+                - stop
+            - if !<script[Soldier_Script].cooled_down[<player>]>:
+                - stop
+            - define jail <player.flag[soldier_jail]>
+            - if <context.entity.in_group[slave]>:
+                - if <context.entity.flag[owner]> == <[jail]>:
+                    - flag <context.entity> slave_timer:+:120
+                    - narrate "<green> Slave: <red><context.entity.name> <green>time extended by <blue>2 hours"
+                    - narrate "<red> Your time got extended by <yellow>2 hours <red>SLAVE" targets:<context.entity>
+                    - cooldown 10s script:Soldier_Script
+                    - stop
+            - if <context.entity.in_group[insurgent]> || <context.entity.in_group[civilian]> || <context.entity.in_group[default]>:
+                - define jail_spawn "<[jail]>_spawn"
+                - define jail_slaves "<[jail]>_slaves"
+                - if <location[<[jail_spawn]>]||null> == null:
+                    - narrate "<red> ERROR: The spawn of your jail is not set. Tell this to the Supreme Warden."
+                    - stop
+                - flag <context.entity> owner:<[jail]>
+                - flag <context.entity> slave_timer:120
+                - flag server <[jail_slaves]>:<context.entity>
+                - execute as_server "lp user <context.entity.name> parent set slave" silent
+                - teleport <context.entity> <location[<[jail_spawn]>]>
+                - narrate "<green> Welcome to the jail <red>SLAVE!" targets:<context.entity>
+                - narrate "<green> Good job Soldier! You caught <red><context.entity.name> <green>breaking the rules."
+                - cooldown 10s script:Soldier_Script

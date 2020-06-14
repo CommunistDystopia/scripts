@@ -115,6 +115,16 @@ Slave_Script:
                 - define owner_name <player.flag[owner]>
                 - teleport <player> <location[<[owner_name]>]>
                 - narrate "<red> You died but you're a slave. Now you're with your owner."
+        on system time minutely every:10:
+            - foreach <server.online_players> as:server_player:
+                - if <[server_player].in_group[slave]>:
+                    - if <[server_player].has_flag[slave_timer]> && <[server_player].has_flag[owner]>:
+                        - define owner <[server_player].flag[owner]>
+                        - flag <[server_player]> slave_timer:-:10
+                        - define slave_timer <[server_player].flag[slave_timer]>
+                        - if <[slave_timer]> == 0.0:
+                            - execute as_server "slaves jail <[owner].after[jail_]> remove <[server_player].name>" silent
+                            - narrate "<green> You are free <red>SLAVE" targets:<[server_player]>
 
 slave_pickaxe:
     type: item

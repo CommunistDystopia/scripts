@@ -46,6 +46,8 @@ Command_Jail:
                     - stop
             - note <[jail]> as:<[jail_name]>
             - narrate "<green> Jail <blue><[name]> <green>created!"
+            - narrate "<green> Remember to set the <red>spawn of the Jail"
+            - narrate "<gree> With <red>/slaves jail <yellow>jailname <red>spawn"
             - stop
         - if <[action]> == delete:
             - if <cuboid[<[jail_name]>]||null> == null:
