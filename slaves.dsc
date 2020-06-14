@@ -69,3 +69,35 @@ Command_Slaves:
         - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
             - narrate "<red> /slaves jail <yellow>jailname <red>spawn"
             - narrate "<red> /slaves jail <yellow>jailname <red>list <yellow>number"
+
+Slave_Script:
+    type: world
+    events:
+        on player exits notable cuboid:
+            - if !<context.cuboids.parse[notable_name].filter[starts_with[jail]].is_empty>:
+                - define jail <context.cuboids.parse[notable_name].filter[starts_with[jail]].first>
+                - if <player.groups.find[slave]||null> != null:
+                    - define jail_spawn "<[jail]>_spawn"
+                    - teleport <player> <location[<[jail_spawn]>]>
+                    - hurt <player> 5
+                    - narrate "<red> You tried to escape... But you got caught and punched by the guards."
+        after player respawns:
+            - if <player.groups.find[slave]||null> != null && <player.has_flag[owner]>:
+                - define owner_name <player.flag[owner]>
+                - teleport <player> <location[<[owner_name]>]>
+                - narrate "<red> You died but you're a slave. Now you're with your owner."
+
+slave_pickaxe:
+    type: item
+    material: iron_pickaxe
+    mechanisms:
+        repair_cost: 99
+        hides: attributes|enchants|unbreakable
+        enchantments: unbreaking,1
+        unbreakable: true
+    display name: <red>Slave Pickaxe
+    lore:
+        - <gray>Mine with this
+        - <gray>pickaxe... <red>SLAVE!
+        - <gray>Your resources are
+        - <gray>the jail resources.
