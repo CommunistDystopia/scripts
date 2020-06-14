@@ -110,6 +110,7 @@ jailstick:
 
 Soldier_Script:
     type: world
+    debug: false
     events:
         on player right clicks player with:jailstick:
             - if !<player.in_group[soldier]> || !<player.has_flag[soldier_jail]>:
@@ -134,7 +135,7 @@ Soldier_Script:
                 - flag <context.entity> owner:<[jail]>
                 - flag <context.entity> slave_timer:120
                 - flag server <[jail_slaves]>:<context.entity>
-                - execute as_server "lp user <context.entity.name> parent set slave" silent
+                - execute as_server "lp user <context.entity.name> parent add slave" silent
                 - teleport <context.entity> <location[<[jail_spawn]>]>
                 - narrate "<green> Welcome to the jail <red>SLAVE!" targets:<context.entity>
                 - narrate "<green> Good job Soldier! You caught <red><context.entity.name> <green>breaking the rules."
@@ -145,7 +146,7 @@ Soldier_Script:
             - if !<context.entity.in_group[insurgent]>:
                 - stop
             - define jail <context.damager.flag[soldier_jail]>
-            - execute as_server "lp user <context.entity.name> parent set slave" silent
+            - execute as_server "lp user <context.entity.name> parent add slave" silent
             - flag <context.entity> owner:<[jail]>
             - flag <context.entity> slave_timer:120
             - narrate "<red> Welcome to the jail <yellow>INSURGENT!"

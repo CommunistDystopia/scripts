@@ -112,8 +112,8 @@ Slave_Script:
                     - narrate "<red> You tried to escape... But you got caught and punched by the guards."
         after player respawns:
             - if <player.in_group[slave]> && <player.has_flag[owner]>:
-                - define owner_name <player.flag[owner]>
-                - teleport <player> <location[<[owner_name]>]>
+                - define owner_name_spawn "<player.flag[owner]>_spawn"
+                - teleport <player> <location[<[owner_name_spawn]>]>
                 - narrate "<red> You died but you're a slave. Now you're with your owner."
         on system time minutely every:10:
             - foreach <server.online_players> as:server_player:
