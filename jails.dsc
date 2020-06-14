@@ -9,7 +9,7 @@ Command_Jail:
     usage: /jail
     script:
         - if !<player.is_op||<context.server>>:
-            - if <player.groups.find[supremewarden]> == -1:
+            - if !<player.in_group[soldier]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
         - define action <context.args.get[1]>
@@ -50,6 +50,11 @@ Command_Jail:
                 - stop
             - note remove as:<[jail_name]>
             - note remove as:<[jail_name]>_spawn
+            - define jail_slaves "<[jailname]>_slaves"
+            - if server.has_flag[<[jail_slaves]>]:
+                - foreach <server.flag[<[jail_slaves]>]> as:slave:
+                - execute as_server "lp user <[slave].name> parent remove slave" silent
+                - flag server <[jail_slaves]>:!
             - narrate "<green> Jail <blue><[name]> <red>deleted!"
             - stop
         - narrate "<red> ERROR: Syntax error. Follow the command syntax:"

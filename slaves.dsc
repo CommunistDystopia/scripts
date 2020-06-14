@@ -12,7 +12,7 @@ Command_Slaves:
     usage: /slaves
     script:
         - if !<player.is_op||<context.server>>:
-            - if <player.groups.find[supremewarden]> == -1:
+            - if !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
         - if <context.args.size> < 2:
@@ -69,6 +69,19 @@ Command_Slaves:
                         - foreach <[jail_slaves]> as:slave:
                             - narrate "<green> Slave <[loop_index]>: <red> <[slave].name>"
                     - stop
+            - if <[action]> == remove && <context.args.size> == 4:
+                - define username <server.match_player[<context.args.get[4]>]||null>
+                - if <[username]> == null:
+                    - narrate "<red> ERROR: Invalid player username."
+                    - stop
+                - if !<[username].in_group[slave]>:
+                    - narrate "<red> ERROR: This player isn't a slave."
+                    - stop
+                - flag <[username]> owner:!
+                - flag <[username]> slave_timer:!
+                - execute as_server "lp user <[username].name> parent remove slave" silent
+                - narrate "<green> Slave <blue><[username].name> <green>removed!"
+                - stop
         - if <[target]> == user:
             - define "<yellow> Do something..."
             - stop
@@ -83,13 +96,13 @@ Slave_Script:
         on player exits notable cuboid:
             - if !<context.cuboids.parse[notable_name].filter[starts_with[jail]].is_empty>:
                 - define jail <context.cuboids.parse[notable_name].filter[starts_with[jail]].first>
-                - if <player.groups.find[slave]> != -1:
+                - if <player.in_group[slave]>:
                     - define jail_spawn "<[jail]>_spawn"
                     - teleport <player> <location[<[jail_spawn]>]>
                     - hurt <player> 5
                     - narrate "<red> You tried to escape... But you got caught and punched by the guards."
         after player respawns:
-            - if <player.groups.find[slave]> != -1 && <player.has_flag[owner]>:
+            - if <player.in_group[slave]> && <player.has_flag[owner]>:
                 - define owner_name <player.flag[owner]>
                 - teleport <player> <location[<[owner_name]>]>
                 - narrate "<red> You died but you're a slave. Now you're with your owner."
