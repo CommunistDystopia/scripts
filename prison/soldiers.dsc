@@ -73,8 +73,8 @@ Command_Soldier:
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username."
                 - stop
-            - if !<[username].in_group[soldier]>:
-                - narrate "<red> ERROR: This player isn't a soldier."
+            - if !<[username].in_group[soldier]> && !<[username].in_group[supremewarden]> && !<player.is_op||<context.server>>:
+                - narrate "<red> ERROR: This player isn't a soldier or a SupremeWarden."
                 - stop
             - define jail_soldiers "<[jail_name]>_soldiers"
             - if <[action]> == add:
@@ -112,10 +112,14 @@ Soldier_Script:
     debug: false
     events:
         on player right clicks player with:jailstick:
-            - if !<player.in_group[soldier]> || !<player.has_flag[soldier_jail]>:
-                - narrate "<red>What are you trying to do? You can't caught someone. <blue>Only JAIL SOLDIERS can!
-                - stop
+            - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
+                - if !<player.in_group[soldier]> || !<player.has_flag[soldier_jail]>:
+                    - narrate "<red>What are you trying to do? You can't caught someone. <blue>Only JAIL SOLDIERS can!
+                    - stop
             - if !<script[Soldier_Script].cooled_down[<player>]>:
+                - stop
+            - if !<player.has_flag[soldier_jail]>:
+                - narrate "<red> ERROR: Please add yourself to the soldiers of the jail"
                 - stop
             - define jail <player.flag[soldier_jail]>
             - if <context.entity.in_group[slave]>:
