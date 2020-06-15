@@ -41,34 +41,8 @@ Command_Slaves:
             - stop
         - if <[action]> == list && <context.args.size> == 3:
             - define list_page <context.args.get[3]>
-            - if <[list_page].is_integer>:
-                - define jail_slaves <server.flag[<[jail_name]>_slaves]||null>
-                - if <[jail_slaves]> == null || <[jail_slaves].is_empty>:
-                    - narrate "<green> Jail <blue><[name]> <green>have <blue>0 <green>slaves."
-                    - stop
-                - narrate "<green> Jail <blue><[name]> <green>have <blue><[jail_slaves].size> <green>slaves."
-                - if <[jail_slaves].size> > 10:
-                    - if <[list_page]> > <[jail_slaves].size.div[10]>:
-                        - narrate "<red> ERROR! Page number invalid."
-                        - stop
-                    - narrate "<green> Page [<[list_page]>/<[jail_slaves].size.div[10].truncate>]"
-                    - flag player slave_num_min:<[list_page].mul[10]>
-                    - flag player slave_num_max:<[list_page].add[1].mul[10]>
-                    - if <[list_page]> != 0 && <player.flag[slave_num_max].div[<[jail_slaves].size>]> != 1:
-                        - flag player slave_num_max:<[jail_slaves].size>
-                    - if <[list_page]> > 0:
-                        - flag player slave_num_min:++
-                    - foreach <[jail_slaves].get[<player.flag[slave_num_min]>].to[<player.flag[slave_num_max]>]> as:slave:
-                        - if <[loop_index]> == 10:
-                            - narrate "<green> Slave <[loop_index]>: <red><[slave].name>"
-                            - foreach stop
-                        - narrate "<green> Slave <[list_page]><[loop_index]>: <red><[slave].name>"
-                    - flag player slave_num_min:!
-                    - flag player slave_num_max:!
-                - if <[jail_slaves].size> <= 10:
-                    - foreach <[jail_slaves]> as:slave:
-                        - narrate "<green> Slave <[loop_index]>: <red><[slave].name>"
-                - stop
+            - run List_Task_Script def:<[jail_name]>|Slave|<[list_page]>
+            - stop
         - if <[action]> == remove && <context.args.size> == 3:
             - define username <server.match_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
@@ -124,6 +98,9 @@ Slave_Script:
                         - if <[slave_timer]> == 0.0:
                             - execute as_server "slaves jail <[owner].after[jail_]> remove <[server_player].name>" silent
                             - narrate "<green> You are free <red>SLAVE" targets:<[server_player]>
+        after player join:
+            - if <player.in_group[slave]> && <player.has_flag[owner]> && <player.has_flag[slave_timer]>:
+                - teleport <player> <location[<player.flag[owner]>_spawn]>
 
 slave_pickaxe:
     type: item

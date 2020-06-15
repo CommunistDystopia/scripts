@@ -47,7 +47,7 @@ Command_Slave_Lead:
                 - if <player.location.points_between[<[slave].location>].size> > <[slave].flag[owner_block_limit]>:
                     - teleport <[slave]> <player.location>
                 - wait 1s
-            - if !<player.is_online> && <[slave].has_flag[jail_owner]>:
+            - if <[slave].has_flag[jail_owner]>:
                 - define jail_spawn <[slave].flag[jail_owner]>_spawn
                 - flag <[slave]> owner:<[slave].flag[jail_owner]>
                 - flag <[slave]> owner_block_limit:!
