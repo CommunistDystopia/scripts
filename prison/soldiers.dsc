@@ -34,7 +34,7 @@ Command_Soldier:
             - narrate "<red> To show a list of soldiers from a jail: /soldiers list <yellow>jailname <yellow>number"
             - stop
         - define name <context.args.get[2]>
-        - define jail_name "jail_<[name]>"
+        - define jail_name jail_<[name]>
         - if <[jail_name].ends_with[_spawn]>:
             - narrate "<red> ERROR: Invalid jail name. Please don't use _spawn in your jail name."
             - stop
@@ -79,7 +79,7 @@ Command_Soldier:
             - if !<[username].in_group[soldier]> && !<[username].in_group[supremewarden]> && !<player.is_op||<context.server>>:
                 - narrate "<red> ERROR: This player isn't a soldier or a SupremeWarden."
                 - stop
-            - define jail_soldiers "<[jail_name]>_soldiers"
+            - define jail_soldiers <[jail_name]>_soldiers
             - if <[action]> == add:
                 - if <[username].has_flag[soldier_jail]>:
                     - narrate "<red> ERROR: This soldier already belongs to a Jail"
@@ -120,7 +120,7 @@ Soldier_Script:
         on player right clicks player with:jailstick:
             - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
                 - if !<player.in_group[soldier]> || !<player.has_flag[soldier_jail]>:
-                    - narrate "<red>What are you trying to do? You can't caught someone. <blue>Only JAIL SOLDIERS can!
+                    - narrate "<red>ERROR: What are you trying to do? You can't caught someone. <blue>Only JAIL SOLDIERS can!"
                     - stop
             - if !<script[Soldier_Script].cooled_down[<player>]>:
                 - stop
@@ -129,15 +129,17 @@ Soldier_Script:
                 - stop
             - define jail <player.flag[soldier_jail]>
             - if <context.entity.in_group[slave]>:
+                - if !<context.entity.has_flag[slave_timer]>:
+                    - narrate "<red> ERROR: This slave is property of someone!"
                 - if <context.entity.flag[owner]> == <[jail]>:
                     - flag <context.entity> slave_timer:+:120
                     - narrate "<green> Slave: <red><context.entity.name> <green>time extended by <blue>2 hours"
                     - narrate "<red> Your time got extended by <yellow>2 hours <red>SLAVE" targets:<context.entity>
-                    - cooldown 10s script:Soldier_Script
-                    - stop
+                - cooldown 10s script:Soldier_Script
+                - stop
             - if <context.entity.in_group[insurgent]> || <context.entity.in_group[civilian]> || <context.entity.in_group[default]>:
-                - define jail_spawn "<[jail]>_spawn"
-                - define jail_slaves "<[jail]>_slaves"
+                - define jail_spawn <[jail]>_spawn
+                - define jail_slaves <[jail]>_slaves
                 - if <location[<[jail_spawn]>]||null> == null:
                     - narrate "<red> ERROR: The spawn of your jail is not set. Tell this to the Supreme Warden."
                     - stop
@@ -153,7 +155,7 @@ Soldier_Script:
             - if !<context.damager.in_group[supremewarden]> && !<context.damager.has_flag[soldier_jail]>:
                 - if !<context.damager.in_group[soldier]> && !<context.damager.has_flag[soldier_jail]>:
                     - stop
-            - if !<context.entity.in_group[insurgent]>:
+            - if !<context.entity.in_group[insurgent]> && !<context.entity.in_group[slave]>:
                 - stop
             - define jail <context.damager.flag[soldier_jail]>
             - execute as_server "lp user <context.entity.name> parent add slave" silent

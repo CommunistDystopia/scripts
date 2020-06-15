@@ -30,7 +30,7 @@ Command_Slaves:
             - if <[name]> == pickaxe:
                 - equip <player> hand:slave_pickaxe
                 - stop
-            - define jail_name "jail_<[name]>"
+            - define jail_name jail_<[name]>
             - if <cuboid[<[jail_name]>]||null> == null:
                 - narrate "<red> Jail <[name]> doesn't exist."
                 - stop
@@ -79,7 +79,7 @@ Command_Slaves:
                 - if !<[username].in_group[slave]>:
                     - narrate "<red> ERROR: This player isn't a slave."
                     - stop
-                - define jail_slaves "<[jail_name]>_slaves"
+                - define jail_slaves <[jail_name]>_slaves
                 - flag server <[jail_slaves]>:<-:<[username]>
                 - flag <[username]> owner:!
                 - flag <[username]> slave_timer:!
@@ -105,13 +105,13 @@ Slave_Script:
             - if !<context.cuboids.parse[notable_name].filter[starts_with[jail]].is_empty>:
                 - define jail <context.cuboids.parse[notable_name].filter[starts_with[jail]].first>
                 - if <player.in_group[slave]> && <player.has_flag[slave_timer]>:
-                    - define jail_spawn "<[jail]>_spawn"
+                    - define jail_spawn <[jail]>_spawn
                     - teleport <player> <location[<[jail_spawn]>]>
                     - hurt <player> 5
                     - narrate "<red> You tried to escape... But you got caught and punched by the guards."
         after player respawns:
             - if <player.in_group[slave]> && <player.has_flag[owner]> && <player.has_flag[slave_timer]>:
-                - define owner_name_spawn "<player.flag[owner]>_spawn"
+                - define owner_name_spawn <player.flag[owner]>_spawn
                 - teleport <player> <location[<[owner_name_spawn]>]>
                 - narrate "<red> You died but you're a slave. Now you're with your owner."
             - if <player.in_group[slave]> && <player.has_flag[owner]> && !<player.has_flag[slave_timer]>:

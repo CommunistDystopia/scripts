@@ -16,7 +16,7 @@ Command_Jail:
                 - stop
         - define action <context.args.get[1]>
         - define name <context.args.get[2]>
-        - define jail_name "jail_<[name]>"
+        - define jail_name jail_<[name]>
         - if <[jail_name].ends_with[_spawn]>:
             - narrate "<red> ERROR: Invalid jail name. Please don't use _spawn in your jail name."
             - stop
@@ -54,8 +54,8 @@ Command_Jail:
                 - stop
             - note remove as:<[jail_name]>
             - note remove as:<[jail_name]>_spawn
-            - define jail_slaves "<[jail_name]>_slaves"
-            - define jail_soldiers "<[jail_name]>_soldiers"
+            - define jail_slaves <[jail_name]>_slaves
+            - define jail_soldiers <[jail_name]>_soldiers
             - if <server.has_flag[<[jail_slaves]>]>:
                 - foreach <server.flag[<[jail_slaves]>]> as:slave:
                     - execute as_server "lp user <[slave].name> parent remove slave" silent
