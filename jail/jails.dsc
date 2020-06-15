@@ -1,8 +1,11 @@
 # /jail Usage
 # /jail create <jailname> x1 y1 z1 x2 y2 z2 - Adds a jail (works like WorldEdit coordinates)
 # /jail delete <jailname> - Removes a jail
+# /jail list <#> - List all the jails in the prison
 # Notables created here
 # - jail_<name> [Used in Soldiers, Slaves]
+# Server flag created here
+# - jails_jail [List of jails names]
 
 Command_Jail:
     type: command
@@ -17,8 +20,8 @@ Command_Jail:
         - define action <context.args.get[1]>
         - define name <context.args.get[2]>
         - define jail_name jail_<[name]>
-        - if <[jail_name].ends_with[_spawn]>:
-            - narrate "<red> ERROR: Invalid jail name. Please don't use _spawn in your jail name."
+        - if <[jail_name].ends_with[_spawn]> || <[jail_name].ends_with[prison]> || <[jail_name].contains[_jails]>:
+            - narrate "<red> ERROR: Invalid jail name. Please don't use _spawn or prison or _jails in your jail name."
             - stop
         - if <[action]> == create:
             - if <context.args.size> < 8:
@@ -44,9 +47,14 @@ Command_Jail:
                     - narrate "<red> ERROR: Your jail conflicts with other jail. Try to change the location of your jail."
                     - stop
             - note <[jail]> as:<[jail_name]>
+            - flag server prison_jails:|:<[jail_name]>
             - narrate "<green> Jail <blue><[name]> <green>created!"
             - narrate "<green> Remember to set the <red>spawn of the Jail"
             - narrate "<green> With <red>/slaves spawn <yellow>jailname"
+            - stop
+        - if <[action]> == list:
+            - define list_page <context.args.get[2]>
+            - run List_Task_Script def:Prison|Jail|<[list_page]>
             - stop
         - if <[action]> == delete:
             - if <cuboid[<[jail_name]>]||null> == null:
@@ -54,6 +62,7 @@ Command_Jail:
                 - stop
             - note remove as:<[jail_name]>
             - note remove as:<[jail_name]>_spawn
+            - flag server prison_jails:<-:<[jail_name]>
             - define jail_slaves <[jail_name]>_slaves
             - define jail_soldiers <[jail_name]>_soldiers
             - if <server.has_flag[<[jail_slaves]>]>:
@@ -71,3 +80,4 @@ Command_Jail:
         - narrate "<yellow>#<red><red> ERROR: Syntax error. Follow the command syntax:"
         - narrate  "<yellow>-<red><red> To create a jail: /jail create <yellow>jailname x1 y1 z1 x2 y2 z2"
         - narrate  "<yellow>-<red><red> To delete a jail: /jail delete <yellow>jailname"
+        - narrate  "<yellow>-<red><red> To list the jails: /jail list <yellow>number"

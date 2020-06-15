@@ -81,7 +81,7 @@ Command_Slave_Lead:
         - if <[action]> == free:
             - if <[slave].has_flag[jail_owner]>:
                 - define jail_slaves <[slave].flag[jail_owner]>_slaves
-                - flag server <[jail_slaves]>:<-:<[username]>
+                - flag server <[jail_slaves]>:<-:<[slave]>
             - flag <[slave]> owner:!
             - flag <[slave]> slave_timer:!
             - flag <[slave]> jail_owner:!
