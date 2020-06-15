@@ -1,6 +1,6 @@
 # /slaveshop usage
-# /slaveshop <slavename> sell - Starts an slave auction. [SupremeWarden]
-# /slaveshop <slavename> bid <amount> - Place a bid on an active auction. [Godvip]
+# /slaveshop sell <slavename> - Starts an slave auction. [SupremeWarden]
+# /slaveshop bid <slavename> <amount> - Place a bid on an active auction. [Godvip]
 # Additional notes
 # - If a Godvip tries to cheat, the auction will be canceled
 # Server flags created here
@@ -19,7 +19,12 @@ Command_Slave_Shop:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.in_group[godvip]>:
             - narrate "<red>You do not have permission for that command"
             - stop
-        - define slave <server.match_player[<context.args.get[1]>]||null>
+        - if <context.args.size> < 2:
+            - narrate "<yellow>#<red><red> ERROR: Not enough arguments. Follow the command syntax:"
+            - narrate "<yellow>-<red><red> [SupremeWarden] To start an auction use: /slaveshop sell <yellow>username"
+            - narrate "<yellow>-<red><gold> [Godvip] <red>To place a bid use: /slaveshop bid <yellow>username <yellow>amount"
+        - define action <context.args.get[1]>
+        - define slave <server.match_player[<context.args.get[2]>]||null>
         - if <[slave]> == null:
             - narrate "<red> ERROR: Wrong username. Try again"
             - stop
@@ -29,7 +34,6 @@ Command_Slave_Shop:
         - if !<[slave].has_flag[slave_timer]> && <[slave].has_flag[owner]> && <[slave].in_group[slave]>:
             - narrate "<red> ERROR: <yellow><[slave].name> <red>is already gotten by <gold>Godvip <red>or a <blue>SupremeWarden"
             - stop
-        - define action <context.args.get[2]>
         - if <[action]> == sell && <player.in_group[supremewarden]>:
             - if <server.has_flag[auction_highest_bid]>:
                 - narrate "<red> ERROR: There is a <gold>Godvip <red>auction active"
@@ -40,7 +44,7 @@ Command_Slave_Shop:
                 - stop
             - narrate "<green> Starting an auction... Sending a message to the <gold>Godvips<green>..."
             - narrate "<gold> A <red>Slave <gold>auction has started! Starting money: 1" targets:<[online_godvips]>
-            - narrate "<green>Use /slaveshop <[slave].name> bid <yellow>amount <green>to place your offer" targets:<[online_godvips]>
+            - narrate "<green>Use /slaveshop bid <yellow><[slave].name> amount <green>to place your offer" targets:<[online_godvips]>
             - flag server auction_highest_bid:1
             - wait 15s
             - narrate "<gold> The winner is..."
@@ -95,7 +99,7 @@ Command_Slave_Shop:
             - flag server auction_highest_bid:<[amount]>
             - narrate "<green> You sucessfully placed a bid by the amount of <yellow><[amount]>!"
             - stop
-        - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate "<red> [SupremeWarden] To start an auction use: /slaveshop <yellow>username <red>sell"
-        - narrate "<gold> [Godvip] <red>To place a bid use: /slaveshop <yellow>username <red>bid <yellow>amount"
+        - narrate "<yellow>#<red><red> ERROR: Syntax error. Follow the command syntax:"
+        - narrate "<yellow>-<red><red> [SupremeWarden] To start an auction use: /slaveshop sell <yellow>username"
+        - narrate "<yellow>-<red><gold> [Godvip] <red>To place a bid use: /slaveshop bid <yellow>username <yellow>amount"
         

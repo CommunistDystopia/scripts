@@ -1,8 +1,8 @@
 # /slavelead usage
-# /slavelead <slavename> start - Forces the slave to follow you within X blocks.
-# /slavelead <slavename> limit <amount> - Sets the slave space between you and him. [Default: 10] [Min: 10] [Max: 30]
-# /slavelead <slavename> control - A SupremeWarden takes control or stop control of a slave that has a jail associated.
-# /slavelead <slavename> free - A Godvip or a SupremeWarden frees a slave
+# /slavelead start <slavename> - Forces the slave to follow you within X blocks.
+# /slavelead limit <slavename> <amount> - Sets the slave space between you and him. [Default: 10] [Min: 10] [Max: 30]
+# /slavelead control <slavename> - A SupremeWarden takes control or stop control of a slave that has a jail associated.
+# /slavelead free <slavename> - A Godvip or a SupremeWarden frees a slave
 # Additional notes
 # - If a SupremeWarden controlling a slave leaves the server, the slave will go back to the jail.
 # Player flags created here
@@ -19,7 +19,14 @@ Command_Slave_Lead:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.in_group[godvip]>:
             - narrate "<red>You do not have permission for that command."
             - stop
-        - define slave <server.match_player[<context.args.get[1]>]||null>
+        - if <context.args.size> < 2:
+            - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax:"
+            - narrate "<yellow>-<red> To start forcing a slave to follow you: /slavelead <yellow>slavename <red>start"
+            - narrate "<yellow>-<red> To stop forcing a slave to follow exit the server and enter again"
+            - narrate "<yellow>-<red> [SupremeWarden] To start controlling or stop controlling a jail slave to follow you: /slavelead <yellow>slavename <red>control"
+            - stop
+        - define action <context.args.get[1]>
+        - define slave <server.match_player[<context.args.get[2]>]||null>
         - if <[slave]> == null:
             - narrate "<red> ERROR: Wrong username. Try again."
             - stop
@@ -29,7 +36,6 @@ Command_Slave_Lead:
         - if <[slave].has_flag[slave_timer]> && !<[slave].has_flag[owner]> && !<[slave].in_group[slave]>:
             - narrate "<red> ERROR: This user isn't a <gold>Godvip <red>or a <blue>SupremeWarden <red>slave"
             - stop
-        - define action <context.args.get[2]>
         - if <[action]> == start:
             - if <[slave].flag[owner]> != <player.name>:
                 - narrate "<red> ERROR: This slave isn't yours"
@@ -74,7 +80,7 @@ Command_Slave_Lead:
             - stop
         - if <[action]> == free:
             - if <[slave].has_flag[jail_owner]>:
-                - define jail_slaves "<[slave].flag[jail_owner]>_slaves"
+                - define jail_slaves <[slave].flag[jail_owner]>_slaves
                 - flag server <[jail_slaves]>:<-:<[username]>
             - flag <[slave]> owner:!
             - flag <[slave]> slave_timer:!
@@ -83,7 +89,7 @@ Command_Slave_Lead:
             - execute as_server "lp user <[slave].name> parent remove slave" silent
             - narrate "<green> The slave <red><[slave].name> <green>is now free!"
             - stop
-        - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate "<red> To start forcing a slave to follow you: /slavelead <yellow>slavename <red>start"
-        - narrate "<red> To stop forcing a slave to follow you re-enter the server"
-        - narrate "<red> [SupremeWarden] To start controlling or stop controlling a jail slave to follow you: /slavelead <yellow>slavename <red>control"
+        - narrate "<yellow>#<red><red> ERROR: Syntax error. Follow the command syntax:"
+        - narrate "<yellow>-<red><red> To start forcing a slave to follow you: /slavelead <yellow>slavename <red>start"
+        - narrate "<yellow>-<red><red> To stop forcing a slave to follow you re-enter the server"
+        - narrate "<yellow>-<red><red> [SupremeWarden] To start controlling or stop controlling a jail slave to follow you: /slavelead <yellow>slavename <red>control"

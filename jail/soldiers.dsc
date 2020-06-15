@@ -28,10 +28,10 @@ Command_Soldier:
             - equip <player> hand:jailstick
             - stop
         - if <context.args.size> < 3:
-            - narrate "<red> ERROR: Not enough arguments."
-            - narrate  "<red> To add a soldier to a jail: /soldiers add <yellow>jailname username"
-            - narrate  "<red> To remove a soldier from a jail: /soldiers remove <yellow>jailname username"
-            - narrate "<red> To show a list of soldiers from a jail: /soldiers list <yellow>jailname <yellow>number"
+            - narrate "<yellow>#<red> ERROR: Not enough arguments."
+            - narrate  "<yellow>-<red> To add a soldier to a jail: /soldiers add <yellow>jailname username"
+            - narrate  "<yellow>-<red> To remove a soldier from a jail: /soldiers remove <yellow>jailname username"
+            - narrate "<yellow>-<red> To show a list of soldiers from a jail: /soldiers list <yellow>jailname <yellow>number"
             - stop
         - define name <context.args.get[2]>
         - define jail_name jail_<[name]>
@@ -92,11 +92,11 @@ Command_Soldier:
                 - flag server <[jail_soldiers]>:<-:<[username]>
                 - narrate "<green> Soldier <blue><[username].name> <green>removed!"
             - stop
-        - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate  "<red> To add a soldier to a jail: /soldiers add <yellow>jailname username"
-        - narrate  "<red> To remove a soldier from a jail: /soldiers remove <yellow>jailname username"
-        - narrate "<red> To show a list of soldiers from a jail: /soldiers list <yellow>jailname <yellow>number"
-        - narrate "<red> To get a jailstick: /soldiers jailstick"
+        - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
+        - narrate "<yellow>-<red> To add a soldier to a jail: /soldiers add <yellow>jailname username"
+        - narrate "<yellow>-<red> To remove a soldier from a jail: /soldiers remove <yellow>jailname username"
+        - narrate "<yellow>-<red> To show a list of soldiers from a jail: /soldiers list <yellow>jailname <yellow>number"
+        - narrate "<yellow>-<red> To get a jailstick: /soldiers jailstick"
 
 jailstick:
     type: item

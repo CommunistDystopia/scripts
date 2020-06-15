@@ -46,7 +46,7 @@ Command_Jail:
             - note <[jail]> as:<[jail_name]>
             - narrate "<green> Jail <blue><[name]> <green>created!"
             - narrate "<green> Remember to set the <red>spawn of the Jail"
-            - narrate "<green> With <red>/slaves jail <yellow>jailname <red>spawn"
+            - narrate "<green> With <red>/slaves spawn <yellow>jailname"
             - stop
         - if <[action]> == delete:
             - if <cuboid[<[jail_name]>]||null> == null:
@@ -68,6 +68,6 @@ Command_Jail:
                 - flag server <[jail_soldiers]>:!
             - narrate "<green> Jail <blue><[name]> <red>deleted!"
             - stop
-        - narrate "<red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate  "<red> To create a jail: /jail create <yellow>jailname x1 y1 z1 x2 y2 z2"
-        - narrate  "<red> To delete a jail: /jail delete <yellow>jailname"
+        - narrate "<yellow>#<red><red> ERROR: Syntax error. Follow the command syntax:"
+        - narrate  "<yellow>-<red><red> To create a jail: /jail create <yellow>jailname x1 y1 z1 x2 y2 z2"
+        - narrate  "<yellow>-<red><red> To delete a jail: /jail delete <yellow>jailname"
