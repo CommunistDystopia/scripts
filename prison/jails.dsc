@@ -11,8 +11,7 @@ Command_Jail:
     description: Minecraft Jail system.
     usage: /jail
     script:
-        - if !<player.is_op||<context.server>>:
-            - if !<player.in_group[soldier]>:
+        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
         - define action <context.args.get[1]>

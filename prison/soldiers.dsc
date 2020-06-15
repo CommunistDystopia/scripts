@@ -17,8 +17,7 @@ Command_Soldier:
     description: Minecraft Soldiers (Jail) system.
     usage: /soldiers
     script:
-        - if !<player.is_op||<context.server>>:
-            - if !<player.in_group[supremewarden]>:
+        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
         - define action <context.args.get[1]>

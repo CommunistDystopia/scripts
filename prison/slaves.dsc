@@ -3,8 +3,6 @@
 # /slaves jail <jailname> list <#> - List the slaves in this jail.
 # /slaves jail <jailname> remove <username> - Removes a slaves from a Jail.
 # /slaves jail pickaxe - Replaces your hand with a slave pickaxe.
-# WIP:
-# /slaves user <username> list - List the slaves of this user.
 # Notables created here
 # - jail_<name>_spawn [Used in Jails]
 
@@ -15,8 +13,7 @@ Command_Slaves:
     description: Minecraft slave system.
     usage: /slaves
     script:
-        - if !<player.is_op||<context.server>>:
-            - if !<player.in_group[supremewarden]>:
+        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
         - if <context.args.size> < 2:
