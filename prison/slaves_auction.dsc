@@ -1,6 +1,8 @@
 # /slaveshop usage
 # /slaveshop <slavename> sell - Starts an slave auction. [SupremeWarden]
 # /slaveshop <slavename> bid <amount> - Place a bid on an active auction. [Godvip]
+# Additional notes
+# - If a Godvip tries to cheat, the auction will be canceled
 # Server flags created here
 # - auction_highest_bidder
 # - auction_highest_bid

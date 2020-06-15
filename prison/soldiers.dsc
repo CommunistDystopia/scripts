@@ -3,6 +3,9 @@
 # /soldier remove <jailname> <username> - Removes a soldier to a jail.
 # /soldier list <jailname> <#> - List the soldiers in this jail.
 # /soldier jailstick - Replaces your hand with a jailstick.
+# Additional notes
+# - A SupremeWarden must add himself to a jail as a soldier
+# - If a Soldier/SupremeWarden with a Jail linked kills a Insurgent, he revives in jail
 # Player flags created here
 # - slave_timer [Used in Jails, Slaves]
 # - owner [Used in Jails, Slaves]
@@ -78,6 +81,9 @@ Command_Soldier:
                 - stop
             - define jail_soldiers "<[jail_name]>_soldiers"
             - if <[action]> == add:
+                - if <[username].has_flag[soldier_jail]>:
+                    - narrate "<red> ERROR: This soldier already belongs to a Jail"
+                    - stop
                 - flag <[username]> soldier_jail:<[jail_name]>
                 - flag server <[jail_soldiers]>:|:<[username]>
                 - narrate "<green> Soldier <blue><[username].name> <green>added!"
@@ -144,8 +150,9 @@ Soldier_Script:
                 - narrate "<green> Good job Soldier! You caught <red><context.entity.name> <green>breaking the rules."
                 - cooldown 10s script:Soldier_Script
         on player kills player:
-            - if !<context.damager.in_group[soldier]> || !<context.damager.has_flag[soldier_jail]>:
-                - stop
+            - if !<context.damager.in_group[supremewarden]> && !<context.damager.has_flag[soldier_jail]>:
+                - if !<context.damager.in_group[soldier]> && !<context.damager.has_flag[soldier_jail]>:
+                    - stop
             - if !<context.entity.in_group[insurgent]>:
                 - stop
             - define jail <context.damager.flag[soldier_jail]>
