@@ -29,11 +29,11 @@ Command_Slave_Lead:
         - if <[slave].has_flag[slave_timer]> && !<[slave].has_flag[owner]> && !<[slave].in_group[slave]>:
             - narrate "<red> ERROR: This user isn't a <gold>Godvip <red>or a <blue>SupremeWarden <red>slave"
             - stop
-        - if <[slave].flag[owner]> != <player.name>:
-            - narrate "<red> ERROR: This slave isn't yours"
-            - stop
         - define action <context.args.get[2]>
         - if <[action]> == start:
+            - if <[slave].flag[owner]> != <player.name>:
+                - narrate "<red> ERROR: This slave isn't yours"
+                - stop
             - narrate "<green> Starting to force the slave <red><[slave].name> to stay within <yellow>10 <green>blocks"
             - narrate "<yellow> Be aware. <green>It will work until you or the slave are offline."
             - narrate "<red> You are now forced to stay with your <gold>owner" targets:<[slave]>
@@ -42,11 +42,11 @@ Command_Slave_Lead:
                     - teleport <[slave]> <player.location>
                 - wait 1s
             - if !<player.is_online> && <[slave].has_flag[jail_owner]>:
-                - define jail_spawn "<[slave].flag[jail_owner]>_spawn"
+                - define jail_spawn <[slave].flag[jail_owner]>_spawn
                 - flag <[slave]> owner:<[slave].flag[jail_owner]>
                 - flag <[slave]> owner_block_limit:!
                 - flag <[slave]> slave_timer:120
-                - teleport <[slave]> <server.flag[<[jail_spawn]>]>
+                - teleport <[slave]> <location[<[jail_spawn]>]>
                 - flag <[slave]> jail_owner:!
             - stop
         - if <[action]> == limit && <context.args.size> == 3:

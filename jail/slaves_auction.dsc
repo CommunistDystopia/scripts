@@ -40,7 +40,7 @@ Command_Slave_Shop:
                 - stop
             - narrate "<green> Starting an auction... Sending a message to the <gold>Godvips<green>..."
             - narrate "<gold> A <red>Slave <gold>auction has started! Starting money: 1" targets:<[online_godvips]>
-            - narrate "<green>Use /slaveshop bid <yellow>amount <green>to place your offer" targets:<[online_godvips]>
+            - narrate "<green>Use /slaveshop <[slave].name> bid <yellow>amount <green>to place your offer" targets:<[online_godvips]>
             - flag server auction_highest_bid:1
             - wait 15s
             - narrate "<gold> The winner is..."
@@ -49,19 +49,19 @@ Command_Slave_Shop:
             - if <[online_godvips_end].is_empty>:
                 - narrate "<red> ERROR: All <gold>Godvips <red>are offline. The auction result will be stopped"
                 - flag server auction_highest_bidder:!
-                - flag server auction_higest_bid:!
+                - flag server auction_highest_bid:!
                 - stop
             - if !<server.has_flag[auction_highest_bidder]>:
                 - narrate "<yellow> No one won the auction." targets:<[online_godvips_end]>|<player>
                 - flag server auction_highest_bidder:!
-                - flag server auction_higest_bid:!
+                - flag server auction_highest_bid:!
                 - stop
             - define highest_bidder <player[<server.flag[auction_highest_bidder]>]>
             - if <[highest_bidder].money> < <server.flag[auction_highest_bid]>:
                 - narrate "<red> Do you think that you can trick this plugin? Try again" targets:<[highest_bidder]>
                 - narrate "<red> The player <[highest_bidder].name> tried to buy the slave but he spent the money before the auction finished" targets:<[online_godvips_end]>|<[player]>
                 - flag server auction_highest_bidder:!
-                - flag server auction_higest_bid:!
+                - flag server auction_highest_bid:!
                 - stop
             - take <[highest_bidder]> money quantity:<server.flag[auction_highest_bid]>
             - flag server auction_slave_jail:<[slave].flag[owner]>
@@ -78,7 +78,7 @@ Command_Slave_Shop:
             - narrate "<gold> <[slave].flag[owner]>!!! Congratulations. <red><[slave].name> <gold>is now your slave" targets:<[online_godvips_end]>
             - narrate "<green> The auction is finished. The <red>slave <green>was <gold>sold"
             - flag server auction_highest_bidder:!
-            - flag server auction_higest_bid:!
+            - flag server auction_highest_bid:!
             - stop
         - if <[action]> == bid && <context.args.size> == 3 && <player.in_group[godvip]>:
             - define amount <context.args.get[3]>
