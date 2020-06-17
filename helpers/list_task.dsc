@@ -1,5 +1,6 @@
 List_Task_Script:
     type: task
+    debug: false
     definitions: jail_name|member|list_page
     script:
         - if <[list_page].is_integer>:
