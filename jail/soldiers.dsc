@@ -124,15 +124,20 @@ Soldier_Script:
                 - flag server <[jail_wanted]>:|:<context.entity>
                 - cooldown 10s script:Soldier_Script
         on player kills player:
-            - if !<context.damager.in_group[supremewarden]> && !<context.damager.has_flag[soldier_jail]>:
-                - if !<context.damager.in_group[soldier]>:
-                    - stop
-            - if !<context.entity.in_group[insurgent]> && !<context.entity.in_group[default]> && <context.entity.in_group[slave]>:
+            - if <context.entity.in_group[slave]>:
+                - stop
+            - if !<context.damager.has_flag[soldier_jail]>:
+                - stop
+            - if !<context.damager.in_group[supremewarden]> && !<context.damager.in_group[soldier]>:
                 - stop
             - define jail <context.damager.flag[soldier_jail]>
             - define jail_slaves <[jail]>_slaves
             - define jail_wanted <[jail]>_wanteds
-            - flag server <[jail_wanted]>:<-:<context.entity>
+            - if !<context.entity.in_group[insurgent]> && !<server.has_flag[<[jail_wanted]>]>:
+                - stop
+            - if <server.has_flag[<[jail_wanted]>]>:
+                - if <server.flag[<[jail_wanted]>].contains[<context.entity>]>:
+                    - flag server <[jail_wanted]>:<-:<context.entity>
             - execute as_server "lp user <context.entity.name> parent add slave" silent
             - flag <context.entity> owner:<[jail]>
             - flag <context.entity> slave_timer:120

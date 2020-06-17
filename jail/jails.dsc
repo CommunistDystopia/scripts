@@ -17,6 +17,12 @@ Command_Jail:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
+        - if <context.args.size> < 2:
+            - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax:"
+            - narrate  "<yellow>-<red><red> To create a jail: /jail create <yellow>jailname x1 y1 z1 x2 y2 z2"
+            - narrate  "<yellow>-<red><red> To delete a jail: /jail delete <yellow>jailname"
+            - narrate  "<yellow>-<red><red> To list the jails in the server: /jail list <yellow>number"
+            - stop
         - define action <context.args.get[1]>
         - define name <context.args.get[2]>
         - define jail_name jail_<[name]>
@@ -65,6 +71,7 @@ Command_Jail:
             - flag server prison_jails:<-:<[jail_name]>
             - define jail_slaves <[jail_name]>_slaves
             - define jail_soldiers <[jail_name]>_soldiers
+            - define jail_wanted <[jail_name]>_wanteds
             - if <server.has_flag[<[jail_slaves]>]>:
                 - foreach <server.flag[<[jail_slaves]>]> as:slave:
                     - execute as_server "lp user <[slave].name> parent remove slave" silent
@@ -72,9 +79,11 @@ Command_Jail:
                     - flag <[slave]> slave_timer:!
                 - flag server <[jail_slaves]>:!
             - if <server.has_flag[<[jail_soldiers]>]>:
-                - foreach <server.flag[<[jail_slaves]>]> as:soldier:
+                - foreach <server.flag[<[jail_soldiers]>]> as:soldier:
                     - flag <[soldier]> soldier_jail:!
                 - flag server <[jail_soldiers]>:!
+            - if <server.has_flag[<[jail_wanted]>]>:
+                - flag server <[jail_wanted]>:!
             - narrate "<green> Jail <blue><[name]> <red>deleted!"
             - stop
         - narrate "<yellow>#<red><red> ERROR: Syntax error. Follow the command syntax:"
