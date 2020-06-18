@@ -14,7 +14,7 @@ explosive_vest:
             type: shaped
             input:
                 - tnt|emerald|tnt
-                - tnt|flint_and_steel|tnt
+                - tnt|leather_chestplate|tnt
                 - tnt|landminer|tnt
 
 Explosive_Vest_Script:
