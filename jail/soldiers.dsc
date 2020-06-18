@@ -1,9 +1,9 @@
-# /soldier Usage
-# /soldier add <jailname> <username> - Adds a soldier to a jail.
-# /soldier remove <jailname> <username> - Removes a soldier to a jail.
-# /soldier list <jailname> <#> - List the soldiers in this jail.
-# /soldier wanted <jailname> <#> - List the wanted players in this jail.
-# /soldier jailstick - Replaces your hand with a jailstick.
+# /soldiers Usage
+# /soldiers add <jailname> <username> - Adds a soldier to a jail.
+# /soldiers remove <jailname> <username> - Removes a soldier to a jail.
+# /soldiers list <jailname> <#> - List the soldiers in this jail.
+# /soldiers wanted <jailname> <#> - List the wanted players in this jail.
+# /soldiers jailstick - Replaces your hand with a jailstick.
 # Additional notes
 # - A SupremeWarden must add himself to a jail as a soldier
 # - If a Soldier/SupremeWarden with a Jail linked kills a Insurgent, he revives in jail
