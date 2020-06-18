@@ -12,8 +12,11 @@ landminer:
         - <red>Be careful!
     recipes:
         1:
-            type: shapeless
-            input: emerald|emerald|emerald|emerald|flint_and_steel|emerald|emerald|emerald|emerald
+            type: shaped
+            input:
+                - emerald|emerald|emerald
+                - emerald|flint_and_steel|emerald
+                - emerald|emerald|emerald
 
 landmine:
     type: item
