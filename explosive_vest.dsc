@@ -4,7 +4,9 @@ explosive_vest:
     mechanisms:
         repair_cost: 99
         hides: attributes|enchants
-        enchantments: unbreaking,1
+    enchantments:
+        - unbreaking:1
+        - vanishing_curse
     display name: <red>Explosive Vest
     lore:
         - <gray>It will detonate on player death.
