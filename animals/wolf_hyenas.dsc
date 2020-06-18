@@ -9,7 +9,7 @@ Wolf_Hyenas_Script:
                     - adjust <[wolf]> angry:false
                     - foreach <[wolf].location.find.living_entities.within[40]> as:entity_near:
                         - if <[entity_near].entity_type> != PLAYER && <[entity_near].entity_type> != WOLF:
-                            - if <[entity_near].entity_type> == SHEEP || <[entity_near].entity_type> == COW || <[entity_near].entity_type> == PIG || <[entity_near].entity_type> == CHICKEN || <[entity_near].entity_type> == RABBIT || <[entity_near].entity_type> == FOX:
+                            - if <[entity_near].entity_type> == SHEEP || <[entity_near].entity_type> == COW || <[entity_near].entity_type> == PIG || <[entity_near].entity_type> == CHICKEN || <[entity_near].entity_type> == RABBIT || <[entity_near].entity_type> == FOX || <[entity_near].entity_type> == MUSHROOM_COW:
                                 - attack <[wolf]> target:<[entity_near]>
                                 - teleport <[wolf]> <[entity_near].location>
                                 - foreach stop
