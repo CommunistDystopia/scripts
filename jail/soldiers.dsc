@@ -112,6 +112,7 @@ Soldier_Script:
             - if <context.entity.in_group[slave]>:
                 - if !<context.entity.has_flag[slave_timer]>:
                     - narrate "<red> ERROR: This slave is property of someone!"
+                    - stop
                 - if <context.entity.flag[owner]> == <[jail]>:
                     - flag <context.entity> slave_timer:+:120
                     - narrate "<green> Slave: <red><context.entity.name> <green>time extended by <blue>2 hours"

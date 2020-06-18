@@ -47,13 +47,6 @@ Command_Slave_Lead:
                 - if <player.location.points_between[<[slave].location>].size> > <[slave].flag[owner_block_limit]>:
                     - teleport <[slave]> <player.location>
                 - wait 1s
-            - if <[slave].has_flag[jail_owner]>:
-                - define jail_spawn <[slave].flag[jail_owner]>_spawn
-                - flag <[slave]> owner:<[slave].flag[jail_owner]>
-                - flag <[slave]> owner_block_limit:!
-                - flag <[slave]> slave_timer:120
-                - teleport <[slave]> <location[<[jail_spawn]>]>
-                - flag <[slave]> jail_owner:!
             - stop
         - if <[action]> == limit && <context.args.size> == 3:
             - define limit_number <context.args.get[3]>
@@ -65,16 +58,18 @@ Command_Slave_Lead:
             - stop
         - if <[action]> == control && <player.in_group[supremewarden]> || <player.is_op||context_server>:
             - if !<[slave].has_flag[slave_timer]> && !<[slave].has_flag[owner]> && !<[slave].in_group[slave]>:
-                - narrate "<red> ERROR: This user isn't a slave"
+                - narrate "<red> ERROR: This user isn't currently a slave from a prison. It's probably controlled by a SupremeWarden"
+                - stop
+            - if !<player.has_flag[soldier_jail]>:
+                - narrate "<red> ERROR: You don't have a jail assigned"
                 - stop
             - if <[slave].flag[owner]> == <player.name>:
-                - flag <[slave]> owner:<[slave].flag[jail_owner]>
-                - flag <[slave]> jail_owner:!
-                - narrate "<green> You stopped getting the <red>slave <green>with you"
+                - narrate "<green> You're already getting the <red>slave <green>with you"
                 - stop
             - flag <[slave]> jail_owner:<[slave].flag[owner]>
             - flag <[slave]> owner:<player.name>
             - flag <[slave]> owner_block_limit:10
+            - flag <player> owned_slaves:|:<[slave]>
             - flag <[slave]> slave_timer:!
             - narrate "<green> You started getting the <red>slave <green>with you"
             - stop
@@ -93,3 +88,26 @@ Command_Slave_Lead:
         - narrate "<yellow>-<red><red> To start forcing a slave to follow you: /slavelead <yellow>slavename <red>start"
         - narrate "<yellow>-<red><red> To stop forcing a slave to follow you re-enter the server"
         - narrate "<yellow>-<red><red> [SupremeWarden] To start controlling or stop controlling a jail slave to follow you: /slavelead <yellow>slavename <red>control"
+
+Slavelad_Script:
+    type: world
+    debug: false
+    events:
+        on player quits:
+            - if <player.in_group[supremewarden]> && <player.has_flag[owned_slaves]> && <player.has_flag[soldier_jail]>:
+                - foreach <player.flag[owned_slaves]> as:owned_slave:
+                    - define slave <player[<[owned_slave]>]>
+                    - if <[slave].has_flag[jail_owner]>:
+                        - define jail_spawn <[slave].flag[jail_owner]>_spawn
+                        - flag <[slave]> owner:<[slave].flag[jail_owner]>
+                        - flag <[slave]> owner_block_limit:!
+                        - flag <[slave]> slave_timer:120
+                        - teleport <[slave]> <location[<[jail_spawn]>]>
+                        - flag <[slave]> jail_owner:!
+                - flag <player> owned_slaves:!
+                - stop
+            - if <player.in_group[slave]> && <player.has_flag[jail_owner]>:
+                - flag <player> owner:<player.flag[jail_owner]>
+                - flag <player> owner_block_limit:!
+                - flag <player> slave_timer:120
+                - flag <player> jail_owner:!
