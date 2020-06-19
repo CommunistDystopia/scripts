@@ -8,13 +8,13 @@ Animals_Need_More_Food_Script:
         on system time hourly every:1:
             - foreach <world[world].entities[COW||CHICKEN||PIG||MUSHROOM_COW||RABBIT||BEE]> as:animal:
                 - if !<[animal].has_flag[last_food]>:
-                    - remove <[animal]>
+                    - hurt 999 <[animal]>
                     - foreach next
                 - define last_food <[animal].flag[last_food]>
                 - define time_now <util.time_now.to_utc>
                 - if <[time_now].is_after[<[last_food]>]>:
                     - flag <[animal]> last_food:!
-                    - remove <[animal]>
+                    - hurt 999 <[animal]>
         on player right clicks PIG with:carrot:
             - determine cancelled
         on player right clicks CHICKEN with:wheat_seeds:
