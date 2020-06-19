@@ -6,6 +6,7 @@ Animals_Need_More_Food_Script:
             - foreach <world[world].entities[COW||CHICKEN||PIG||MUSHROOM_COW||RABBIT||BEE]> as:animal:
                 - if !<[animal].has_flag[last_food]>:
                     - remove <[animal]>
+                    - foreach next
                 - define last_food <[animal].flag[last_food]>
                 - define time_now <util.time_now.to_utc>
                 - if <[time_now].is_after[<[last_food]>]>:
