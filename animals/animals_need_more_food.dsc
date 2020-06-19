@@ -2,6 +2,9 @@ Animals_Need_More_Food_Script:
     type: world
     debug: false
     events:
+        on entity death:
+            - if <context.entity.has_flag[last_food]>:
+                - flag <context.entity> last_food:!
         on system time hourly every:1:
             - foreach <world[world].entities[COW||CHICKEN||PIG||MUSHROOM_COW||RABBIT||BEE]> as:animal:
                 - if !<[animal].has_flag[last_food]>:
