@@ -28,7 +28,7 @@ Command_Slave_Lead:
         - define action <context.args.get[1]>
         - define slave <server.match_player[<context.args.get[2]>]||null>
         - if <[slave]> == null:
-            - narrate "<red> ERROR: Wrong username. Try again."
+            - narrate "<red> ERROR: Invalid player username OR the player is offline."
             - stop
         - if !<[slave].in_group[slave]>:
             - narrate "<red> ERROR: This user isn't a slave"

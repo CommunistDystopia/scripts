@@ -1,6 +1,7 @@
 # /slaves Usage
 # /slaves spawn <jailname> - Sets the spawn point of the slave in the player position.
 # /slaves list <jailname> <#> - List the slaves in this jail.
+# /slaves add <jailname> <username> - Adds a slaves to a jail.
 # /slaves remove <jailname> <username> - Removes a slaves from a Jail.
 # /slaves pickaxe - Replaces your hand with a slave pickaxe.
 # Notables created here
@@ -18,7 +19,8 @@ Command_Slaves:
                 - stop
         - if <context.args.size> < 2:
             - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax:"
-            - narrate "<yellow>-<red> To add a slave to a jail: /slaves spawn <yellow>jailname"
+            - narrate "<yellow>-<red> To set the spawn of a jail: /slaves spawn <yellow>jailname"
+            - narrate "<yellow>-<red> To add a slave to a jail: /slaves add <yellow>jailname <yellow>username"
             - narrate "<yellow>-<red> To remove a slave from a jail: /slaves remove <yellow>jailname <yellow>username"
             - narrate "<yellow>-<red> To show a list of slaves from a jail: /slaves list <yellow>jailname <yellow>number"
             - narrate "<yellow>-<red> To get a slave pickaxe /slave pickaxe"
@@ -31,6 +33,30 @@ Command_Slaves:
         - define jail_name jail_<[name]>
         - if <cuboid[<[jail_name]>]||null> == null:
             - narrate "<red> Jail <[name]> doesn't exist."
+            - stop
+        - if <[action]> == add && <player.is_op||<context.server>>:
+            - define username <server.match_player[<context.args.get[3]>]||null>
+            - if <[username]> == null:
+                - narrate "<red> ERROR: Invalid player username OR the player is offline."
+                - stop
+            - if <[username].in_group[slave]>:
+                - narrate "<red> ERROR: This player is already a slave."
+                - stop
+            - define jail_slaves <[jail_name]>_slaves
+            - define jail_spawn <[jail_name]>_spawn
+            - if !<location[<[jail_spawn]>]||null> == null:
+                - narrate "<red> ERROR: Please set the jail spawn with /slaves spawn <yellow>jailname <red>while standing inside the jail"
+                - stop
+            - flag server <[jail_slaves]>:|:<[username]>
+            - flag <[username]> owner:<[jail_name]>
+            - flag <[username]> slave_timer:120
+            - flag <[username]> jail_owner:!
+            - flag <[username]> owner_block_limit:!
+            - execute as_server "lp user <[username].name> parent add slave" silent
+            - if <[username].is_online>:
+                - teleport <[username]> <location[<[jail_spawn]>]>
+                - narrate "<green> Welcome to the jail <red>SLAVE!" targets:<[username]>
+            - narrate "<green> Slave <blue><[username].name> <green>added to the Jail!"
             - stop
         - if <[action]> == spawn:
             - if !<cuboid[<[jail_name]>].contains_location[<player.location>]>:
@@ -46,7 +72,7 @@ Command_Slaves:
         - if <[action]> == remove && <context.args.size> == 3:
             - define username <server.match_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username."
+                - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
             - if !<[username].in_group[slave]>:
                 - narrate "<red> ERROR: This player isn't a slave."
@@ -61,7 +87,8 @@ Command_Slaves:
             - narrate "<green> Slave <blue><[username].name> <green>removed!"
             - stop
         - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate "<yellow>-<red> To add a slave to a jail: /slaves spawn <yellow>jailname"
+        - narrate "<yellow>-<red> To set the spawn of a jail: /slaves spawn <yellow>jailname"
+        - narrate "<yellow>-<red> To add a slave to a jail: /slaves add <yellow>jailname <yellow>username"
         - narrate "<yellow>-<red> To remove a slave from a jail: /slaves remove <yellow>jailname <yellow>username"
         - narrate "<yellow>-<red> To show a list of slaves from a jail: /slaves list <yellow>jailname <yellow>number"
         - narrate "<yellow>-<red> To get a slave pickaxe /slaves pickaxe"

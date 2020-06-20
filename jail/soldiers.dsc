@@ -54,7 +54,7 @@ Command_Soldier:
                 - stop
             - define username <server.match_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username."
+                - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
             - if !<[username].in_group[soldier]> && !<[username].in_group[supremewarden]> && !<player.is_op||<context.server>>:
                 - narrate "<red> ERROR: This player isn't a soldier or a SupremeWarden."
