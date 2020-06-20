@@ -40,7 +40,7 @@ Animals_Need_More_Food_Script:
         on player right clicks MUSHROOM_COW with:bowl:
             - determine cancelled
         on player right clicks entity with:wheat:
-            - if <context.entity.name> != COW && <context.entity.name> != CHICKEN && <context.entity.name> != PIG && <context.entity.name> != MUSHROOM_COW:
+            - if <context.entity.name> != COW && <context.entity.name> != CHICKEN && <context.entity.name> != PIG && <context.entity.name> != MUSHROOM_COW && <context.entity.name> != SHEEP:
                 - stop
             - if <context.item.quantity> < 64:
                 - determine cancelled
