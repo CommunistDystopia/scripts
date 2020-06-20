@@ -24,7 +24,7 @@ Animals_Need_More_Food_Script:
             - if <context.entity.has_flag[last_food]>:
                 - flag <context.entity> last_food:!
         on system time hourly every:1:
-            - foreach <world[world].entities[COW||CHICKEN||PIG||MUSHROOM_COW||RABBIT||BEE||WOLF||HORSE]> as:animal:
+            - foreach <world[world].entities[SHEEP||COW||CHICKEN||PIG||MUSHROOM_COW||RABBIT||BEE||WOLF||HORSE]> as:animal:
                 - if !<[animal].has_flag[last_food]>:
                     - hurt 999 <[animal]>
                     - foreach next
