@@ -17,6 +17,9 @@ Command_Slaves:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
+        - if <context.args.size> == 1 && <context.args.get[1]> == pickaxe:
+            - equip <player> hand:slave_pickaxe
+            - stop
         - if <context.args.size> < 2:
             - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax:"
             - narrate "<yellow>-<red> To set the spawn of a jail: /slaves spawn <yellow>jailname"
@@ -27,9 +30,6 @@ Command_Slaves:
             - stop
         - define action <context.args.get[1]>
         - define name <context.args.get[2]>
-        - if <[name]> == pickaxe:
-            - equip <player> hand:slave_pickaxe
-            - stop
         - define jail_name jail_<[name]>
         - if <cuboid[<[jail_name]>]||null> == null:
             - narrate "<red> Jail <[name]> doesn't exist."
