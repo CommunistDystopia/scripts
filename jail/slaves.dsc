@@ -102,6 +102,7 @@ Slave_Script:
                 - define jail <context.cuboids.parse[notable_name].filter[starts_with[jail]].first>
                 - if <player.in_group[slave]> && <player.has_flag[slave_timer]>:
                     - define jail_spawn <[jail]>_spawn
+                    - wait 1s
                     - teleport <player> <location[<[jail_spawn]>]>
                     - hurt <player> 5
                     - narrate "<red> You tried to escape... But you got caught and punched by the guards."
