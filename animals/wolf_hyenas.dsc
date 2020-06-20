@@ -13,25 +13,25 @@ Wolf_Hyenas_Script:
                                 - define teleport_range 11
                                 - repeat 8:
                                     - define space_between <[teleport_range].sub[<[value]>]>
-                                    - if !<[entity_near].location.center.backward[<[space_between]>].chunk.is_loaded>:
+                                    - if <[entity_near].location.center.backward[<[space_between]>].chunk.is_loaded>:
                                         - if !<[entity_near].location.center.backward[<[space_between]>].material.is_solid>:
                                             - attack <[wolf]> target:<[entity_near]>
                                             - teleport <[wolf]> <[entity_near].location.center.backward[<[space_between]>]>
                                             - cast speed duration:15s amplifier:2 <[wolf]> hide_particles
                                             - repeat stop
-                                    - if !<[entity_near].location.center.left[<[space_between]>].chunk.is_loaded>:
+                                    - if <[entity_near].location.center.left[<[space_between]>].chunk.is_loaded>:
                                         - if !<[entity_near].location.center.left[<[space_between]>].material.is_solid>:
                                             - attack <[wolf]> target:<[entity_near]>
                                             - teleport <[wolf]> <[entity_near].location.center.left[<[space_between]>]>
                                             - cast speed duration:15s amplifier:2 <[wolf]> hide_particles
                                             - repeat stop
-                                    - if !<[entity_near].location.center.right[<[space_between]>].chunk.is_loaded>:
+                                    - if <[entity_near].location.center.right[<[space_between]>].chunk.is_loaded>:
                                         - if !<[entity_near].location.center.right[<[space_between]>].material.is_solid>:
                                             - attack <[wolf]> target:<[entity_near]>
                                             - teleport <[wolf]> <[entity_near].location.center.right[<[space_between]>]>
                                             - cast speed duration:15s amplifier:2 <[wolf]> hide_particles
                                             - repeat stop
-                                    - if !<[entity_near].location.center.forward[<[space_between]>].chunk.is_loaded>:
+                                    - if <[entity_near].location.center.forward[<[space_between]>].chunk.is_loaded>:
                                         - if !<[entity_near].location.center.forward[<[space_between]>].material.is_solid>:
                                             - attack <[wolf]> target:<[entity_near]>
                                             - teleport <[wolf]> <[entity_near].location.center.forward[<[space_between]>]>
