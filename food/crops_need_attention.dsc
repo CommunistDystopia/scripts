@@ -17,6 +17,11 @@ Croops_Need_Attention_Script:
                 - determine cancelled
         on player right clicks block with:bone_meal:
             - determine cancelled
+        on player right clicks SWEET_BERRY_BUSH:
+            - if <context.location.material.age> == 2.0 || <context.location.material.age> == 3.0:
+                - drop SWEET_BERRIES <context.location> quantity:1
+                - modifyblock <context.location> <material[SWEET_BERRY_BUSH].with[age=1]>
+                - determine cancelled
         on player breaks SWEET_BERRY_BUSH:
             - if <context.material.age> == 2.0 || <context.material.age> == 3.0:
                 - determine <item[SWEET_BERRIES]>

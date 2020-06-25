@@ -29,8 +29,8 @@ Animals_Need_More_Food_Script:
                     - hurt 999 <[animal]>
                     - foreach next
                 - define last_food <[animal].flag[last_food]>
-                - define time_now <util.time_now.to_utc>
-                - if <[time_now].is_after[<[last_food]>]>:
+                - define actual_time <util.time_now.to_utc>
+                - if <[actual_time].is_after[<[last_food]>]>:
                     - flag <[animal]> last_food:!
                     - hurt 999 <[animal]>
         on player right clicks PIG with:carrot:
@@ -47,7 +47,7 @@ Animals_Need_More_Food_Script:
                 - stop
             - inventory set slot:<player.held_item_slot> o:air
             - adjust <context.entity> breed:true
-            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc.format>
+            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc>
             - repeat 10:
                 - playeffect heart at:<context.entity.location> quantity:10
                 - wait 1s
@@ -57,7 +57,7 @@ Animals_Need_More_Food_Script:
                 - stop
             - inventory set slot:<player.held_item_slot> o:air
             - adjust <context.entity> breed:true
-            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc.format>
+            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc>
             - repeat 10:
                 - playeffect heart at:<context.entity.location> quantity:10
                 - wait 1s
@@ -67,7 +67,7 @@ Animals_Need_More_Food_Script:
                 - stop
             - inventory set slot:<player.held_item_slot> o:air
             - adjust <context.entity> breed:true
-            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc.format>
+            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc>
             - repeat 10:
                 - playeffect heart at:<context.entity.location> quantity:10
                 - wait 1s
@@ -80,7 +80,7 @@ Animals_Need_More_Food_Script:
                 - stop
             - inventory set slot:<player.held_item_slot> o:air
             - adjust <context.entity> breed:true
-            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc.format>
+            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc>
             - repeat 10:
                 - playeffect heart at:<context.entity.location> quantity:10
                 - wait 1s
@@ -92,7 +92,7 @@ Animals_Need_More_Food_Script:
                 - narrate "<red> Please use only one <green>Emerald Apple <red>at a time."
                 - determine cancelled
             - inventory set slot:<player.held_item_slot> o:air
-            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc.format>
+            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc>
             - repeat 10:
                 - playeffect composter at:<context.entity.location> quantity:10
                 - wait 1s
