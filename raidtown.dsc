@@ -116,7 +116,7 @@ Command_Raid_Town:
                     - flag <player> raid_points:-:<[points]>
                 - define raidtime <[points].mul[600]>
                 - define max_bar_value 1
-                - log "Raid started by <player.name> using <[points]> raid points" file:logs/raidlogs/raids.txt
+                - log "Raid started by <player.name> using <[points]> raid points" file:logs/denizen/raids.txt
                 - narrate "<green> Raid has started! The raid will last for <[raidtime].div[60]> minutes!" targets:<server.online_players>
                 - narrate "<yellow> WARNING A: <red>Every block change (place or break a block) will be reset at the end of the raid!" targets:<server.online_players>
                 - narrate "<yellow> WARNING B: <red>If you place a block, you will lose it. Use them to attack or defend!" targets:<server.online_players>
