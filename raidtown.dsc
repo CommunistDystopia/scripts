@@ -126,7 +126,7 @@ Command_Raid_Town:
                     - define progress:<[value].div[<[raidtime]>]>
                     - define time_remaining:<[raidtime].sub[<[value]>]>
                     - define actual_progress:<[max_bar_value].sub[<[progress]>]>
-                    - bossbar update raidbar progress:<[actual_progress]> "title:RAID - Time Remaining"
+                    - bossbar update raidbar progress:<[actual_progress]> "title:SERVER RAID - Time Remaining"
                     - wait 1s
                 - bossbar remove raidbar
                 - if <server.has_flag[raid_affected_locations]> && <server.has_flag[raid_affected_materials]>:
