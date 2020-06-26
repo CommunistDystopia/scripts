@@ -144,9 +144,9 @@ Command_Raid_Town:
                         - modifyblock <[raid_location]> <[raid_block]>
                     - flag server raid_affected_locations:!
                     - flag server raid_affected_materials:!
-                - flag server raid_active:!
                 - flag server raidtime:!
                 - flag server raid_queue:!
+                - flag server raid_active:!
                 - narrate "<green> Raid has ended!" targets:<server.online_players>
                 - stop
             - if <[action]> == stop:
