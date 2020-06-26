@@ -3,6 +3,9 @@
 # /slaves list <jailname> <#> - List the slaves in this jail.
 # /slaves add <jailname> <username> - Adds a slaves to a jail.
 # /slaves remove <jailname> <username> - Removes a slaves from a Jail.
+# /slaves time <jailname> info <username> - Checks the time in minutes of a slave.
+# /slaves time <jailname> add <username> <#> - Adds time in hours to a slave. (Each number is 1 hour)
+# /slaves time <jailname> remove <username> <#> - Remove time in hours to a slave. (Each number is 1 hour)
 # /slaves pickaxe - Replaces your hand with a slave pickaxe.
 # Notables created here
 # - jail_<name>_spawn [Used in Jails]
@@ -22,11 +25,14 @@ Command_Slaves:
             - stop
         - if <context.args.size> < 2:
             - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax:"
-            - narrate "<yellow>-<red> To set the spawn of a jail: /slaves spawn <yellow>jailname"
-            - narrate "<yellow>-<red> To add a slave to a jail: /slaves add <yellow>jailname <yellow>username"
-            - narrate "<yellow>-<red> To remove a slave from a jail: /slaves remove <yellow>jailname <yellow>username"
-            - narrate "<yellow>-<red> To show a list of slaves from a jail: /slaves list <yellow>jailname <yellow>number"
-            - narrate "<yellow>-<red> To get a slave pickaxe /slave pickaxe"
+            - narrate "<yellow>-<red> To set the spawn of a jail: <white>/slaves spawn <yellow>jailname"
+            - narrate "<yellow>-<red> To add a slave to a jail: <white>/slaves add <yellow>jailname <yellow>username"
+            - narrate "<yellow>-<red> To remove a slave from a jail: <white>/slaves remove <yellow>jailname <yellow>username"
+            - narrate "<yellow>-<red> To show a list of slaves from a jail: <white>/slaves list <yellow>jailname <yellow>number"
+            - narrate "<yellow>-<red> To check time of a slave in a jail: <white>/slaves time <yellow>jailname <white>info <yellow>username"
+            - narrate "<yellow>-<red> To add time (1 hour per each number) to a slave in a jail: <white>/slaves time <yellow>jailname <white>add <yellow>username <yellow>number"
+            - narrate "<yellow>-<red> To remove time (1 hour per each number) to a slave in a jail: <white>/slaves time <yellow>jailname <white>remove <yellow>username <yellow>number"
+            - narrate "<yellow>-<red> To get a slave pickaxe <white>/slaves pickaxe"
             - stop
         - define action <context.args.get[1]>
         - define name <context.args.get[2]>
@@ -34,6 +40,54 @@ Command_Slaves:
         - if <cuboid[<[jail_name]>]||null> == null:
             - narrate "<red> Jail <[name]> doesn't exist."
             - stop
+        - if <[action]> == time:
+            - if <context.args.size> < 4:
+                - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax:"
+                - narrate "<yellow>-<red> To check time of a slave in a jail: <white>/slaves time <yellow>jailname <white>info <yellow>username"
+                - narrate "<yellow>-<red> To add time (1 hour per each number) to a slave in a jail: <white>/slaves time <yellow>jailname <white>add <yellow>username <yellow>number"
+                - narrate "<yellow>-<red> To remove time (1 hour per each number) to a slave in a jail: <white>/slaves time <yellow>jailname <white>remove <yellow>username <yellow>number"
+                - stop
+            - define secondary_action <context.args.get[3]>
+            - define username <server.match_player[<context.args.get[4]>]||null>
+            - if <[username]> == null:
+                - narrate "<red> ERROR: Invalid player username OR the player is offline."
+                - stop
+            - if !<[username].in_group[slave]>:
+                - narrate "<red> ERROR: This player isn't a slave."
+                - stop
+            - if !<[username].has_flag[slave_timer]>:
+                - narrate "<red> ERROR: This user isn't a jail slave."
+                - stop
+            - if <[secondary_action]> == add || <[secondary_action]> == remove || <[secondary_action]> == info:
+                - if <[secondary_action]> == info:
+                    - narrate "<green> The remaining time of the slave <red><[username].name> <green>is <yellow><[username].flag[slave_timer]> <green>minutes"
+                    - stop
+                - if <context.args.size> < 5:
+                    - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax:"
+                    - narrate "<yellow>-<red> To add time (1 hour per each number) to a slave in a jail: <white>/slaves time <yellow>jailname <white>add <yellow>username <yellow>number"
+                    - narrate "<yellow>-<red> To remove time (1 hour per each number) to a slave in a jail: <white>/slaves time <yellow>jailname <white>remove <yellow>username <yellow>number"
+                    - stop
+                - define timer <context.args.get[5]>
+                - if !<[timer].is_integer>:
+                    - narrate "<red> ERROR: The time must be a integer number!"
+                - if <[secondary_action]> == add:
+                    - if <[username].flag[slave_timer].add[<[timer].mul[60]>]> < 0:
+                        - narrate "<red> ERROR: The user can't have negative time!"
+                        - stop
+                    - flag <[username]> slave_timer:+:<[timer].mul[60]>
+                    - narrate "<green> Added <blue><[timer]> hours to the slave <red><[username].name>"
+                    - narrate "<green> The <yellow>jail <green>added <blue><[timer]> <green>hours to your time in jail" targets:<[username]>
+                    - narrate "<green> Remaining time in Jail: <blue><[username].flag[slave_timer]> <green>minutes" targets:<[username]>
+                    - stop
+                - if <[secondary_action]> == remove:
+                    - if <[username].flag[slave_timer].sub[<[timer].mul[60]>]> < 0:
+                        - narrate "<red> ERROR: The user can't have negative time!"
+                        - stop
+                    - flag <[username]> slave_timer:-:<[timer].mul[60]>
+                    - narrate "<green> Removed <red><[timer]> hours to the slave <red><[username].name>"
+                    - narrate "<green> The <yellow>jail <green>removed <red><[timer]> <green>hours to your time in jail" targets:<[username]>
+                    - narrate "<green> Remaining time in Jail: <blue><[username].flag[slave_timer]> <green>minutes" targets:<[username]>
+                    - stop
         - if <[action]> == add && <player.is_op||<context.server>>:
             - define username <server.match_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
@@ -87,11 +141,14 @@ Command_Slaves:
             - narrate "<green> Slave <blue><[username].name> <green>removed!"
             - stop
         - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate "<yellow>-<red> To set the spawn of a jail: /slaves spawn <yellow>jailname"
-        - narrate "<yellow>-<red> To add a slave to a jail: /slaves add <yellow>jailname <yellow>username"
-        - narrate "<yellow>-<red> To remove a slave from a jail: /slaves remove <yellow>jailname <yellow>username"
-        - narrate "<yellow>-<red> To show a list of slaves from a jail: /slaves list <yellow>jailname <yellow>number"
-        - narrate "<yellow>-<red> To get a slave pickaxe /slaves pickaxe"
+        - narrate "<yellow>-<red> To set the spawn of a jail: <white>/slaves spawn <yellow>jailname"
+        - narrate "<yellow>-<red> To add a slave to a jail: <white>/slaves add <yellow>jailname <yellow>username"
+        - narrate "<yellow>-<red> To remove a slave from a jail: <white>/slaves remove <yellow>jailname <yellow>username"
+        - narrate "<yellow>-<red> To show a list of slaves from a jail: <white>/slaves list <yellow>jailname <yellow>number"
+        - narrate "<yellow>-<red> To check time of a slave in a jail: <white>/slaves time <yellow>jailname <white>info <yellow>username"
+        - narrate "<yellow>-<red> To add time (1 hour per each number) to a slave in a jail: <white>/slaves time <yellow>jailname <white>add <yellow>username <yellow>number"
+        - narrate "<yellow>-<red> To remove time (1 hour per each number) to a slave in a jail: <white>/slaves time <yellow>jailname <white>remove <yellow>username <yellow>number"
+        - narrate "<yellow>-<red> To get a slave pickaxe <white>/slaves pickaxe"
 
 Slave_Script:
     type: world
