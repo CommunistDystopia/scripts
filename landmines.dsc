@@ -30,9 +30,12 @@ Landmine_Script:
     debug: false
     events:
         on player right clicks block with:landminer:
+            - if <context.location.town||null> != null:
+                - determine cancelled
             - equip <player> hand:air
             - note <context.location.up[1]> as:landmine_<context.location.center.xyz.replace[,].with[-]>-<context.location.world>
             - narrate "<green>Landmine placed! <red>Be careful"
+            - determine cancelled
         on player walks over notable:
             - if <context.notable.starts_with[landmine_]>:
                 - define inner_explosion_players <location[<context.notable>].find.players.within[3]>
