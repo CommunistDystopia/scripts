@@ -202,11 +202,14 @@ Raid_Town_Script:
                     - flag server raid_affected_locations:|:<context.location>
                     - flag server raid_affected_materials:|:<context.material>
                     - modifyblock <context.location> air
+                    - determine cancelled
                     - stop
                 - if !<server.flag[raid_affected_locations].contains[<context.location>]>:
                     - flag server raid_affected_locations:|:<context.location>
                     - flag server raid_affected_materials:|:<context.material>
                     - modifyblock <context.location> air
+                    - determine cancelled
+                    - stop
         after player places block:
             - if <server.has_flag[raid_active]>:
                 - if !<context.location.regions.is_empty>:
@@ -216,9 +219,12 @@ Raid_Town_Script:
                     - flag server raid_affected_locations:|:<context.location>
                     - flag server raid_affected_materials:|:<context.old_material>
                     - modifyblock <context.location> <context.material.name>
+                    - determine cancelled
                     - stop
                 - if !<server.flag[raid_affected_locations].contains[<context.location>]>:
                     - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.sub[1]>
                     - flag server raid_affected_locations:|:<context.location>
                     - flag server raid_affected_materials:|:<context.old_material>
                     - modifyblock <context.location> <context.material.name>
+                    - determine cancelled
+                    - stop
