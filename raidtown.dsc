@@ -4,7 +4,7 @@
 # /raidtown points remove <username> <#> - Removes raid points from a user.
 # /raidtown points info <username> - Show the current raid points of a user.
 # /raidtown points permission <username> - Add or Remove the permission to start a raid of a user.
-# /raidtown raid start <#> - Start the raid using X raid points. [Min 1]
+# /raidtown raid start <#> - Start the raid using X raid points. [Min 1] [Every raid point is 10 minutes of raid]
 # /raidtown raid stop - Stops the current raid.
 # Server flags created here
 # - raid_active
@@ -12,6 +12,8 @@
 # - raid_affected_blocks
 # - raidtime
 # - raid_queue
+# LuckPerm permission nodes used
+# - raid.start
 
 Command_Raid_Town:
     type: command
@@ -130,6 +132,7 @@ Command_Raid_Town:
                 - narrate "<yellow> WARNING B: <red>If you place a block, you will lose it. Use them to attack or defend!" targets:<server.online_players>
                 - foreach <server.online_players> as:online_player:
                     - execute as_server "lp user <[online_player].name> permission settemp blocklocker.bypass true <[raidtime]>s" silent
+                    - execute as_server "lp user <[online_player].name> permission settemp towny.claimed.alltown.switch.* true <[raidtime]>s" silent
                 - bossbar raidbar players:<server.online_players> color:red "title:RAID - Time remaining" progress:<[max_bar_value]>
                 - flag server raid_active:true
                 - repeat <[raidtime]>:
@@ -159,6 +162,7 @@ Command_Raid_Town:
                 - bossbar raidbar remove
                 - foreach <server.online_players> as:online_player:
                     - execute as_server "lp user <[online_player].name> permission unsettemp blocklocker.bypass" silent
+                    - execute as_server "lp user <[online_player].name> permission unsettemp towny.claimed.alltown.switch.*" silent
                 - if <server.has_flag[raid_affected_locations]> && <server.has_flag[raid_affected_materials]>:
                     - foreach <server.flag[raid_affected_locations]> as:raid_location:
                         - define raid_block <server.flag[raid_affected_materials].get[<[loop_index]>]>
@@ -186,10 +190,12 @@ Raid_Town_Script:
             - if <server.has_flag[raid_active]>:
                 - if <player.has_permission[blocklocker.bypass]>:
                     - execute as_server "lp user <player.name> permission unsettemp blocklocker.bypass" silent
+                    - execute as_server "lp user <player.name> permission unsettemp towny.claimed.alltown.switch.*" silent
         after player join:
             - if <server.has_flag[raid_active]>:
                 - if !<player.has_permission[blocklocker.bypass]>:
                     - execute as_server "lp user <player.name> permission settemp blocklocker.bypass <server.flag[raidtime]>s" silent
+                    - execute as_server "lp user <player.name> permission settemp towny.claimed.alltown.switch.* true <server.flag[raidtime]>s" silent
         on player breaks block:
             - if <server.has_flag[raid_active]>:
                 - if !<context.location.regions.is_empty>:
