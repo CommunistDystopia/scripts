@@ -14,8 +14,6 @@
 # - raid_queue
 # LuckPerm permission nodes used
 # - raid.start
-# LuckPerm group dependency
-# - raider
 
 Command_Raid_Town:
     type: command
@@ -132,8 +130,6 @@ Command_Raid_Town:
                 - narrate "<green> Raid has started! The raid will last for <[raidtime].div[60]> minutes!" targets:<server.online_players>
                 - narrate "<yellow> WARNING A: <red>Every block change (place or break a block) will be reset at the end of the raid!" targets:<server.online_players>
                 - narrate "<yellow> WARNING B: <red>If you place a block, you will lose it. Use them to attack or defend!" targets:<server.online_players>
-                - foreach <server.online_players> as:online_player:
-                    - execute as_server "lp user <[online_player].name> parent addtemp raider <[raidtime]>s" silent
                 - bossbar raidbar players:<server.online_players> color:red "title:RAID - Time remaining" progress:<[max_bar_value]>
                 - flag server raid_active:true
                 - repeat <[raidtime]>:
@@ -161,8 +157,6 @@ Command_Raid_Town:
                     - narrate "<red> ERROR: A raid must be active to be stopped!"
                     - stop
                 - bossbar raidbar remove
-                - foreach <server.online_players> as:online_player:
-                    - execute as_server "lp user <[online_player].name> parent removetemp raider" silent
                 - if <server.has_flag[raid_affected_locations]> && <server.has_flag[raid_affected_materials]>:
                     - foreach <server.flag[raid_affected_locations]> as:raid_location:
                         - define raid_block <server.flag[raid_affected_materials].get[<[loop_index]>]>
@@ -186,45 +180,36 @@ Raid_Town_Script:
     type: world
     debug: false
     events:
-        on player quits:
-            - if <server.has_flag[raid_active]>:
-                - if <player.has_permission[blocklocker.bypass]>:
-                    - execute as_server "lp user <player.name> parent removetemp raider" silent
-        after player join:
-            - if <server.has_flag[raid_active]>:
-                - if !<player.has_permission[blocklocker.bypass]>:
-                    - execute as_server "lp user <player.name> parent addtemp raider <server.flag[raidtime]>s" silent
-        on player breaks block:
+        on player breaks block bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
                 - if !<context.location.regions.is_empty>:
                     - stop
+                - modifyblock <context.location> air
                 - if !<server.has_flag[raid_affected_locations]>:
                     - flag server raid_affected_locations:|:<context.location>
                     - flag server raid_affected_materials:|:<context.material>
-                    - modifyblock <context.location> air
-                    - determine cancelled
                     - stop
                 - if !<server.flag[raid_affected_locations].contains[<context.location>]>:
                     - flag server raid_affected_locations:|:<context.location>
                     - flag server raid_affected_materials:|:<context.material>
-                    - modifyblock <context.location> air
-                    - determine cancelled
                     - stop
-        after player places block:
+        after player places block bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
                 - if !<context.location.regions.is_empty>:
                     - stop
-                - if !<server.has_flag[raid_affected_locations]>:
+                - if !<player.inventory.slot[<player.held_item_slot>].repairable>:
                     - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.sub[1]>
+                    - modifyblock <context.location> <context.material>
+                - if !<server.has_flag[raid_affected_locations]>:
                     - flag server raid_affected_locations:|:<context.location>
                     - flag server raid_affected_materials:|:<context.old_material>
-                    - modifyblock <context.location> <context.material.name>
-                    - determine cancelled
                     - stop
                 - if !<server.flag[raid_affected_locations].contains[<context.location>]>:
-                    - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.sub[1]>
                     - flag server raid_affected_locations:|:<context.location>
                     - flag server raid_affected_materials:|:<context.old_material>
-                    - modifyblock <context.location> <context.material.name>
-                    - determine cancelled
                     - stop
+        on player right clicks CHEST bukkit_priority:HIGHEST ignorecancelled:true:
+            - if <server.has_flag[raid_active]>:
+                - if !<context.location.regions.is_empty>:
+                    - stop
+                - inventory open d:<context.location>
