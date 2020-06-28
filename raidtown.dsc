@@ -221,11 +221,11 @@ Raid_Town_Script:
                 - inventory open d:<context.location>
         on player damages ARMOR_STAND bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
-                - if <player.location.regions.is_empty>:
-                    - determine cancelled:false
+                - if !<player.location.regions.is_empty>:
                     - stop
+                - determine cancelled:false
         on player damages ITEM_FRAME bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
-                - if <player.location.regions.is_empty>:
-                    - determine cancelled:false
+                - if !<player.location.regions.is_empty>:
                     - stop
+                - determine cancelled:false
