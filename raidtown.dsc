@@ -184,6 +184,9 @@ Raid_Town_Script:
             - if <server.has_flag[raid_active]>:
                 - if !<context.location.regions.is_empty>:
                     - stop
+                - if <context.material.is_ageable> || <context.material.name> == MELON:
+                    - determine cancelled:false
+                    - stop
                 - modifyblock <context.location> air
                 - if !<server.has_flag[raid_affected_locations]>:
                     - flag server raid_affected_locations:|:<context.location>
@@ -210,7 +213,19 @@ Raid_Town_Script:
                     - stop
         on player clicks block bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
-                - if <context.click_type> != RIGHT_CLICK_BLOCK || !<player.location.regions.is_empty> || !<context.location.material.item.has_inventory>:
+                - if !<player.location.regions.is_empty>:
+                    - stop
+                - if <context.click_type> != RIGHT_CLICK_BLOCK || !<context.location.material.item.has_inventory>:
                     - determine cancelled:false
                     - stop
                 - inventory open d:<context.location>
+        on player damages ARMOR_STAND bukkit_priority:HIGHEST ignorecancelled:true:
+            - if <server.has_flag[raid_active]>:
+                - if <player.location.regions.is_empty>:
+                    - determine cancelled:false
+                    - stop
+        on player damages ITEM_FRAME bukkit_priority:HIGHEST ignorecancelled:true:
+            - if <server.has_flag[raid_active]>:
+                - if <player.location.regions.is_empty>:
+                    - determine cancelled:false
+                    - stop
