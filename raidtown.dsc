@@ -208,8 +208,9 @@ Raid_Town_Script:
                     - flag server raid_affected_locations:|:<context.location>
                     - flag server raid_affected_materials:|:<context.old_material>
                     - stop
-        on player right clicks CHEST bukkit_priority:HIGHEST ignorecancelled:true:
+        on player clicks block bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
-                - if !<context.location.regions.is_empty>:
+                - if <context.click_type> != RIGHT_CLICK_BLOCK || !<player.location.regions.is_empty> || !<context.location.material.item.has_inventory>:
+                    - determine cancelled:false
                     - stop
                 - inventory open d:<context.location>
