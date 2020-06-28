@@ -135,7 +135,7 @@ Command_Raid_Town:
                 - repeat <[raidtime]>:
                     - define time_remaining:<[raidtime].sub[<[value]>]>
                     - flag server raidtime:<[time_remaining]>
-                    - bossbar update raidbar progress:<[time_remaining].div[<[raidtime]>]>
+                    - bossbar update raidbar progress:<[time_remaining].div[<[raidtime]>]> players:<server.online_players>
                     - wait 1s
                 - bossbar remove raidbar
                 - if <server.has_flag[raid_affected_locations]> && <server.has_flag[raid_affected_materials]>:
