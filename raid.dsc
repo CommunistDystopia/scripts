@@ -1,8 +1,18 @@
 Command_Raid:
     type: command
+    debug: false
     name: raid
     description: Minecraft Towny Raid.
     usage: /raid <&lt>town<&gt> <&lt>start/stop<&gt> <&lt>number<&gt>
+    tab complete:
+        - if !<player.is_op||<context.server>>:
+            - stop
+        - choose <context.args.size>:
+            - case 0:
+                - determine <list[start|stop]>
+            - case 1:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <list[start|stop].filter[starts_with[<context.args.first>]]>
     script:
         # To set the town_boundaries check the town size on the config file of Towny
         # Half the amount and it will be the town boundaries.

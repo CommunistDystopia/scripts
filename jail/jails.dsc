@@ -13,6 +13,28 @@ Command_Jail:
     name: jail
     description: Minecraft Jail system.
     usage: /jail
+    tab complete:
+        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
+            - stop
+        - choose <context.args.size>:
+            - case 0:
+                - determine <list[create|delete|list]>
+            - case 1:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <list[create|delete|list].filter[starts_with[<context.args.first>]]>
+                - else:
+                    - if <server.has_flag[prison_jails]>:
+                        - if <context.args.get[1].contains[list]>:
+                            - determine <server.flag[prison_jails].size.div[10].truncate>
+                        - if !<context.args.get[1].contains_any_case_sensitive_text[create|list]>:
+                            - determine <server.flag[prison_jails].parse[after[jail_]]>
+            - case 2:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - if <server.has_flag[prison_jails]>:
+                        - if <context.args.get[1].contains[list]>:
+                            - determine <server.flag[prison_jails].size.div[10].truncate>
+                        - if !<context.args.get[1].contains_any_case_sensitive_text[create|list]>:
+                            - determine <server.flag[prison_jails].parse[after[jail_]]>
     script:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."

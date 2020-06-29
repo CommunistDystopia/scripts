@@ -21,6 +21,29 @@ Command_Raid_Town:
     name: raidtown
     description: Minecraft Player Raid.
     usage: /raidtown
+    tab complete:
+        - if !<player.is_op||<context.server>> && !<player.has_permission[raid.start]>:
+            - stop
+        - choose <context.args.size>:
+            - case 0:
+                - determine <list[points|raid]>
+            - case 1:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <list[points|raid].filter[starts_with[<context.args.first>]]>
+                - else:
+                    - if <context.args.get[1].contains[points]>:
+                        - determine <list[add|remove|info|permission]>
+                    - if <context.args.get[1].contains[raid]>:
+                        - determine <list[start|stop]>
+            - case 2:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - if <context.args.get[1].contains[points]>:
+                        - determine <list[add|remove|info|permission]>
+                    - if <context.args.get[1].contains[raid]>:
+                        - determine <list[start|stop]>
+                - else:
+                    - if <context.args.get[1].contains[points]>:
+                        - determine <server.online_players.parse[name]>
     script:
         - if !<player.is_op||<context.server>> && !<player.has_permission[raid.start]>:
                 - narrate "<red>You do not have permission for that command."

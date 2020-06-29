@@ -20,6 +20,27 @@ Command_Soldier:
     name: soldiers
     description: Minecraft Soldiers (Jail) system.
     usage: /soldiers
+    tab complete:
+        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
+            - stop
+        - choose <context.args.size>:
+            - case 0:
+                - determine <list[add|remove|list|wanted|jailstick]>
+            - case 1:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <list[add|remove|list|wanted|jailstick].filter[starts_with[<context.args.first>]]>
+                - else:
+                    - if <server.has_flag[prison_jails]> && <context.args.get[1]> != jailstick:
+                        - determine <server.flag[prison_jails].parse[after[jail_]]>
+            - case 2:
+                - if <server.has_flag[prison_jails]>:
+                    - if "!<context.raw_args.ends_with[ ]>":
+                            - determine <server.flag[prison_jails].parse[after[jail_]]>
+                    - else:
+                        - if <context.args.get[1].contains_any_case_sensitive_text[list|wanted]>:
+                            - determine <server.flag[prison_jails].size.div[10].truncate>
+                        - else:
+                            - determine <server.online_players.parse[name]>
     script:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."

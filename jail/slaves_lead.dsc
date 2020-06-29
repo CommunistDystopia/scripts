@@ -15,6 +15,20 @@ Command_Slave_Lead:
     name: slavelead
     description: Minecraft slave lead system.
     usage: /slavelead
+    tab complete:
+        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.in_group[godvip]>:
+            - stop
+        - choose <context.args.size>:
+            - case 0:
+                - determine <list[start|limit|control|free]>
+            - case 1:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <list[start|limit|control|free].filter[starts_with[<context.args.first>]]>
+                - else:
+                    - determine <server.online_players.filter[in_group[slave]].parse[name]>
+            - case 2:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <server.online_players.filter[in_group[slave]].parse[name]>
     script:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.in_group[godvip]>:
             - narrate "<red>You do not have permission for that command."
