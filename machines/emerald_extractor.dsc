@@ -6,7 +6,12 @@ Emerald_Extractor_Script:
             - determine cancelled
         on DROPPER dispenses item:
             - define dropper_inv <context.location.inventory>
-            - if <[dropper_inv].contains[emerald_extractor]> || <context.item> == <item[emerald_extractor]>:
+            - define dropper_inv_inc <context.location.inventory.include[<context.item>]>
+            - define extractor_slot <[dropper_inv_inc].find_imperfect[emerald_extractor]>
+            - if <[extractor_slot]> != -1:
+                - define ex_lore_last <[dropper_inv_inc].slot[<[extractor_slot]>].lore.last>
+                - if <[ex_lore_last]> == "<red>Damaged":
+                    - stop
                 - if !<[dropper_inv].contains_any[ex_upgrade_1|ex_upgrade_2|ex_upgrade_3|ex_upgrade_4|ex_upgrade_5]>:
                     - if <context.item> != <item[ex_upgrade_1]> && <context.item> != <item[ex_upgrade_2]> && <context.item> != <item[ex_upgrade_3]> && <context.item> != <item[ex_upgrade_4]> && <context.item> != <item[ex_upgrade_5]>:
                         - if <[dropper_inv].quantity.material[coal]> < 64 || <[dropper_inv].quantity.material[green_dye]> < 32:

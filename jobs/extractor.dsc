@@ -1,0 +1,143 @@
+# Player flags created [jobs/Extractor + machines/Emerald_Extractor]
+# - damaged_machines
+# - trusted_users
+
+Job_Emerald_Extractor_Script:
+    type: world
+    debug: false
+    events:
+        on emerald_extractor recipe formed:
+            - define owner "<context.item.lore.include[Owner:<player.uuid>]>"
+            - determine <context.item.with[lore=<[owner]>]>
+        on player left clicks dropper:
+            - define random_chance <util.random.int[1].to[100]>
+            - define dropper_inv <context.location.inventory>
+            - define ex_slot <[dropper_inv].find_imperfect[emerald_extractor]>
+            - if <[ex_slot]> != -1:
+                - define ex_lore <[dropper_inv].slot[<[ex_slot]>].lore>
+                - if <[ex_lore].last> == "<red>Damaged":
+                    - stop
+                - if !<[dropper_inv].contains_any[ex_upgrade_1|ex_upgrade_2|ex_upgrade_3|ex_upgrade_4|ex_upgrade_5]>:
+                    - if <player.inventory.contains[coal].quantity[64]> && <player.inventory.contains[green_dye].quantity[32]>:
+                        - take material:coal from:<player.inventory> quantity:64
+                        - take material:green_dye from:<player.inventory> quantity:32
+                        - give coal to:<[dropper_inv]> quantity:64
+                        - give green_dye to:<[dropper_inv]> quantity:32
+                        - narrate "<green> Machine filled. You lost <red>64 coal <green>and <red>32 green dye"
+                    - if <[random_chance]> <= 10:
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_1]>:
+                    - if <player.inventory.contains[coal].quantity[32]> && <player.inventory.contains[green_dye].quantity[16]>:
+                        - take material:coal from:<player.inventory> quantity:32
+                        - take material:green_dye from:<player.inventory> quantity:16
+                        - give coal to:<[dropper_inv]> quantity:32
+                        - give green_dye to:<[dropper_inv]> quantity:16
+                        - narrate "<green> Machine filled. You lost <red>32 coal <green>and <red>16 green dye"
+                    - if <[random_chance]> <= 5:
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_2]>:
+                    - if <player.inventory.contains[coal].quantity[16]> && <player.inventory.contains[green_dye].quantity[8]>:
+                        - take material:coal from:<player.inventory> quantity:16
+                        - take material:green_dye from:<player.inventory> quantity:8
+                        - give coal to:<[dropper_inv]> quantity:16
+                        - give green_dye to:<[dropper_inv]> quantity:8
+                        - narrate "<green> Machine filled. You lost <red>16 coal <green>and <red>8 green dye"
+                    - if <[random_chance]> <= 4:
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_3]>:
+                    - if <player.inventory.contains[coal].quantity[8]> && <player.inventory.contains[green_dye].quantity[4]>:
+                        - take material:coal from:<player.inventory> quantity:8
+                        - take material:green_dye from:<player.inventory> quantity:4
+                        - give coal to:<[dropper_inv]> quantity:8
+                        - give green_dye to:<[dropper_inv]> quantity:4
+                        - narrate "<green> Machine filled. You lost <red>8 coal <green>and <red>4 green dye"
+                    - if <[random_chance]> <= 3:
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_4]>:
+                    - if <player.inventory.contains[coal].quantity[4]> && <player.inventory.contains[green_dye].quantity[2]>:
+                        - take material:coal from:<player.inventory> quantity:4
+                        - take material:green_dye from:<player.inventory> quantity:2
+                        - give coal to:<[dropper_inv]> quantity:4
+                        - give green_dye to:<[dropper_inv]> quantity:2
+                        - narrate "<green> Machine filled. You lost <red>4 coal <green>and <red>2 green dye"
+                    - if <[random_chance]> <= 2:
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_5]>:
+                    - if <player.inventory.contains[coal].quantity[2]> && <player.inventory.contains[green_dye].quantity[1]>:
+                        - take material:coal from:<player.inventory> quantity:2
+                        - take material:green_dye from:<player.inventory> quantity:1
+                        - give coal to:<[dropper_inv]> quantity:2
+                        - give green_dye to:<[dropper_inv]> quantity:1
+                        - narrate "<green> Machine filled. You lost <red>2 coal <green>and <red>1 green dye"
+                    - if <[random_chance]> == 1:
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+        on player left clicks dropper with:wrench:
+            - define dropper_inv <context.location.inventory>
+            - define ex_slot <[dropper_inv].find_imperfect[emerald_extractor]>
+            - if <[ex_slot]> != -1:
+                - define ex_lore <[dropper_inv].slot[<[ex_slot]>].lore>
+                - if <[ex_lore].last> != "<red>Damaged":
+                    - stop
+                - if <[dropper_inv].slot[<[ex_slot]>].quantity> > 1:
+                    - narrate "<red> You need to have only one machine of this type in the dropper."
+                    - stop
+                - if !<[dropper_inv].contains_any[ex_upgrade_1|ex_upgrade_2|ex_upgrade_3|ex_upgrade_4|ex_upgrade_5]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[6]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:6
+                    - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>6 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_1]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[5]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:5
+                    - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>5 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_2]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[4]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:4
+                    - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>4 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_3]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[3]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:3
+                    - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>3 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_4]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[2]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:2
+                    - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>2 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ex_upgrade_5]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[1]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:1
+                    - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>an iron ingot"
+                    - stop
