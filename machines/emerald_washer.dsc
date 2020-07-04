@@ -6,7 +6,9 @@ Emerald_Washer_Script:
             - determine cancelled
         on DROPPER dispenses item:
             - define dropper_inv <context.location.inventory>
-            - if <[dropper_inv].contains[emerald_washer]> || <context.item> == <item[emerald_washer]>:
+            - define dropper_inv_inc <context.location.inventory.include[<context.item>]>
+            - define washer_slot <[dropper_inv_inc].find_imperfect[emerald_washer]>
+            - if <[washer_slot]> != -1:
                 - if !<[dropper_inv].contains_any[ew_upgrade_1|ew_upgrade_2|ew_upgrade_3|ew_upgrade_4|ew_upgrade_5]>:
                     - if <context.item> != <item[ew_upgrade_1]> && <context.item> != <item[ew_upgrade_2]> && <context.item> != <item[ew_upgrade_3]> && <context.item> != <item[ew_upgrade_4]> && <context.item> != <item[ew_upgrade_5]>:
                         - if <[dropper_inv].quantity.material[gold_ingot]> < 64 || <[dropper_inv].quantity[green_crystal]> < 32 || <[dropper_inv].quantity.material[water_bucket]> < 1:

@@ -1,0 +1,151 @@
+Job_Emerald_Washer_Script:
+    type: world
+    debug: false
+    events:
+        on emerald_washer recipe formed:
+            - define owner "<context.item.lore.include[Owner:<player.uuid>]>"
+            - determine <context.item.with[lore=<[owner]>]>
+        on player left clicks dropper:
+            - define random_chance <util.random.int[1].to[100]>
+            - define dropper_inv <context.location.inventory>
+            - define ew_slot <[dropper_inv].find_imperfect[emerald_washer]>
+            - if <[ew_slot]> != -1:
+                - define ew_lore <[dropper_inv].slot[<[ew_slot]>].lore>
+                - if <[ew_lore].last> == "<red>Damaged":
+                    - stop
+                - if !<[dropper_inv].contains_any[ew_upgrade_1|ew_upgrade_2|ew_upgrade_3|ew_upgrade_4|ew_upgrade_5]>:
+                    - if <player.inventory.contains[gold_ingot].quantity[64]> && <player.inventory.contains[green_crystal].quantity[32]> && <player.inventory.contains[water_bucket].quantity[1]>:
+                        - take material:gold_ingot from:<player.inventory> quantity:64
+                        - take material:water_bucket from:<player.inventory> quantity:1
+                        - take <item[green_crystal]> from:<player.inventory> quantity:32
+                        - give water_bucket to:<[dropper_inv]> quantity:1
+                        - give gold_ingot to:<[dropper_inv]> quantity:64
+                        - give green_crystal to:<[dropper_inv]> quantity:32
+                        - narrate "<green> Machine filled. You lost <red>64 gold ingots<green>, <red>1 water bucket <green>and <red>32 green crystals"
+                    - if <[random_chance]> <= 10:
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_1]>:
+                    - if <player.inventory.contains[gold_ingot].quantity[32]> && <player.inventory.contains[green_crystal].quantity[26]> && <player.inventory.contains[water_bucket].quantity[1]>:
+                        - take material:gold_ingot from:<player.inventory> quantity:32
+                        - take material:water_bucket from:<player.inventory> quantity:1
+                        - take <item[green_crystal]> from:<player.inventory> quantity:26
+                        - give water_bucket to:<[dropper_inv]> quantity:1
+                        - give gold_ingot to:<[dropper_inv]> quantity:32
+                        - give green_crystal to:<[dropper_inv]> quantity:26
+                        - narrate "<green> Machine filled. You lost <red>32 gold ingots<green>, <red>1 water bucket <green>and <red>16 green crystals"
+                    - if <[random_chance]> <= 5:
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_2]>:
+                    - if <player.inventory.contains[gold_ingot].quantity[16]> && <player.inventory.contains[green_crystal].quantity[20]> && <player.inventory.contains[water_bucket].quantity[1]>:
+                        - take material:gold_ingot from:<player.inventory> quantity:16
+                        - take material:water_bucket from:<player.inventory> quantity:1
+                        - take <item[green_crystal]> from:<player.inventory> quantity:20
+                        - give water_bucket to:<[dropper_inv]> quantity:1
+                        - give gold_ingot to:<[dropper_inv]> quantity:16
+                        - give green_crystal to:<[dropper_inv]> quantity:20
+                        - narrate "<green> Machine filled. You lost <red>16 gold ingots<green>, <red>1 water bucket <green>and <red>8 green crystals"
+                    - if <[random_chance]> <= 4:
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_3]>:
+                    - if <player.inventory.contains[gold_ingot].quantity[8]> && <player.inventory.contains[green_crystal].quantity[15]> && <player.inventory.contains[water_bucket].quantity[1]>:
+                        - take material:gold_ingot from:<player.inventory> quantity:8
+                        - take material:water_bucket from:<player.inventory> quantity:1
+                        - take <item[green_crystal]> from:<player.inventory> quantity:15
+                        - give water_bucket to:<[dropper_inv]> quantity:1
+                        - give gold_ingot to:<[dropper_inv]> quantity:8
+                        - give green_crystal to:<[dropper_inv]> quantity:15
+                        - narrate "<green> Machine filled. You lost <red>8 gold ingots<green>, <red>1 water bucket <green>and <red>4 green crystals"
+                    - if <[random_chance]> <= 3:
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_4]>:
+                    - if <player.inventory.contains[gold_ingot].quantity[4]> && <player.inventory.contains[green_crystal].quantity[10]> && <player.inventory.contains[water_bucket].quantity[1]>:
+                        - take material:gold_ingot from:<player.inventory> quantity:4
+                        - take material:water_bucket from:<player.inventory> quantity:1
+                        - take <item[green_crystal]> from:<player.inventory> quantity:10
+                        - give water_bucket to:<[dropper_inv]> quantity:1
+                        - give gold_ingot to:<[dropper_inv]> quantity:4
+                        - give green_crystal to:<[dropper_inv]> quantity:10
+                        - narrate "<green> Machine filled. You lost <red>4 gold_ingots<green>, <red>1 water bucket <green>and <red>2 green crystals"
+                    - if <[random_chance]> <= 2:
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_5]>:
+                    - if <player.inventory.contains[gold_ingot].quantity[2]> && <player.inventory.contains[green_crystal].quantity[5]> && <player.inventory.contains[water_bucket].quantity[1]>:
+                        - take material:gold_ingot from:<player.inventory> quantity:2
+                        - take material:water_bucket from:<player.inventory> quantity:1
+                        - take <item[green_crystal]> from:<player.inventory> quantity:5
+                        - give water_bucket to:<[dropper_inv]> quantity:1
+                        - give gold_ingot to:<[dropper_inv]> quantity:2
+                        - give green_crystal to:<[dropper_inv]> quantity:5
+                        - narrate "<green> Machine filled. You lost <red>2 gold_ingots<green>, <red>1 water bucket <green>and <red>1 green crystals"
+                    - if <[random_chance]> == 1:
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                    - stop
+        on player left clicks dropper with:wrench:
+            - define dropper_inv <context.location.inventory>
+            - define ew_slot <[dropper_inv].find_imperfect[emerald_washer]>
+            - if <[ew_slot]> != -1:
+                - define ew_lore <[dropper_inv].slot[<[ew_slot]>].lore>
+                - if <[ew_lore].last> != "<red>Damaged":
+                    - stop
+                - if <[dropper_inv].slot[<[ew_slot]>].quantity> > 1:
+                    - narrate "<red> You need to have only one machine of this type in the dropper."
+                    - stop
+                - if !<[dropper_inv].contains_any[ew_upgrade_1|ew_upgrade_2|ew_upgrade_3|ew_upgrade_4|ew_upgrade_5]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[6]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:6
+                    - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>6 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_1]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[5]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:5
+                    - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>5 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_2]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[4]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:4
+                    - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>4 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_3]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[3]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:3
+                    - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>3 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_4]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[2]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:2
+                    - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>2 iron ingots"
+                    - stop
+                - if <[dropper_inv].contains[ew_upgrade_5]>:
+                    - if !<player.inventory.contains[iron_ingot].quantity[1]>:
+                        - narrate "<red> Not enough iron to repair the machine!"
+                        - stop
+                    - take material:iron_ingot from:<player.inventory> quantity:1
+                    - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].exclude[<red>Damaged]>
+                    - narrate "<green> Machine repaired! You lost <red>an iron ingot"
+                    - stop
