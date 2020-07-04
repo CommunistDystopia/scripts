@@ -3,7 +3,7 @@ Job_Emerald_Washer_Script:
     debug: false
     events:
         on emerald_washer recipe formed:
-            - define owner "<context.item.lore.include[Owner:<player.uuid>]>"
+            - define owner <context.item.lore.include[Owner:<player.uuid>]>
             - determine <context.item.with[lore=<[owner]>]>
         on player left clicks dropper:
             - define random_chance <util.random.int[1].to[100]>
@@ -11,7 +11,7 @@ Job_Emerald_Washer_Script:
             - define ew_slot <[dropper_inv].find_imperfect[emerald_washer]>
             - if <[ew_slot]> != -1:
                 - define ew_lore <[dropper_inv].slot[<[ew_slot]>].lore>
-                - if <[ew_lore].last> == "<red>Damaged":
+                - if <[ew_lore].last> == <red>Damaged:
                     - stop
                 - if !<[dropper_inv].contains_any[ew_upgrade_1|ew_upgrade_2|ew_upgrade_3|ew_upgrade_4|ew_upgrade_5]>:
                     - if <player.inventory.contains[gold_ingot].quantity[64]> && <player.inventory.contains[green_crystal].quantity[32]> && <player.inventory.contains[water_bucket].quantity[1]>:
@@ -23,7 +23,7 @@ Job_Emerald_Washer_Script:
                         - give green_crystal to:<[dropper_inv]> quantity:32
                         - narrate "<green> Machine filled. You lost <red>64 gold ingots<green>, <red>1 water bucket <green>and <red>32 green crystals"
                     - if <[random_chance]> <= 10:
-                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ew_upgrade_1]>:
@@ -36,7 +36,7 @@ Job_Emerald_Washer_Script:
                         - give green_crystal to:<[dropper_inv]> quantity:26
                         - narrate "<green> Machine filled. You lost <red>32 gold ingots<green>, <red>1 water bucket <green>and <red>16 green crystals"
                     - if <[random_chance]> <= 5:
-                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ew_upgrade_2]>:
@@ -49,7 +49,7 @@ Job_Emerald_Washer_Script:
                         - give green_crystal to:<[dropper_inv]> quantity:20
                         - narrate "<green> Machine filled. You lost <red>16 gold ingots<green>, <red>1 water bucket <green>and <red>8 green crystals"
                     - if <[random_chance]> <= 4:
-                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ew_upgrade_3]>:
@@ -62,7 +62,7 @@ Job_Emerald_Washer_Script:
                         - give green_crystal to:<[dropper_inv]> quantity:15
                         - narrate "<green> Machine filled. You lost <red>8 gold ingots<green>, <red>1 water bucket <green>and <red>4 green crystals"
                     - if <[random_chance]> <= 3:
-                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ew_upgrade_4]>:
@@ -75,7 +75,7 @@ Job_Emerald_Washer_Script:
                         - give green_crystal to:<[dropper_inv]> quantity:10
                         - narrate "<green> Machine filled. You lost <red>4 gold_ingots<green>, <red>1 water bucket <green>and <red>2 green crystals"
                     - if <[random_chance]> <= 2:
-                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ew_upgrade_5]>:
@@ -88,7 +88,7 @@ Job_Emerald_Washer_Script:
                         - give green_crystal to:<[dropper_inv]> quantity:5
                         - narrate "<green> Machine filled. You lost <red>2 gold_ingots<green>, <red>1 water bucket <green>and <red>1 green crystals"
                     - if <[random_chance]> == 1:
-                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> "lore:<[ew_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ew_slot]> d:<[dropper_inv]> lore:<[ew_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
         on player left clicks dropper with:wrench:
@@ -96,7 +96,7 @@ Job_Emerald_Washer_Script:
             - define ew_slot <[dropper_inv].find_imperfect[emerald_washer]>
             - if <[ew_slot]> != -1:
                 - define ew_lore <[dropper_inv].slot[<[ew_slot]>].lore>
-                - if <[ew_lore].last> != "<red>Damaged":
+                - if <[ew_lore].last> != <red>Damaged:
                     - stop
                 - if <[dropper_inv].slot[<[ew_slot]>].quantity> > 1:
                     - narrate "<red> You need to have only one machine of this type in the dropper."

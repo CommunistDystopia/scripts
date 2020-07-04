@@ -1,5 +1,4 @@
 # Player flags created [jobs/Extractor + machines/Emerald_Extractor]
-# - damaged_machines
 # - trusted_users
 
 Job_Emerald_Extractor_Script:
@@ -7,7 +6,7 @@ Job_Emerald_Extractor_Script:
     debug: false
     events:
         on emerald_extractor recipe formed:
-            - define owner "<context.item.lore.include[Owner:<player.uuid>]>"
+            - define owner <context.item.lore.include[Owner:<player.uuid>]>
             - determine <context.item.with[lore=<[owner]>]>
         on player left clicks dropper:
             - define random_chance <util.random.int[1].to[100]>
@@ -15,7 +14,7 @@ Job_Emerald_Extractor_Script:
             - define ex_slot <[dropper_inv].find_imperfect[emerald_extractor]>
             - if <[ex_slot]> != -1:
                 - define ex_lore <[dropper_inv].slot[<[ex_slot]>].lore>
-                - if <[ex_lore].last> == "<red>Damaged":
+                - if <[ex_lore].last> == <red>Damaged:
                     - stop
                 - if !<[dropper_inv].contains_any[ex_upgrade_1|ex_upgrade_2|ex_upgrade_3|ex_upgrade_4|ex_upgrade_5]>:
                     - if <player.inventory.contains[coal].quantity[64]> && <player.inventory.contains[green_dye].quantity[32]>:
@@ -25,7 +24,7 @@ Job_Emerald_Extractor_Script:
                         - give green_dye to:<[dropper_inv]> quantity:32
                         - narrate "<green> Machine filled. You lost <red>64 coal <green>and <red>32 green dye"
                     - if <[random_chance]> <= 10:
-                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ex_upgrade_1]>:
@@ -36,7 +35,7 @@ Job_Emerald_Extractor_Script:
                         - give green_dye to:<[dropper_inv]> quantity:16
                         - narrate "<green> Machine filled. You lost <red>32 coal <green>and <red>16 green dye"
                     - if <[random_chance]> <= 5:
-                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ex_upgrade_2]>:
@@ -47,7 +46,7 @@ Job_Emerald_Extractor_Script:
                         - give green_dye to:<[dropper_inv]> quantity:8
                         - narrate "<green> Machine filled. You lost <red>16 coal <green>and <red>8 green dye"
                     - if <[random_chance]> <= 4:
-                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ex_upgrade_3]>:
@@ -58,7 +57,7 @@ Job_Emerald_Extractor_Script:
                         - give green_dye to:<[dropper_inv]> quantity:4
                         - narrate "<green> Machine filled. You lost <red>8 coal <green>and <red>4 green dye"
                     - if <[random_chance]> <= 3:
-                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ex_upgrade_4]>:
@@ -69,7 +68,7 @@ Job_Emerald_Extractor_Script:
                         - give green_dye to:<[dropper_inv]> quantity:2
                         - narrate "<green> Machine filled. You lost <red>4 coal <green>and <red>2 green dye"
                     - if <[random_chance]> <= 2:
-                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
                 - if <[dropper_inv].contains[ex_upgrade_5]>:
@@ -80,7 +79,7 @@ Job_Emerald_Extractor_Script:
                         - give green_dye to:<[dropper_inv]> quantity:1
                         - narrate "<green> Machine filled. You lost <red>2 coal <green>and <red>1 green dye"
                     - if <[random_chance]> == 1:
-                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> "lore:<[ex_lore].include[<red>Damaged]>"
+                        - inventory adjust slot:<[ex_slot]> d:<[dropper_inv]> lore:<[ex_lore].include[<red>Damaged]>
                         - narrate "<red> You acidentally damaged the machine when filling the dropper."
                     - stop
         on player left clicks dropper with:wrench:
@@ -88,7 +87,7 @@ Job_Emerald_Extractor_Script:
             - define ex_slot <[dropper_inv].find_imperfect[emerald_extractor]>
             - if <[ex_slot]> != -1:
                 - define ex_lore <[dropper_inv].slot[<[ex_slot]>].lore>
-                - if <[ex_lore].last> != "<red>Damaged":
+                - if <[ex_lore].last> != <red>Damaged:
                     - stop
                 - if <[dropper_inv].slot[<[ex_slot]>].quantity> > 1:
                     - narrate "<red> You need to have only one machine of this type in the dropper."

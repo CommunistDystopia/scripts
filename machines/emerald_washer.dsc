@@ -10,7 +10,7 @@ Emerald_Washer_Script:
             - define washer_slot <[dropper_inv_inc].find_imperfect[emerald_washer]>
             - if <[washer_slot]> != -1:
                 - define washer_lore_last <[dropper_inv_inc].slot[<[washer_slot]>].lore.last>
-                - if <[washer_lore_last]> == "<red>Damaged":
+                - if <[washer_lore_last]> == <red>Damaged:
                     - determine cancelled
                     - stop
                 - if !<[dropper_inv].contains_any[ew_upgrade_1|ew_upgrade_2|ew_upgrade_3|ew_upgrade_4|ew_upgrade_5]>:

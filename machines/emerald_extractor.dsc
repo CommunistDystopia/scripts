@@ -10,7 +10,7 @@ Emerald_Extractor_Script:
             - define extractor_slot <[dropper_inv_inc].find_imperfect[emerald_extractor]>
             - if <[extractor_slot]> != -1:
                 - define ex_lore_last <[dropper_inv_inc].slot[<[extractor_slot]>].lore.last>
-                - if <[ex_lore_last]> == "<red>Damaged":
+                - if <[ex_lore_last]> == <red>Damaged:
                     - determine cancelled
                     - stop
                 - if !<[dropper_inv].contains_any[ex_upgrade_1|ex_upgrade_2|ex_upgrade_3|ex_upgrade_4|ex_upgrade_5]>:
