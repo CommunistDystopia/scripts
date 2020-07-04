@@ -88,7 +88,9 @@ emerald_extractor:
     display name: <green>Emerald Extractor
     lore:
         - <gray>Add to a dropper to make it a machine.
-        - <gray>Default ratio: 64 <white>Coal<gray>/32 <white>Green Dye
+        - <gray>Default ratio
+        - <gray>64 <white>Coal
+        - <gray>32 <white>Green Dye
         - <gray>Result: <green>Green Crystal
     recipes:
         1:
@@ -105,7 +107,9 @@ ex_upgrade_1:
     material: enchanted_book
     display name: <yellow>Upgrade T1
     lore:
-        - <gray>Lower the ratio to: 32 <white>Coal<gray>/16 <white>Green Dye
+        - <gray>Lower the ratio to
+        - <gray>32 <white>Coal
+        - <gray>16 <white>Green Dye
         - <gray>Works with: <green>Emerald Extractor
 
 ex_upgrade_2:
@@ -113,7 +117,9 @@ ex_upgrade_2:
     material: enchanted_book
     display name: <yellow>Upgrade T2
     lore:
-        - <gray>Lower the ratio to: 16 <white>Coal<gray>/8 <white>Green Dye
+        - <gray>Lower the ratio to
+        - <gray>16 <white>Coal
+        - <gray>8 <white>Green Dye
         - <gray>Works with: <green>Emerald Extractor
 
 ex_upgrade_3:
@@ -121,7 +127,9 @@ ex_upgrade_3:
     material: enchanted_book
     display name: <yellow>Upgrade T3
     lore:
-        - <gray>Lower the ratio to: 8 <white>Coal<gray>/4 <white>Green Dye
+        - <gray>Lower the ratio to
+        - <gray>8 <white>Coal
+        - <gray>4 <white>Green Dye
         - <gray>Works with: <green>Emerald Extractor
 
 ex_upgrade_4:
@@ -129,7 +137,9 @@ ex_upgrade_4:
     material: enchanted_book
     display name: <yellow>Upgrade T4
     lore:
-        - <gray>Lower the ratio to: 4 <white>Coal<gray>/2 <white>Green Dye
+        - <gray>Lower the ratio to
+        - <gray>4 <white>Coal
+        - <gray>2 <white>Green Dye
         - <gray>Works with: <green>Emerald Extractor
 
 ex_upgrade_5:
@@ -137,5 +147,7 @@ ex_upgrade_5:
     material: enchanted_book
     display name: <yellow>Upgrade T5
     lore:
-        - <gray>Lower the ratio to: 2 <white>Coal<gray>/1 <white>Green Dye
+        - <gray>Lower the ratio to
+        - <gray>2 <white>Coal
+        - <gray>1 <white>Green Dye
         - <gray>Works with: <green>Emerald Extractor
