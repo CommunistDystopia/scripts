@@ -11,6 +11,7 @@ Emerald_Extractor_Script:
             - if <[extractor_slot]> != -1:
                 - define ex_lore_last <[dropper_inv_inc].slot[<[extractor_slot]>].lore.last>
                 - if <[ex_lore_last]> == "<red>Damaged":
+                    - determine cancelled
                     - stop
                 - if !<[dropper_inv].contains_any[ex_upgrade_1|ex_upgrade_2|ex_upgrade_3|ex_upgrade_4|ex_upgrade_5]>:
                     - if <context.item> != <item[ex_upgrade_1]> && <context.item> != <item[ex_upgrade_2]> && <context.item> != <item[ex_upgrade_3]> && <context.item> != <item[ex_upgrade_4]> && <context.item> != <item[ex_upgrade_5]>:
