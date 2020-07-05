@@ -2,72 +2,21 @@ Emerald_Extractor_Script:
     type: world
     debug: false
     events:
+        on emerald_extractor recipe formed:
+            - define owner <context.item.lore.include[Owner:<player.uuid>]>
+            - determine <context.item.with[lore=<[owner]>]>
+        on player left clicks dropper:
+            - run Fill_Machine_Task def:<player.inventory>|<context.location.inventory>|Emerald_Extractor|5
+        on player left clicks dropper with:wrench:
+            - run Repair_Machine_Task def:<player.inventory>|<context.location.inventory>|Emerald_Extractor|5
         on player places emerald_extractor:
             - determine cancelled
         on DROPPER dispenses item:
-            - define dropper_inv <context.location.inventory>
-            - define dropper_inv_inc <context.location.inventory.include[<context.item>]>
-            - define extractor_slot <[dropper_inv_inc].find_imperfect[emerald_extractor]>
-            - if <[extractor_slot]> != -1:
-                - define ex_lore_last <[dropper_inv_inc].slot[<[extractor_slot]>].lore.last>
-                - if <[ex_lore_last]> == <red>Damaged:
-                    - determine cancelled
-                    - stop
-                - if !<[dropper_inv].contains_any[ex_upgrade_1|ex_upgrade_2|ex_upgrade_3|ex_upgrade_4|ex_upgrade_5]>:
-                    - if <context.item> != <item[ex_upgrade_1]> && <context.item> != <item[ex_upgrade_2]> && <context.item> != <item[ex_upgrade_3]> && <context.item> != <item[ex_upgrade_4]> && <context.item> != <item[ex_upgrade_5]>:
-                        - if <[dropper_inv].quantity.material[coal]> < 64 || <[dropper_inv].quantity.material[green_dye]> < 32:
-                            - determine cancelled
-                            - stop
-                        - take material:coal quantity:64 from:<context.location.inventory>
-                        - take material:green_dye quantity:32 from:<context.location.inventory>
-                        - determine <item[green_crystal]>
-                        - determine passively cancelled:false
-                        - stop
-                - if <[dropper_inv].contains[ex_upgrade_1]> || <context.item> == <item[ex_upgrade_1]>:
-                    - if <[dropper_inv].quantity.material[coal]> < 32 || <[dropper_inv].quantity.material[green_dye]> < 16:
-                        - determine cancelled
-                        - stop
-                    - take material:coal quantity:32 from:<context.location.inventory>
-                    - take material:green_dye quantity:16 from:<context.location.inventory>
-                    - determine <item[green_crystal]>
-                    - determine passively cancelled:false
-                    - stop
-                - if <[dropper_inv].contains[ex_upgrade_2]> || <context.item> == <item[ex_upgrade_2]>:
-                    - if <[dropper_inv].quantity.material[coal]> < 16 || <[dropper_inv].quantity.material[green_dye]> < 8:
-                        - determine cancelled
-                        - stop
-                    - take material:coal quantity:16 from:<context.location.inventory>
-                    - take material:green_dye quantity:8 from:<context.location.inventory>
-                    - determine <item[green_crystal]>
-                    - determine passively cancelled:false
-                    - stop
-                - if <[dropper_inv].contains[ex_upgrade_3]> || <context.item> == <item[ex_upgrade_3]>:
-                    - if <[dropper_inv].quantity.material[coal]> < 8 || <[dropper_inv].quantity.material[green_dye]> < 4:
-                        - determine cancelled
-                        - stop
-                    - take material:coal quantity:8 from:<context.location.inventory>
-                    - take material:green_dye quantity:4 from:<context.location.inventory>
-                    - determine <item[green_crystal]>
-                    - determine passively cancelled:false
-                    - stop
-                - if <[dropper_inv].contains[ex_upgrade_4]> || <context.item> == <item[ex_upgrade_4]>:
-                    - if <[dropper_inv].quantity.material[coal]> < 4 || <[dropper_inv].quantity.material[green_dye]> < 2:
-                        - determine cancelled
-                        - stop
-                    - take material:coal quantity:4 from:<context.location.inventory>
-                    - take material:green_dye quantity:2 from:<context.location.inventory>
-                    - determine <item[green_crystal]>
-                    - determine passively cancelled:false
-                    - stop
-                - if <[dropper_inv].contains[ex_upgrade_5]> || <context.item> == <item[ex_upgrade_5]>:
-                    - if <[dropper_inv].quantity.material[coal]> < 2 || <[dropper_inv].quantity.material[green_dye]> < 1:
-                        - determine cancelled
-                        - stop
-                    - take material:coal quantity:2 from:<context.location.inventory>
-                    - take material:green_dye quantity:1 from:<context.location.inventory>
-                    - determine <item[green_crystal]>
-                    - determine passively cancelled:false
-                    - stop
+            - define machine_inventory <context.location.inventory>
+            - define item_drop <context.item>
+            - define machine_name Emerald_Extractor
+            - define upgrade_amount 5
+            - inject Machine_Task instantly
 
 # Green Crystal #
 
@@ -84,7 +33,7 @@ green_crystal:
 
 # EMERALD EXTRACTOR #
 
-emerald_extractor:
+Emerald_Extractor:
     type: item
     material: coal_block
     mechanisms:
@@ -108,7 +57,7 @@ emerald_extractor:
 
 # UPGRADES #
 
-ex_upgrade_1:
+Emerald_Extractor_T1:
     type: item
     material: enchanted_book
     display name: <yellow>Upgrade T1
@@ -118,7 +67,7 @@ ex_upgrade_1:
         - <gray>16 <white>Green Dye
         - <gray>Works with: <green>Emerald Extractor
 
-ex_upgrade_2:
+Emerald_Extractor_T2:
     type: item
     material: enchanted_book
     display name: <yellow>Upgrade T2
@@ -128,7 +77,7 @@ ex_upgrade_2:
         - <gray>8 <white>Green Dye
         - <gray>Works with: <green>Emerald Extractor
 
-ex_upgrade_3:
+Emerald_Extractor_T3:
     type: item
     material: enchanted_book
     display name: <yellow>Upgrade T3
@@ -138,7 +87,7 @@ ex_upgrade_3:
         - <gray>4 <white>Green Dye
         - <gray>Works with: <green>Emerald Extractor
 
-ex_upgrade_4:
+Emerald_Extractor_T4:
     type: item
     material: enchanted_book
     display name: <yellow>Upgrade T4
@@ -148,7 +97,7 @@ ex_upgrade_4:
         - <gray>2 <white>Green Dye
         - <gray>Works with: <green>Emerald Extractor
 
-ex_upgrade_5:
+Emerald_Extractor_T5:
     type: item
     material: enchanted_book
     display name: <yellow>Upgrade T5
