@@ -150,3 +150,16 @@ Repair_Machine_Task:
                 - narrate "<green> Machine repaired! You lost <red><[item_quantity]> <[machine_item]>"
             - inventory adjust slot:<[machine_slot]> d:<[machine_inventory]> lore:<[machine_lore].exclude[<red>Damaged]>
             - stop
+
+Security_Machine_Task:
+    type: task
+    debug: false
+    definitions: machine_slot
+    script:
+        - if <[machine_slot]> != -1 && !<player.is_op>:
+            - define owner <player[<context.location.inventory.slot[<[machine_slot]>].lore.filter[starts_with[owner:]].first.after[owner:]>]>
+            - if !<[owner].uuid.contains_all_case_sensitive_text[<player.uuid>]>:
+                - if !<[owner].has_flag[trusted_players]>:
+                    - determine cancelled
+                - if <[owner].flag[trusted_players].find[<player.uuid>]> == -1:
+                    - determine cancelled
