@@ -18,6 +18,29 @@ Emerald_Washer_Script:
             - define machine_name Emerald_Washer
             - define upgrade_amount 5
             - inject Machine_Task instantly
+        on player clicks in Emerald_Washer_Shop:
+            - if !<context.item.has_script>:
+                - determine cancelled
+            - define key <context.item.script.name.replace_text[_T].with[_upgrade_]>
+            - define upgrade_cost <script[Emerald_Washer_Data].data_key[<[key]>].get[upgrade_cost]>
+            - foreach <[upgrade_cost].list_keys> as:upgrade_item:
+                - define item_quantity <[upgrade_cost].get[<[upgrade_item]>]>
+                - if !<player.inventory.contains[<[upgrade_item]>].quantity[<[item_quantity]>]>:
+                    - narrate "<red> ERROR: You don't have enough items to purchase this upgrade."
+                    - inventory close d:<context.inventory>
+                    - determine cancelled
+                    - stop
+            - foreach <[upgrade_cost].list_keys> as:upgrade_item:
+                - define item_quantity <[upgrade_cost].get[<[upgrade_item]>]>
+                - if <script[<[upgrade_item]>]||null> == null:
+                    - take material:<[upgrade_item]> from:<player.inventory> quantity:<[item_quantity]>
+                    - if <[upgrade_item]> == water_bucket || <[upgrade_item]> == lava_bucket:
+                        - give bucket to:<player.inventory>
+                - else:
+                    - take <[upgrade_item]> from:<player.inventory> quantity:<[item_quantity]>
+            - give <context.item.with[lore=hi]> to:<player.inventory>
+            - narrate "<green> Thanks for buying the Emerald Washer <blue><context.item.display><green>!"
+            - determine cancelled
 
 # EMERALD EXTRACTOR #
 
@@ -55,6 +78,8 @@ Emerald_Washer_T1:
         - <gray>32 <white>Gold Ingot
         - <gray>26 <white>Green Crystal
         - <gray>Works with: <green>Emerald Washer
+        - Price
+        - <green>3 <white>Emerald Block
 
 Emerald_Washer_T2:
     type: item
@@ -65,6 +90,9 @@ Emerald_Washer_T2:
         - <gray>16 <white>Gold Ingot
         - <gray>20 <white>Green Crystal
         - <gray>Works with: <green>Emerald Washer
+        - Price
+        - <blue>3 <white>Diamond Block
+        - <green>3 <white>Emerald Block
 
 Emerald_Washer_T3:
     type: item
@@ -75,6 +103,8 @@ Emerald_Washer_T3:
         - <gray>8 <white>Gold Ingot
         - <gray>15 <white>Green Crystal
         - <gray>Works with: <green>Emerald Washer
+        - Price
+        - <green>6 <white>Emerald Block
 
 Emerald_Washer_T4:
     type: item
@@ -85,6 +115,9 @@ Emerald_Washer_T4:
         - <gray>4 <white>Gold Ingot
         - <gray>10 <white>Green Crystal
         - <gray>Works with: <green>Emerald Washer
+        - Price
+        - <blue>3 <white>Diamond Block
+        - <green>6 <white>Emerald Block
 
 Emerald_Washer_T5:
     type: item
@@ -95,3 +128,15 @@ Emerald_Washer_T5:
         - <gray>2 <white>Gold Ingot
         - <gray>5 <white>Green Crystal
         - <gray>Works with: <green>Emerald Washer
+        - Price
+        - <green>9 <white>Emerald Block
+
+# SHOP #
+
+Emerald_Washer_Shop:
+    type: inventory
+    inventory: chest
+    title: Emerald Washer Shop
+    size: 9
+    slots:
+        - [Emerald_Washer_T1] [Emerald_Washer_T2] [Emerald_Washer_T3] [Emerald_Washer_T4] [Emerald_Washer_T5] [] [] [] []

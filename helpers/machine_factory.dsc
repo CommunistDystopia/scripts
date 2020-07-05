@@ -11,7 +11,7 @@ Machine_Task:
                 - determine cancelled
                 - stop
             - repeat <[upgrade_amount]>:
-                - if <[machine_inventory].contains[<[machine_name]>_T<[value]>]> || <[item_drop]> == <item[<[machine_name]>_T<[value]>]>:
+                - if <[machine_inventory].contains_imperfect[<[machine_name]>_T<[value]>]> || <[item_drop].script||null> == <script[<[machine_name]>_T<[value]>]>:
                     - define machine_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Upgrade_<[value]>]>
                     - foreach <[machine_data].get[required_items].list_keys> as:machine_item:
                         - define item_quantity <[machine_data].get[required_items].get[<[machine_item]>]>
@@ -31,7 +31,7 @@ Machine_Task:
                                 - give bucket to:<[machine_inventory]>
                         - else:
                             - take <[machine_item]> from:<[machine_inventory]> quantity:<[item_quantity]>
-                    - determine <item[emerald]>
+                    - determine <item[<script[<[machine_name]>_Data].data_key[product]>]>
                     - stop
             - define machine_default_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Default]>
             - foreach <[machine_default_data].get[required_items].list_keys> as:machine_item:
@@ -48,11 +48,11 @@ Machine_Task:
                 - define item_quantity <[machine_default_data].get[required_items].get[<[machine_item]>]>
                 - if <script[<[machine_item]>]||null> == null:
                     - take material:<[machine_item]> from:<[machine_inventory]> quantity:<[item_quantity]>
-                    - if <[machine_item]> == WATER_BUCKET || <[machine_item]> == LAVA_BUCKET:
+                    - if <[machine_item]> == water_bucket || <[machine_item]> == lava_bucket:
                         - give bucket to:<[machine_inventory]>
                 - else:
                     - take <[machine_item]> from:<[machine_inventory]> quantity:<[item_quantity]>
-            - determine <item[emerald]>
+            - determine <item[<script[<[machine_name]>_Data].data_key[product]>]>
             - stop
 
 Fill_Machine_Task:
@@ -67,7 +67,7 @@ Fill_Machine_Task:
             - if <[machine_lore].last> == <red>Damaged:
                 - stop
             - repeat <[upgrade_amount]>:
-                - if <[machine_inventory].contains[<[machine_name]>_T<[value]>]>:
+                - if <[machine_inventory].contains_imperfect[<[machine_name]>_T<[value]>]>:
                     - define machine_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Upgrade_<[value]>]>
                     - foreach <[machine_data].get[required_items].list_keys> as:machine_item:
                         - define item_quantity <[machine_data].get[required_items].get[<[machine_item]>]>
@@ -117,7 +117,7 @@ Repair_Machine_Task:
                 - narrate "<red> You need to have only one machine of this type in the dropper."
                 - stop
             - repeat <[upgrade_amount]>:
-                - if <[machine_inventory].contains[<[machine_name]>_T<[value]>]>:
+                - if <[machine_inventory].contains_imperfect[<[machine_name]>_T<[value]>]>:
                     - define machine_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Upgrade_<[value]>]>
                     - foreach <[machine_data].get[repair_items].list_keys> as:machine_item:
                         - define item_quantity <[machine_data].get[repair_items].get[<[machine_item]>]>
