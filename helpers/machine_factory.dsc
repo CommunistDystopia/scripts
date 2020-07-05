@@ -11,7 +11,7 @@ Machine_Task:
                 - determine cancelled
                 - stop
             - repeat <[upgrade_amount]>:
-                - if <[machine_inventory].find_imperfect[<[machine_name]>_T<[value]>]> || <[item_drop].script.name||null> == <script[<[machine_name]>_T<[value]>].name>:
+                - if <[machine_inventory].find_imperfect[<[machine_name]>_T<[value]>]> != -1 || <[item_drop].script.name||null> == <script[<[machine_name]>_T<[value]>].name>:
                     - define machine_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Upgrade_<[value]>]>
                     - foreach <[machine_data].get[required_items].list_keys> as:machine_item:
                         - define item_quantity <[machine_data].get[required_items].get[<[machine_item]>]>
@@ -67,7 +67,7 @@ Fill_Machine_Task:
             - if <[machine_lore].last> == <red>Damaged:
                 - stop
             - repeat <[upgrade_amount]>:
-                - if <[machine_inventory].find_imperfect[<[machine_name]>_T<[value]>]>:
+                - if <[machine_inventory].find_imperfect[<[machine_name]>_T<[value]>]> != -1:
                     - define machine_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Upgrade_<[value]>]>
                     - foreach <[machine_data].get[required_items].list_keys> as:machine_item:
                         - define item_quantity <[machine_data].get[required_items].get[<[machine_item]>]>
@@ -117,7 +117,7 @@ Repair_Machine_Task:
                 - narrate "<red> You need to have only one machine of this type in the dropper."
                 - stop
             - repeat <[upgrade_amount]>:
-                - if <[machine_inventory].find_imperfect[<[machine_name]>_T<[value]>]>:
+                - if <[machine_inventory].find_imperfect[<[machine_name]>_T<[value]>]> != -1:
                     - define machine_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Upgrade_<[value]>]>
                     - foreach <[machine_data].get[repair_items].list_keys> as:machine_item:
                         - define item_quantity <[machine_data].get[repair_items].get[<[machine_item]>]>
