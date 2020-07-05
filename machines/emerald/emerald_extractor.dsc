@@ -38,7 +38,8 @@ Emerald_Extractor_Script:
                         - give bucket to:<player.inventory>
                 - else:
                     - take <[upgrade_item]> from:<player.inventory> quantity:<[item_quantity]>
-            - give <context.item> to:<player.inventory>
+            - define item_lore <context.item.lore.get[1].to[<context.item.lore.size.sub[<[upgrade_cost].size.add[1]>]>]>
+            - give <context.item.with[lore=<[item_lore]>]> to:<player.inventory>
             - narrate "<green> Thanks for buying the Emerald Extractor <blue><context.item.display><green>!"
             - determine cancelled
 
