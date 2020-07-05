@@ -53,8 +53,8 @@ Command_Slaves:
                             - determine <server.online_players.parse[name]>
     script:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
-                - narrate "<red>You do not have permission for that command."
-                - stop
+            - narrate "<red>You do not have permission for that command."
+            - stop
         - if <context.args.size> == 1 && <context.args.get[1]> == pickaxe:
             - equip <player> hand:slave_pickaxe
             - stop
