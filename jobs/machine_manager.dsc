@@ -21,14 +21,14 @@ Command_Manager:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
             - if !<player.has_flag[trusted_players]>:
-                - flag player trusted_players:|:<[username]>
+                - flag player trusted_players:|:<[username].uuid>
                 - narrate "<green>You successfully trusted <blue><[username].name>"
                 - stop
-            - if <player.flag[trusted_players].find[<[username]>]>
-                - flag player trusted_players:<-:<[username]>
+            - if <player.flag[trusted_players].contains_all_case_sensitive_text[<[username].uuid>]>:
+                - flag player trusted_players:<-:<[username].uuid>
                 - narrate "<green>You successfully <red>untrusted <blue><[username].name>"
                 - stop
-            - flag player trusted_players:|:<[username]>
+            - flag player trusted_players:|:<[username].uuid>
             - narrate "<green>You successfully trusted <blue><[username].name>"
             - stop
         - if <[action]> == upgrade:

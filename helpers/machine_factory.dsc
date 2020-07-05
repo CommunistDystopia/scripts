@@ -60,7 +60,6 @@ Fill_Machine_Task:
     debug: false
     definitions: filler_inventory|machine_inventory|machine_name|upgrade_amount
     script:
-        - define random_chance <util.random.int[1].to[100]>
         - define machine_slot <[machine_inventory].find_imperfect[<[machine_name]>]>
         - if <[machine_slot]> != -1:
             - define machine_lore <[machine_inventory].slot[<[machine_slot]>].lore>
@@ -81,10 +80,10 @@ Fill_Machine_Task:
                             - take <[machine_item]> from:<[filler_inventory]> quantity:<[item_quantity]>
                         - give <[machine_item]> to:<[machine_inventory]> quantity:<[item_quantity]>
                         - narrate "<green> Machine filled. You lost <red><[item_quantity]> <[machine_item]>."
-                    - if <[random_chance]> <= <[machine_data].get[damage_chance]>:
-                        - inventory adjust slot:<[machine_slot]> d:<[machine_inventory]> lore:<[machine_lore].include[<red>Damaged]>
-                        - narrate "<red> You acidentally damaged the machine when filling the dropper."
-                    - stop
+                        - define random_chance <util.random.decimal[1].to[100]>
+                        - if <[random_chance]> < <[machine_default_data].get[damage_chance].div[<[machine_default_data].get[required_items].size>]>:
+                            - inventory adjust slot:<[machine_slot]> d:<[machine_inventory]> lore:<[machine_lore].include[<red>Damaged]>
+                            - narrate "<red> You acidentally damaged the machine when filling the dropper."
             - define machine_default_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Default]>
             - foreach <[machine_default_data].get[required_items].list_keys> as:machine_item:
                 - define item_quantity <[machine_default_data].get[required_items].get[<[machine_item]>]>
@@ -98,9 +97,10 @@ Fill_Machine_Task:
                     - take <[machine_item]> from:<[filler_inventory]> quantity:<[item_quantity]>
                 - give <[machine_item]> to:<[machine_inventory]> quantity:<[item_quantity]>
                 - narrate "<green> Machine filled. You lost <red><[item_quantity]> <[machine_item]>."
-            - if <[random_chance]> <= <[machine_default_data].get[damage_chance]>:
-                - inventory adjust slot:<[machine_slot]> d:<[machine_inventory]> lore:<[machine_lore].include[<red>Damaged]>
-                - narrate "<red> You acidentally damaged the machine when filling the dropper."
+                - define random_chance <util.random.decimal[1].to[100]>
+                - if <[random_chance]> < <[machine_default_data].get[damage_chance].div[<[machine_default_data].get[required_items].size>]>:
+                    - inventory adjust slot:<[machine_slot]> d:<[machine_inventory]> lore:<[machine_lore].include[<red>Damaged]>
+                    - narrate "<red> You acidentally damaged the machine when filling the dropper."
             - stop
 
 Repair_Machine_Task:

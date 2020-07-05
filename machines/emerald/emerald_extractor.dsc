@@ -42,6 +42,24 @@ Emerald_Extractor_Script:
             - give <context.item.with[lore=<[item_lore]>]> to:<player.inventory>
             - narrate "<green> Thanks for buying the Emerald Extractor <blue><context.item.display><green>!"
             - determine cancelled
+        on player breaks dropper:
+            - define machine_slot <context.location.inventory.find_imperfect[Emerald_Extractor]>
+            - if <[machine_slot]> != -1 && !<player.is_op>:
+                - define owner <player[<context.location.inventory.slot[<[machine_slot]>].lore.filter[starts_with[owner:]].first.after[owner:]>]>
+                - if !<[owner].uuid.contains_all_case_sensitive_text[<player.uuid>]>:
+                    - if !<[owner].has_flag[trusted_players]>:
+                        - determine cancelled
+                    - if <[owner].flag[trusted_players].find[<player.uuid>]> == -1:
+                        - determine cancelled
+        on player right clicks dropper:
+            - define machine_slot <context.location.inventory.find_imperfect[Emerald_Extractor]>
+            - if <[machine_slot]> != -1 && !<player.is_op>:
+                - define owner <player[<context.location.inventory.slot[<[machine_slot]>].lore.filter[starts_with[owner:]].first.after[owner:]>]>
+                - if !<[owner].uuid.contains_all_case_sensitive_text[<player.uuid>]>:
+                    - if !<[owner].has_flag[trusted_players]>:
+                        - determine cancelled
+                    - if <[owner].flag[trusted_players].find[<player.uuid>]> == -1:
+                        - determine cancelled
 
 # Green Crystal #
 
