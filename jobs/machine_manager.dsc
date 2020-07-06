@@ -4,6 +4,30 @@ Command_Manager:
     name: manager
     description: Minecraft machine manager system.
     usage: /manager
+    tab complete:
+        - if !<player.is_op||<context.server>> && !<player.has_flag[manager]>:
+            - stop
+        - choose <context.args.size>:
+            - case 0:
+                - determine <list[get|trust|upgrade]>
+            - case 1:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <list[get|trust|upgrade].filter[starts_with[<context.args.first>]]>
+                - else:
+                    - if <context.args.get[1].contains[trust]>:
+                        - determine <server.online_players.parse[name]>
+                    - if <context.args.get[1].contains[upgrade]>:
+                        - determine <list[Emerald_Extractor|Emerald_Washer]>
+                    - if <context.args.get[1].contains[get]>:
+                        - determine <list[wrench]>
+            - case 2:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - if <context.args.get[1].contains[trust]>:
+                        - determine <server.online_players>
+                    - if <context.args.get[1].contains[upgrade]>:
+                        - determine <list[Emerald_Extractor|Emerald_Washer]>
+                    - if <context.args.get[1].contains[get]>:
+                        - determine <list[wrench]>
     script:
         - if !<player.is_op||<context.server>> && !<player.has_flag[manager]>:
             - narrate "<red>You do not have permission for that command."
@@ -35,3 +59,6 @@ Command_Manager:
             - if <script[<[target]>]||null> == null:
                 - narrate "<red> ERROR: Invalid machine name. Maybe you forgot to add an underscore instead of spaces?"
             - inventory open d:<[target]>_shop
+        - if <[action]> == get:
+            - if <[target]> == wrench:
+                - give wrench to:<player.inventory>
