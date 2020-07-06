@@ -47,7 +47,7 @@ Command_Soldier:
                 - stop
         - define action <context.args.get[1]>
         - if <[action]> == jailstick:
-            - equip <player> hand:jailstick
+            - give jailstick to:<player.inventory>
             - stop
         - if <context.args.size> < 3:
             - narrate "<yellow>#<red> ERROR: Not enough arguments."

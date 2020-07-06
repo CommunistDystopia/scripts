@@ -56,7 +56,7 @@ Command_Slaves:
             - narrate "<red>You do not have permission for that command."
             - stop
         - if <context.args.size> == 1 && <context.args.get[1]> == pickaxe:
-            - equip <player> hand:slave_pickaxe
+            - give slave_pickaxe to:<player.inventory>
             - stop
         - if <context.args.size> < 2:
             - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax:"
