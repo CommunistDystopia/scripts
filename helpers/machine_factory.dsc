@@ -163,3 +163,18 @@ Security_Machine_Task:
                     - determine cancelled
                 - if <[owner].flag[trusted_players].find[<player.uuid>]> == -1:
                     - determine cancelled
+
+Filter_Machine_Task:
+    type: task
+    debug: false
+    definitions: machine_name|machine_inventory|item_to_filter
+    script:
+        - if <[machine_inventory].find_imperfect[<[machine_name]>]> != -1:
+            - define machine_default_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Default]>
+            - define required_items <[machine_default_data].get[required_items].list_keys>
+            - if <[item_to_filter].has_script>:
+                - if <[required_items].find[<[item_to_filter].script.name>]> == -1:
+                    - take <[item_to_filter]> from:<[machine_inventory]>
+            - else:
+                - if <[required_items].find[<[item_to_filter].material.name>]> == -1:
+                    - take <[item_to_filter]> from:<[machine_inventory]>

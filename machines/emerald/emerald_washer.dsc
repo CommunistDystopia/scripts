@@ -48,6 +48,9 @@ Emerald_Washer_Script:
         on player right clicks dropper:
             - define machine_slot <context.location.inventory.find_imperfect[Emerald_Washer]>
             - inject Security_Machine_Task instantly
+        after item moves from inventory:
+            - run Filter_Machine_Task def:Emerald_Washer|<context.destination>|<context.item>
+
 
 # EMERALD EXTRACTOR #
 

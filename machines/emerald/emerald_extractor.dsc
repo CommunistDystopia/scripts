@@ -48,6 +48,8 @@ Emerald_Extractor_Script:
         on player right clicks dropper:
             - define machine_slot <context.location.inventory.find_imperfect[Emerald_Extractor]>
             - inject Security_Machine_Task instantly
+        after item moves from inventory:
+            - run Filter_Machine_Task def:Emerald_Extractor|<context.destination>|<context.item>
 
 # Green Crystal #
 
