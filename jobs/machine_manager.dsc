@@ -42,7 +42,7 @@ Command_Manager:
         - if <[action]> == trust:
             - define username <server.match_offline_player[<[target]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username OR the player is offline."
+                - narrate "<red> ERROR: Invalid player username."
                 - stop
             - if !<player.has_flag[trusted_players]>:
                 - flag player trusted_players:|:<[username].uuid>

@@ -85,7 +85,7 @@ Command_Slaves:
             - define secondary_action <context.args.get[3]>
             - define username <server.match_offline_player[<context.args.get[4]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username OR the player is offline."
+                - narrate "<red> ERROR: Invalid player username."
                 - stop
             - if !<[username].in_group[slave]>:
                 - narrate "<red> ERROR: This player isn't a slave."
@@ -126,7 +126,7 @@ Command_Slaves:
         - if <[action]> == add && <player.is_op||<context.server>>:
             - define username <server.match_offline_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username OR the player is offline."
+                - narrate "<red> ERROR: Invalid player username."
                 - stop
             - if <[username].in_group[slave]>:
                 - narrate "<red> ERROR: This player is already a slave."
@@ -161,7 +161,7 @@ Command_Slaves:
         - if <[action]> == remove && <context.args.size> == 3:
             - define username <server.match_offline_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username OR the player is offline."
+                - narrate "<red> ERROR: Invalid player username."
                 - stop
             - if !<[username].in_group[slave]>:
                 - narrate "<red> ERROR: This player isn't a slave."
