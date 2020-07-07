@@ -40,9 +40,9 @@ Command_Manager:
         - define action <context.args.get[1]>
         - define target <context.args.get[2]>
         - if <[action]> == trust:
-            - define username <server.match_offline_player[<[target]>]||null>
+            - define username <servermatch_player[<[target]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username."
+                - narrate "<red> ERROR: .Invalid player username OR the player is offline."
                 - stop
             - if !<player.has_flag[trusted_players]>:
                 - flag player trusted_players:|:<[username].uuid>

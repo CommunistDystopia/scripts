@@ -40,9 +40,9 @@ Command_Slave_Lead:
             - narrate "<yellow>-<red> [SupremeWarden] To start controlling or stop controlling a jail slave to follow you: /slavelead <yellow>slavename <red>control"
             - stop
         - define action <context.args.get[1]>
-        - define slave <server.match_offline_player[<context.args.get[2]>]||null>
+        - define slave <servermatch_player[<context.args.get[2]>]||null>
         - if <[slave]> == null:
-            - narrate "<red> ERROR: Invalid player username."
+            - narrate "<red> ERROR: .Invalid player username OR the player is offline."
             - stop
         - if !<[slave].in_group[slave]>:
             - narrate "<red> ERROR: This user isn't a slave"

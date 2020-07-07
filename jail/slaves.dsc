@@ -83,9 +83,9 @@ Command_Slaves:
                 - narrate "<yellow>-<red> To remove time (1 hour per each number) to a slave in a jail: <white>/slaves time <yellow>jailname <white>remove <yellow>username <yellow>number"
                 - stop
             - define secondary_action <context.args.get[3]>
-            - define username <server.match_offline_player[<context.args.get[4]>]||null>
+            - define username <servermatch_player[<context.args.get[4]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username."
+                - narrate "<red> ERROR: .Invalid player username OR the player is offline."
                 - stop
             - if !<[username].in_group[slave]>:
                 - narrate "<red> ERROR: This player isn't a slave."
@@ -124,9 +124,9 @@ Command_Slaves:
                     - narrate "<green> Remaining time in Jail: <blue><[username].flag[slave_timer]> <green>minutes" targets:<[username]>
                     - stop
         - if <[action]> == add && <player.is_op||<context.server>>:
-            - define username <server.match_offline_player[<context.args.get[3]>]||null>
+            - define username <servermatch_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username."
+                - narrate "<red> ERROR: .Invalid player username OR the player is offline."
                 - stop
             - if <[username].in_group[slave]>:
                 - narrate "<red> ERROR: This player is already a slave."
@@ -159,9 +159,9 @@ Command_Slaves:
             - run List_Task_Script def:<[jail_name]>|Slave|<[list_page]>
             - stop
         - if <[action]> == remove && <context.args.size> == 3:
-            - define username <server.match_offline_player[<context.args.get[3]>]||null>
+            - define username <servermatch_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: Invalid player username."
+                - narrate "<red> ERROR: .Invalid player username OR the player is offline."
                 - stop
             - if !<[username].in_group[slave]>:
                 - narrate "<red> ERROR: This player isn't a slave."
@@ -204,7 +204,7 @@ Slave_Script:
                 - teleport <player> <location[<[owner_name_spawn]>]>
                 - narrate "<red> You died but you're a slave. Now you're with your owner."
             - if <player.in_group[slave]> && <player.has_flag[owner]> && !<player.has_flag[slave_timer]>:
-                - define owner <server.match_offline_player[<player.flag[owner]>]||null>
+                - define owner <servermatch_player[<player.flag[owner]>]||null>
                 - if <[owner]> != null:
                     - teleport <player> <[owner].location>
                     - narrate "<red> You died but you're a slave. Now you're with your owner."
