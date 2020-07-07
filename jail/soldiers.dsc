@@ -140,7 +140,7 @@ Soldier_Script:
                     - narrate "<red> Your time got extended by <yellow>2 hours <red>SLAVE" targets:<context.entity>
                 - cooldown 10s script:Soldier_Script
                 - stop
-            - if <context.entity.in_group[insurgent]> || <context.entity.in_group[civilian]> || <context.entity.in_group[default]>:
+            - if <context.entity.in_group[insurgent]> || <context.entity.in_group[civilian]> || <context.entity.in_group[default]> || <context.entity.in_group[vip]> || <context.entity.in_group[ultravip]> || <context.entity.in_group[supremevip]> || <context.entity.in_group[godvip]>:
                 - define jail_wanted <[jail]>_wanteds
                 - narrate "<red><context.entity.name> <green>was added to the <yellow>WANTED <green>list"
                 - flag server <[jail_wanted]>:|:<context.entity>
