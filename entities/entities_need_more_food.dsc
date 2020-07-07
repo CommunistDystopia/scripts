@@ -16,23 +16,26 @@ emerald_apple:
                 - emerald|apple|emerald
                 - emerald|emerald|emerald
 
-Animals_Need_More_Food_Script:
+Entities_Need_More_Food_Script:
     type: world
     debug: false
     events:
+        on entity despawns:
+            - if <context.entity.has_flag[last_food]>:
+                - flag <context.entity> last_food:!
         on entity death:
             - if <context.entity.has_flag[last_food]>:
                 - flag <context.entity> last_food:!
         on system time hourly every:1:
-            - foreach <world[world].entities[SHEEP||COW||CHICKEN||PIG||MUSHROOM_COW||RABBIT||BEE||WOLF||HORSE]> as:animal:
-                - if !<[animal].has_flag[last_food]>:
-                    - hurt 999 <[animal]>
+            - foreach <world[world].entities[SHEEP||COW||CHICKEN||PIG||MUSHROOM_COW||RABBIT||BEE||WOLF||HORSE||VILLAGER]> as:living_being:
+                - if !<[living_being].has_flag[last_food]>:
+                    - hurt 999 <[living_being]>
                     - foreach next
-                - define last_food <[animal].flag[last_food]>
+                - define last_food <[living_being].flag[last_food]>
                 - define actual_time <util.time_now.to_utc>
                 - if <[actual_time].is_after[<[last_food]>]>:
-                    - flag <[animal]> last_food:!
-                    - hurt 999 <[animal]>
+                    - flag <[living_being]> last_food:!
+                    - hurt 999 <[living_being]>
         on player right clicks PIG with:carrot:
             - determine cancelled
         on player right clicks CHICKEN with:wheat_seeds:
@@ -95,4 +98,13 @@ Animals_Need_More_Food_Script:
             - flag <context.entity> last_food:<util.time_now.add[1d].to_utc>
             - repeat 10:
                 - playeffect composter at:<context.entity.location> quantity:10
+                - wait 1s
+        on player right clicks VILLAGER with:COOKED_BEEF:
+            - if <context.item.quantity> < 10:
+                - determine cancelled
+                - stop
+            - inventory set slot:<player.held_item_slot> o:air
+            - flag <context.entity> last_food:<util.time_now.add[1d].to_utc>
+            - repeat 10:
+                - playeffect heart at:<context.entity.location> quantity:10
                 - wait 1s
