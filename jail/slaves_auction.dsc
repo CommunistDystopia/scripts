@@ -38,7 +38,7 @@ Command_Slave_Shop:
             - narrate "<yellow>-<red><red> [SupremeWarden] To start an auction use: /slaveshop sell <yellow>username"
             - narrate "<yellow>-<red><gold> [Godvip] <red>To place a bid use: /slaveshop bid <yellow>username <yellow>amount"
         - define action <context.args.get[1]>
-        - define slave <server.match_player[<context.args.get[2]>]||null>
+        - define slave <server.match_offline_player[<context.args.get[2]>]||null>
         - if <[slave]> == null:
             - narrate "<red> ERROR: Invalid player username OR the player is offline."
             - stop

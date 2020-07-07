@@ -64,7 +64,7 @@ Command_Raid_Town:
                 - if !<player.is_op||<context.server>>:
                     - narrate "<red> ERROR: Only operators can do that!"
                     - stop
-                - define username <server.match_player[<context.args.get[3]>]||null>
+                - define username <server.match_offline_player[<context.args.get[3]>]||null>
                 - if <[username]> == null:
                     - narrate "<red> ERROR: Invalid player username OR the player is offline."
                     - stop
