@@ -73,7 +73,7 @@ Command_Soldier:
             - if <cuboid[<[jail_name]>]||null> == null:
                 - narrate "<red> ERROR: Jail <[name]> doesn't exist."
                 - stop
-            - define username <servermatch_player[<context.args.get[3]>]||null>
+            - define username <server.match_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
                 - narrate "<red> ERROR: .Invalid player username OR the player is offline."
                 - stop
