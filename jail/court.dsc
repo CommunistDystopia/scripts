@@ -4,7 +4,7 @@
 # /court request lawyer - The slave request a lawyer
 # - Judge/SupremeWarden Commands
 # /court start <username> - The Judge/SW starts a court with the Slave.
-# /court request witness - The Judge/SW request the players to be witness.
+# /court request witness <username> - The Judge/SW request the players to be witness.
 # /court declare guilty - The Judge/SW declares a slave guilty
 # /court declare innocent - The Judge/SW declares a slave innocent.
 # /court remove witness <username> - The Judge/SW removes a witness from the stand.
@@ -73,15 +73,17 @@ Command_Court:
             - if <player.in_group[slave]>:
                 - narrate "<red> ERROR: Slaves can't witness a Court"
                 - stop
-            - flag server court_witness:|:<player.uuid>
-            - narrate "<yellow> COURT:<white> Welcome to the Court as a Witness. Wait 5 seconds and you will join the Court."
-            - narrate "<yellow> COURT:<white> You can't talk until the Judge give you the permission to."
-            - narrate "<yellow> COURT:<white> If you want to leave, relog or ask the Judge to remove you."
-            - teleport <player> <location[court_witness_player_spot]>
-            - create player <player.name> <location[court_witness_spot]> save:playernpc
-            - wait 5s
-            - adjust <player> spectate:<entry[playernpc].created_npc>
-            - flag player court_npc:<entry[playernpc].created_npc.id>
+            - if <server.has_flag[court_witness]> && <server.flag[court_witness].contains_all_case_sensitive_text[<player.uuid>]>:
+                - narrate "<yellow> COURT:<white> Welcome to the Court as a Witness. Wait 5 seconds and you will join the Court."
+                - narrate "<yellow> COURT:<white> You can't talk until the Judge give you the permission to."
+                - narrate "<yellow> COURT:<white> If you want to leave, relog or ask the Judge to remove you."
+                - teleport <player> <location[court_witness_player_spot]>
+                - create player <player.name> <location[court_witness_spot]> save:playernpc
+                - wait 5s
+                - adjust <player> spectate:<entry[playernpc].created_npc>
+                - flag player court_npc:<entry[playernpc].created_npc.id>
+                - stop
+            - narrate "<red> ERROR: You are not the court Witness"
             - stop
         - if <context.args.size> < 2:
             - goto syntax_error
@@ -135,9 +137,23 @@ Command_Court:
                 - if !<server.flag[court_lead].contains_all_case_sensitive_text[<player.uuid>]>:
                     - narrate "<red> ERROR: You are not the lead of the current court"
                     - stop
-                - narrate "<yellow> COURT: <white>Sending request to all online players..."
-                - narrate "<yellow> COURT: <white>The lead of the current court is requesting your assistance" targets:<server.online_players>
-                - narrate "<yellow> COURT: <white>To join use the command <red>/court witness" targets:<server.online_players>
+                - if <context.args.size> < 3:
+                    - goto syntax_error
+                - define username <server.match_player[<context.args.get[3]>]||null>
+                - if <[username]> == null:
+                    - narrate "<red> ERROR: Invalid player username OR the player is offline."
+                    - stop
+                - if <[username].in_group[slave]>:
+                    - narrate "<red> ERROR: Slaves can't be witness in a Court."
+                    - stop
+                - if <server.has_flag[court_witness]>:
+                    - narrate "<red> ERROR: You already invited as witness, please wait until he accepts the invitation or remove them."
+                    - narrate "<white> DO: <red>/court remove witness <[username]>"
+                    - stop
+                - narrate "<yellow> COURT: <white>Sending request to <[username].name>..."
+                - flag server court_witness:<[username].uuid>
+                - narrate "<yellow> COURT: <white>The lead of the current court is requesting your assistance" targets:<[username]>
+                - narrate "<yellow> COURT: <white>To join use the command <red>/court witness" targets:<[username]>
                 - stop
         - if <[action]> == start:
             - if !<player.is_op> && !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
@@ -210,11 +226,12 @@ Command_Court:
                 - if <[username]> == null:
                     - narrate "<red> ERROR: Invalid player username OR the player is offline."
                     - stop
-                - if <[target]> == witness && <server.flag[court_witness].find[<[username].uuid>]> != -1:
-                    - adjust <[username]> spectate:<[username]>
-                    - remove <npc[<[username].flag[court_npc]>]>
-                    - flag server court_witness:<-:<[username].uuid>
-                    - flag <[username]> court_npc:!
+                - if <[target]> == witness && <server.flag[court_witness].contains_all_case_sensitive_text[<[username].uuid>]>:
+                    - if <[username].has_flag[court_npc]>:
+                        - adjust <[username]> spectate:<[username]>
+                        - remove <npc[<[username].flag[court_npc]>]>
+                        - flag <[username]> court_npc:!
+                    - flag server court_witness:!
                     - narrate "<yellow> COURT: <blue><player.name> <white>kicked you out" targets:<[username]>
                     - narrate "<yellow> COURT: <white>Witness <red><[username].name> <white>kicked"
                     - stop
@@ -274,10 +291,11 @@ Court_Script:
                 - run Court_Task_Script def:<player[<server.flag[court_slave]>]>
         on player quits:
             - if <server.has_flag[court_active]>:
-                - if <server.flag[court_witness].find[<player.uuid>]> != -1:
-                    - remove <npc[<player.flag[court_npc]>]>
-                    - flag player court_npc:!
-                    - flag server court_witness:<-:<player.uuid>
+                - if <server.has_flag[court_witness]> && <server.flag[court_witness].contains_all_case_sensitive_text[<player.uuid>]>:
+                    - if <player.has_flag[court_npc]>:
+                        - remove <npc[<player.flag[court_npc]>]>
+                        - flag player court_npc:!
+                    - flag server court_witness:!
                 - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]> || <server.flag[court_lead].contains_all_case_sensitive_text[<player.uuid>]>:
                     - narrate "<yellow> COURT: <white>The player <player.name> left the server while in a court" targets:<server.online_players>
                     - if <player.in_group[slave]>:
@@ -288,8 +306,9 @@ Court_Script:
                     - wait 1m
                     - if !<player.is_online>:
                         - run Court_Task_Script def:<player[<server.flag[court_slave]>]>
+                        - narrate "<yellow> COURT: <white>The Court ended without a result" targets:<server.online_players>
         after player join:
-            - wait 15s
+            - wait 5s
             - if <player.is_online>:
                 - if <server.has_flag[court_active]>:
                     - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:

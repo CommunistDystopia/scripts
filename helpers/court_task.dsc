@@ -9,11 +9,11 @@ Court_Task_Script:
         - flag <[slave]> court_npc:!
         - flag server court_slave:!
         - if <server.has_flag[court_witness]>:
-            - foreach <server.flag[court_witness]> as:witness:
-                - if <player[<[witness]>].is_online>:
-                    - adjust <player[<[witness]>]> spectate:<player[<[witness]>]>
-                - remove <npc[<player[<[witness]>].flag[court_npc]>]>
-                - flag <player[<[witness]>]> court_npc:!
+            - define witness <player[<server.flag[court_witness]>]>
+            - if <[witness].is_online> && <[witness].has_flag[court_npc]>:
+                - adjust <[witness]> spectate:<[witness]>
+                - remove <npc[<[witness].flag[court_npc]>]>
+                - flag <[witness]> court_npc:!
         - flag server court_witness:!
         - flag server court_lead:!
         - flag server court_lawyer:!
