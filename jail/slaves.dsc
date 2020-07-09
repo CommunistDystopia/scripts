@@ -192,7 +192,7 @@ Slave_Script:
         on player exits notable cuboid:
             - if !<context.cuboids.parse[notable_name].filter[starts_with[jail]].is_empty>:
                 - define jail <context.cuboids.parse[notable_name].filter[starts_with[jail]].first>
-                - if <player.in_group[slave]> && <player.has_flag[slave_timer]>:
+                - if <player.is_online> && <player.in_group[slave]> && <player.has_flag[slave_timer]>:
                     - define jail_spawn <[jail]>_spawn
                     - wait 1s
                     - teleport <player> <location[<[jail_spawn]>]>
@@ -212,6 +212,9 @@ Slave_Script:
             - foreach <server.online_players> as:server_player:
                 - if <[server_player].in_group[slave]>:
                     - if <[server_player].has_flag[slave_timer]> && <[server_player].has_flag[owner]>:
+                        - if <server.has_flag[court_active]>:
+                            - if <server.flag[court_slave].contains_all_case_sensitive_text[<[server_player].uuid>]>:
+                                - foreach next
                         - define owner <[server_player].flag[owner]>
                         - flag <[server_player]> slave_timer:-:10
                         - define slave_timer <[server_player].flag[slave_timer]>
