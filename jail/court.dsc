@@ -77,11 +77,11 @@ Command_Court:
             - narrate "<yellow> COURT:<white> Welcome to the Court as a Witness. Wait 5 seconds and you will join the Court."
             - narrate "<yellow> COURT:<white> You can't talk until the Judge give you the permission to."
             - narrate "<yellow> COURT:<white> If you want to leave, relog or ask the Judge to remove you."
+            - teleport <player> <location[court_witness_player_spot]>
             - create player <player.name> <location[court_witness_spot]> save:playernpc
             - wait 5s
             - adjust <player> spectate:<entry[playernpc].created_npc>
             - flag player court_npc:<entry[playernpc].created_npc.id>
-            # TODO: Make them look to the Court area better.
             - stop
         - if <context.args.size> < 2:
             - goto syntax_error
@@ -126,7 +126,7 @@ Command_Court:
                 - narrate "<green> Request sent. <white>Please wait for any of the online Laywers to accept your request"
                 - stop
             - if <[target]> == witness:
-                - if !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
+                - if !<player.is_op> && !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
                     - narrate "<red>You do not have permission for that command."
                     - stop
                 - if !<server.has_flag[court_active]>:
@@ -138,10 +138,9 @@ Command_Court:
                 - narrate "<yellow> COURT: <white>Sending request to all online players..."
                 - narrate "<yellow> COURT: <white>The lead of the current court is requesting your assistance" targets:<server.online_players>
                 - narrate "<yellow> COURT: <white>To join use the command <red>/court witness" targets:<server.online_players>
-                - narrate "<yellow> COURT: <white>Be careful by leaving your body alone or with items while you witness" targets:<server.online_players>
                 - stop
         - if <[action]> == start:
-            - if !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
+            - if !<player.is_op> && !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
             - if <server.has_flag[court_active]>:
@@ -158,7 +157,7 @@ Command_Court:
             - flag server court_lead:<player.uuid>
             - flag server court_active:true
             - narrate "<yellow> COURT: <green>The Court has started <red>slave. In 5 seconds you will join the Court." targets:<[username]>
-            # TODO: Make them look to the Court area better.
+            - teleport <[username]> <location[court_slave_player_spot]>
             - teleport <player> <location[court_lead_spot]>
             - narrate "<yellow> COURT: <white>Welcome to the Court. Just another day on the job"
             - create player <[username].name> <location[court_slave_spot]> save:playernpc
@@ -167,7 +166,7 @@ Command_Court:
             - flag <[username]> court_npc:<entry[playernpc].created_npc.id>
             - stop
         - if <[action]> == declare:
-            - if !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
+            - if !<player.is_op> && !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
             - if !<server.has_flag[court_active]>:
@@ -179,6 +178,7 @@ Command_Court:
             - define slave <player[<server.flag[court_slave]>]>
             - if <[target]> == guilty || <[target]> == innocent:
                 - if <[target]> == guilty:
+                    - teleport <[slave]> <location[<[slave].flag[owner]>_spawn]>
                     - flag <[slave]> slave_timer:+:120
                     - narrate "<white> The Slave <red><[slave].name> <white>is declared <red>Guilty" targets:<server.online_players>
                     - narrate "<white> Welcome back to the Jail! With <red>2 hours <white>more." targets:<[slave]>
@@ -190,12 +190,11 @@ Command_Court:
                     - flag <[slave]> owner_block_limit:!
                     - execute as_server "lp user <[slave].name> parent remove slave" silent
                     - narrate "<white> The Slave <red><[slave].name> <white>is declared <green>Innocent" targets:<server.online_players>
-                    - narrate "<white> Welcome back to the Jail! But... <green>You're free! <white>/t spawn out!" targets:<[slave]>
-                - adjust <[slave]> spectate:<[slave]>
+                    - narrate "<green> You're free! <white>/t spawn out!" targets:<[slave]>
                 - run Court_Task_Script def:<[slave]>
                 - stop
         - if <[action]> == remove:
-            - if !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
+            - if !<player.is_op> && !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
                 - narrate "<red>You do not have permission for that command."
                 - stop
             - if !<server.has_flag[court_active]>:
@@ -249,20 +248,20 @@ Command_Court:
             - stop
         - mark syntax_error
         - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
-        - if <player.in_group[slave]>:
+        - if <player.is_op> || <player.in_group[slave]>:
             - narrate "<yellow>-<red> To request a trail in a court: <white>/court request trail"
             - narrate "<yellow>-<red> To request a lawyer in a court: <white>/court request lawyer"
             - stop
-        - if <player.in_group[supremewarden]> || <player.in_group[judge]>:
+        - if <player.is_op> || <player.in_group[supremewarden]> || <player.in_group[judge]>:
             - narrate "<yellow>-<red> To start a Court with a slave: <white>/court start <yellow>username"
             - narrate "<yellow>-<red> To request witness: <white>/court request witness"
             - narrate "<yellow>-<red> To declare the slave guilty: <white>/court declare guilty"
             - narrate "<yellow>-<red> To declare the slave innocent: <white>/court declare innocent"
             - narrate "<yellow>-<red> To remove a witness: <white>/court remove witness <yellow>username"
             - narrate "<yellow>-<red> To remove a lawyer: <white>/court remove lawyer <yellow>username"
-        - if <player.in_group[vip]> || <player.in_group[ultravip]> || <player.in_group[supremevip]> || <player.in_group[godvip]>:
+        - if <player.is_op> || <player.in_group[vip]> || <player.in_group[ultravip]> || <player.in_group[supremevip]> || <player.in_group[godvip]>:
             - narrate "<yellow>-<red> To spectate a court: <white>/court spectate"
-        - if <player.in_group[lawyer]>:
+        - if <player.is_op> || <player.in_group[lawyer]>:
             - narrate "<yellow>-<red> To be the lawyer of a court: <white>/court lawyer"
         - narrate "<yellow>-<red> To be a witness of a court: <white>/court witness"
 
@@ -283,7 +282,7 @@ Court_Script:
                     - narrate "<yellow> COURT: <white>The player <player.name> left the server while in a court" targets:<server.online_players>
                     - if <player.in_group[slave]>:
                         - narrate "<yellow> COURT: <white>The player is the <red>Slave <white>of the court" targets:<server.online_players>
-                    - if <player.in_group[supremewarden]> || <player.in_group[judge]>:
+                    - if <player.is_op> || <player.in_group[supremewarden]> || <player.in_group[judge]>:
                         - narrate "<yellow> COURT: <white>The player is the <yellow>Lead <white>of the court" targets:<server.online_players>
                     - narrate "<yellow> COURT: <white>Wait 1 minute for him or the Court will end with no result" targets:<server.online_players>
                     - wait 1m

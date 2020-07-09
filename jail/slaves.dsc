@@ -193,6 +193,9 @@ Slave_Script:
             - if !<context.cuboids.parse[notable_name].filter[starts_with[jail]].is_empty>:
                 - define jail <context.cuboids.parse[notable_name].filter[starts_with[jail]].first>
                 - if <player.is_online> && <player.in_group[slave]> && <player.has_flag[slave_timer]>:
+                    - if <server.has_flag[court_active]>:
+                        - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
+                            - stop
                     - define jail_spawn <[jail]>_spawn
                     - wait 1s
                     - teleport <player> <location[<[jail_spawn]>]>
@@ -200,6 +203,9 @@ Slave_Script:
                     - narrate "<red> You tried to escape... But you got caught and punched by the guards."
         after player respawns:
             - if <player.in_group[slave]> && <player.has_flag[owner]> && <player.has_flag[slave_timer]>:
+                - if <server.has_flag[court_active]>:
+                    - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
+                        - stop
                 - define owner_name_spawn <player.flag[owner]>_spawn
                 - teleport <player> <location[<[owner_name_spawn]>]>
                 - narrate "<red> You died but you're a slave. Now you're with your owner."
@@ -223,6 +229,9 @@ Slave_Script:
                             - narrate "<green> You are free <red>SLAVE" targets:<[server_player]>
         after player join:
             - if <player.in_group[slave]> && <player.has_flag[owner]> && <player.has_flag[slave_timer]>:
+                - if <server.has_flag[court_active]>:
+                    - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
+                        - stop
                 - teleport <player> <location[<player.flag[owner]>_spawn]>
 
 slave_pickaxe:
