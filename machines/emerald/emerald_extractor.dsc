@@ -4,8 +4,8 @@ Emerald_Extractor_Script:
     events:
         on player crafts emerald_extractor:
             - define owner <context.item.lore.include[Owner:<player.uuid>]>
+            - flag <player> manager:true
             - determine <context.item.with[lore=<[owner]>]>
-            - flag player manager:true
         on player left clicks dropper:
             - run Fill_Machine_Task def:<player.inventory>|<context.location.inventory>|Emerald_Extractor|5
         on player left clicks dropper with:wrench:

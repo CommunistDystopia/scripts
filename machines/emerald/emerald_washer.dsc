@@ -4,8 +4,8 @@ Emerald_Washer_Script:
     events:
         on player crafts emerald_washer:
             - define owner <context.item.lore.include[Owner:<player.uuid>]>
+            - flag <player> manager:true
             - determine <context.item.with[lore=<[owner]>]>
-            - flag player manager:true
         on player places emerald_washer:
             - determine cancelled
         on player left clicks dropper:
