@@ -1,8 +1,10 @@
 # /soldiers Usage
 # /soldiers add <jailname> <username> - Adds a soldier to a jail.
 # /soldiers remove <jailname> <username> - Removes a soldier to a jail.
-# /soldiers list <jailname> <#> - List the soldiers in this jail.
-# /soldiers wanted <jailname> <#> - List the wanted players in this jail.
+# /soldiers list <jailname> soldiers <#> - List the soldiers in this jail.
+# /soldiers list <jailname> wanteds <#> - List the wanted players in this jail.
+# /soldiers wanted <jailname> add <#> - Add a wanted from this jail.
+# /soldiers wanted <jailname> remove <#> - Remove a wanted from this jail.
 # /soldiers jailstick - Replaces your hand with a jailstick.
 # Additional notes
 # - A SupremeWarden must add himself to a jail as a soldier
@@ -37,10 +39,25 @@ Command_Soldier:
                     - if "!<context.raw_args.ends_with[ ]>":
                             - determine <server.flag[prison_jails].parse[after[jail_]]>
                     - else:
-                        - if <context.args.get[1].contains_any_case_sensitive_text[list|wanted]>:
-                            - determine <server.flag[prison_jails].size.div[10].truncate>
+                        - if <context.args.get[1]> == list:
+                            - determine <list[soldiers|wanteds]>
+                        - if <context.args.get[1]> == wanted:
+                            - determine <list[add|remove]>
                         - else:
                             - determine <server.online_players.parse[name]>
+            - case 3:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - if <context.args.get[1]> == list:
+                        - determine <list[soldiers|wanteds]>
+                    - if <context.args.get[1]> == wanted:
+                        - determine <list[add|remove]>
+                    - else:
+                        - determine <server.online_players.parse[name]>
+                - else:
+                    - if <context.args.get[1]> == list:
+                        - determine <server.flag[prison_jails].size.div[10].truncate>
+                    - if <context.args.get[1]> == wanted:
+                        - determine <server.online_players.parse[name]>
     script:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
                 - narrate "<red>You do not have permission for that command."
@@ -50,32 +67,55 @@ Command_Soldier:
             - give jailstick to:<player.inventory>
             - stop
         - if <context.args.size> < 3:
-            - narrate "<yellow>#<red> ERROR: Not enough arguments."
-            - narrate  "<yellow>-<red> To add a soldier to a jail: /soldiers add <yellow>jailname username"
-            - narrate  "<yellow>-<red> To remove a soldier from a jail: /soldiers remove <yellow>jailname username"
-            - narrate "<yellow>-<red> To show a list of soldiers from a jail: /soldiers list <yellow>jailname <yellow>number"
-            - narrate "<yellow>-<red> To show a list of wanteds from a jail: /soldiers wanted <yellow>jailname <yellow>number"
-            - stop
+            - goto syntax_error
         - define name <context.args.get[2]>
         - define jail_name jail_<[name]>
         - if <[jail_name].ends_with[_spawn]>:
             - narrate "<red> ERROR: Invalid jail name. Please don't use _spawn in your jail name."
             - stop
-        - if <[action]> == list && <context.args.size> == 3:
-            - define list_page <context.args.get[3]>
-            - run List_Task_Script def:<[jail_name]>|Soldier|<[list_page]>
+        - if <cuboid[<[jail_name]>]||null> == null:
+            - narrate "<red> ERROR: Jail <[name]> doesn't exist."
             - stop
-        - if <[action]> == wanted && <context.args.size> == 3:
-            - define list_page <context.args.get[3]>
-            - run List_Task_Script def:<[jail_name]>|Wanted|<[list_page]>
-            - stop
-        - if <[action]> == add || <[action]> == remove:
-            - if <cuboid[<[jail_name]>]||null> == null:
-                - narrate "<red> ERROR: Jail <[name]> doesn't exist."
+        - if <[action]> == list:
+            - if <context.args.size> < 4:
+                - goto syntax_error
+            - define target <context.args.get[3]>
+            - if <[target]> == soldiers:
+                - define list_page <context.args.get[4]>
+                - run List_Task_Script def:<[jail_name]>|Soldier|<[list_page]>
                 - stop
+            - if <[target]> == wanteds:
+                - define list_page <context.args.get[4]>
+                - run List_Task_Script def:<[jail_name]>|Wanted|<[list_page]>
+                - stop
+        - if <[action]> == wanted:
+            - if <context.args.size> < 4:
+                - goto syntax_error
+            - define secondary_action <context.args.get[3]>
+            - if <[secondary_action]> == add || <[secondary_action]> == remove:
+                - define username <server.match_player[<context.args.get[4]>]||null>
+                - if <[username]> == null:
+                    - narrate "<red> ERROR: Invalid player username OR the player is offline."
+                    - stop
+                - define jail_wanteds <[jail_name]>_wanteds
+                - if <[secondary_action]> == add:
+                    - if <server.has_flag[<[jail_wanteds]>]> && <server.flag[<[jail_wanteds]>].find[<[username]>]> != -1:
+                        - narrate "<red> ERROR: The player is already a wanted of this jail"
+                        - stop
+                    - flag server <[jail_wanteds]>:|:<[username]>
+                    - narrate "<blue> <[username].name> <green>added to the wanted list!"
+                    - stop
+                - if <[secondary_action]> == remove:
+                    - if <server.has_flag[<[jail_wanteds]>]> && <server.flag[<[jail_wanteds]>].find[<[username]>]> == -1:
+                        - narrate "<red> ERROR: The player is not a wanted of this jail"
+                        - stop
+                    - flag server <[jail_wanteds]>:<-:<[username]>
+                    - narrate "<blue> <[username].name> <green>removed from the wanted list!"
+                    - stop
+        - if <[action]> == add || <[action]> == remove:
             - define username <server.match_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
-                - narrate "<red> ERROR: .Invalid player username OR the player is offline."
+                - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
             - if !<[username].in_group[soldier]> && !<[username].in_group[supremewarden]> && !<player.is_op||<context.server>>:
                 - narrate "<red> ERROR: This player isn't a soldier or a SupremeWarden."
@@ -93,6 +133,7 @@ Command_Soldier:
                 - flag server <[jail_soldiers]>:<-:<[username]>
                 - narrate "<green> Soldier <blue><[username].name> <green>removed!"
             - stop
+        - mark syntax_error
         - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
         - narrate "<yellow>-<red> To add a soldier to a jail: /soldiers add <yellow>jailname username"
         - narrate "<yellow>-<red> To remove a soldier from a jail: /soldiers remove <yellow>jailname username"
