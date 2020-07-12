@@ -111,7 +111,7 @@ Slavelead_Script:
             - if <player.in_group[supremewarden]> && <player.has_flag[owned_slaves]> && <player.has_flag[soldier_jail]>:
                 - foreach <player.flag[owned_slaves]> as:owned_slave:
                     - define slave <player[<[owned_slave]>]>
-                    - if <[slave].has_flag[jail_owner]>:
+                    - if <[slave].is_online> && <[slave].has_flag[jail_owner]>:
                         - define jail_spawn <[slave].flag[jail_owner]>_spawn
                         - flag <[slave]> owner:<[slave].flag[jail_owner]>
                         - flag <[slave]> owner_block_limit:!

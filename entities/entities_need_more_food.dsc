@@ -21,9 +21,13 @@ Entities_Need_More_Food_Script:
     debug: false
     events:
         on entity despawns:
+            - if <context.entity.is_player>:
+                - stop
             - if <context.entity.has_flag[last_food]>:
                 - flag <context.entity> last_food:!
         on entity death:
+            - if <context.entity.is_player>:
+                - stop
             - if <context.entity.has_flag[last_food]>:
                 - flag <context.entity> last_food:!
         on system time hourly every:1:

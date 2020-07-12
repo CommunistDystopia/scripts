@@ -8,3 +8,6 @@ Placing_Permissions_Script:
         on player right clicks block with:item_frame:
             - if !<player.has_permission[place.item_frame]>:
                 - determine cancelled
+        on player right clicks block with:water_bucket:
+            - if <player.in_group[outlaw]>:
+                - determine cancelled
