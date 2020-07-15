@@ -114,6 +114,17 @@ Slave_Lead_Script:
                 - narrate "<red> ERROR: This user isn't a valid slave"
                 - stop
             - cooldown 5s script:Slave_Lead_Script
+            - if <[slave].has_flag[slave_lead_queue]>:
+                - queue <[slave].flag[slave_lead_queue]> stop
+                - if <player.has_flag[owned_slaves]>:
+                    - flag <player> owned_slaves:<-:<[slave]>
+                    - if <[slave].is_online> && <[slave].has_flag[jail_owner]>:
+                        - flag <[slave]> owner:<[slave].flag[jail_owner]>
+                        - flag <[slave]> owner_block_limit:!
+                        - flag <[slave]> jail_owner:!
+                - flag <[slave]> slave_lead_queue:!
+                - narrate "<green> The Lead on <red><[slave].name> <green>stopped"
+                - stop
             - inject Slave_Lead_Task instantly
         on player quits:
             - if <player.has_flag[owned_slaves]> && <player.has_flag[soldier_jail]>:
@@ -123,7 +134,7 @@ Slave_Lead_Script:
                         - define jail_spawn <[slave].flag[jail_owner]>_spawn
                         - flag <[slave]> owner:<[slave].flag[jail_owner]>
                         - flag <[slave]> owner_block_limit:!
-                        - flag <[slave]> slave_timer:120
+                        - flag <[slave]> slave_lead_queue:!
                         - teleport <[slave]> <location[<[jail_spawn]>]>
                         - narrate "<blue> <player.name> <red>log out. Welcome back to Jail" targets:<[slave]>
                         - flag <[slave]> jail_owner:!
@@ -132,9 +143,9 @@ Slave_Lead_Script:
             - if <player.in_group[slave]> && <player.has_flag[jail_owner]>:
                 - flag <player> owner:<player.flag[jail_owner]>
                 - flag <player> owner_block_limit:!
-                - flag <player> slave_timer:120
                 - flag <player> jail_owner:!
                 - flag <player> spawn_on_jail:true
+                - flag <player> slave_lead_queue:!
         after player joins:
             - wait 5s
             - if <player.is_online> && <player.in_group[slave]> && <player.has_flag[spawn_on_jail]>:

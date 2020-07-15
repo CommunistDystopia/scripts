@@ -175,6 +175,7 @@ Command_Slaves:
             - flag <[username]> slave_timer:!
             - flag <[username]> jail_owner:!
             - flag <[username]> owner_block_limit:!
+            - flag <[username]> slave_lead_queue:!
             - execute as_server "lp user <[username].name> parent remove slave" silent
             - narrate "<green> Slave <blue><[username].name> <green>removed!"
             - stop
@@ -219,14 +220,15 @@ Slave_Script:
                             - execute as_server "slaves jail <[owner].after[jail_]> remove <[server_player].name>" silent
                             - narrate "<green> You are free <red>SLAVE" targets:<[server_player]>
         on command:
-            - if <player.in_group[slave]> && <player.has_flag[slave_timer]>:
-                - if <context.command> == tpa:
-                    - determine FULFILLED
-                - if <context.args.size> < 1:
-                    - stop
-                - if <context.command> == t || <context.command> == town:
-                    - if <context.args.get[1]> == spawn:
+            - if <context.source_type> == PLAYER:
+                - if <player.in_group[slave]> && <player.has_flag[slave_timer]>:
+                    - if <context.command> == tpa:
                         - determine FULFILLED
+                    - if <context.args.size> < 1:
+                        - stop
+                    - if <context.command> == t || <context.command> == town:
+                        - if <context.args.get[1]> == spawn:
+                            - determine FULFILLED
 
 slave_pickaxe:
     type: item

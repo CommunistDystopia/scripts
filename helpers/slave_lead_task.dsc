@@ -19,6 +19,7 @@ Slave_Lead_Task:
         - if !<[slave].flag[owner].contains_all_case_sensitive_text[<player.uuid>]>:
             - narrate "<red> ERROR: This slave isn't yours"
             - stop
+        - flag <[slave]> slave_lead_queue:<queue>
         - narrate "<green> Starting to force the slave <red><[slave].name> to stay within <yellow>10 <green>blocks"
         - narrate "<yellow> Be aware. <green>It will work until you or the slave are offline."
         - narrate "<red> You are now forced to stay with your <gold>owner" targets:<[slave]>

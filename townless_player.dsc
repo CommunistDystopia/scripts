@@ -3,6 +3,6 @@ Townless_Player_Script:
     debug: false
     events:
         on player respawns:
-            - if <player.town||null> == null:
+            - if !<player.in_group[slave]> && <player.town||null> == null:
                 - group add outlaw
                 - determine <location[townless_spawn]>
