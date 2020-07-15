@@ -3,7 +3,7 @@ Slave_Lead_Task:
     debug: false
     definitions: slave
     script:
-        - if <player.in_group[supremewarden]>:
+        - if <player.in_group[supremewarden]> || <player.is_op>:
             - if !<[slave].has_flag[slave_timer]>:
                 - narrate "<red> ERROR: This user isn't currently a slave from a prison. It's probably controlled by a Godvip"
                 - stop

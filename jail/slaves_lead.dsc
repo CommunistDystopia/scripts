@@ -116,7 +116,7 @@ Slave_Lead_Script:
             - cooldown 5s script:Slave_Lead_Script
             - inject Slave_Lead_Task instantly
         on player quits:
-            - if <player.in_group[supremewarden]> && <player.has_flag[owned_slaves]> && <player.has_flag[soldier_jail]>:
+            - if <player.has_flag[owned_slaves]> && <player.has_flag[soldier_jail]>:
                 - foreach <player.flag[owned_slaves]> as:owned_slave:
                     - define slave <player[<[owned_slave]>]>
                     - if <[slave].is_online> && <[slave].has_flag[jail_owner]>:
