@@ -189,18 +189,6 @@ Slave_Script:
     type: world
     debug: false
     events:
-        on player exits notable cuboid:
-            - if !<context.cuboids.parse[notable_name].filter[starts_with[jail]].is_empty>:
-                - define jail <context.cuboids.parse[notable_name].filter[starts_with[jail]].first>
-                - if <player.is_online> && <player.in_group[slave]> && <player.has_flag[slave_timer]>:
-                    - if <server.has_flag[court_active]>:
-                        - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
-                            - stop
-                    - define jail_spawn <[jail]>_spawn
-                    - wait 1s
-                    - teleport <player> <location[<[jail_spawn]>]>
-                    - hurt <player> 5
-                    - narrate "<red> You tried to escape... But you got caught and punched by the guards."
         after player respawns:
             - if <player.in_group[slave]> && <player.has_flag[owner]> && <player.has_flag[slave_timer]>:
                 - if <server.has_flag[court_active]>:
@@ -227,12 +215,6 @@ Slave_Script:
                         - if <[slave_timer]> == 0.0:
                             - execute as_server "slaves jail <[owner].after[jail_]> remove <[server_player].name>" silent
                             - narrate "<green> You are free <red>SLAVE" targets:<[server_player]>
-        after player join:
-            - if <player.in_group[slave]> && <player.has_flag[owner]> && <player.has_flag[slave_timer]>:
-                - if <server.has_flag[court_active]>:
-                    - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
-                        - stop
-                - teleport <player> <location[<player.flag[owner]>_spawn]>
 
 slave_pickaxe:
     type: item

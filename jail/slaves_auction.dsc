@@ -88,12 +88,12 @@ Command_Slave_Shop:
             - define auction_slave_jail_slaves "<server.flag[auction_slave_jail]>_slaves"
             - flag server <[auction_slave_jail_slaves]>:<-:<[slave]>
             - flag server auction_slave_jail:!
-            - flag <[slave]> owner:<[highest_bidder].name>
+            - flag <[slave]> owner:<[highest_bidder].uuid>
             - flag <[slave]> owner_block_limit:10
             - flag <[slave]> slave_timer:!
             - if <[highest_bidder].is_online>:
                 - teleport <[slave]> <[highest_bidder].location>
-            - narrate "<gold> <[slave].flag[owner]>!!! Congratulations. <red><[slave].name> <gold>is now your slave" targets:<[online_godvips_end]>
+            - narrate "<gold> <[highest_bidder].name>!!! Congratulations. <red><[slave].name> <gold>is now your slave" targets:<[online_godvips_end]>
             - narrate "<green> The auction is finished. The <red>slave <green>was <gold>sold"
             - flag server auction_highest_bidder:!
             - flag server auction_highest_bid:!

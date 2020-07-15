@@ -6,6 +6,7 @@
 # /soldiers wanted <jailname> add <#> - Add a wanted from this jail.
 # /soldiers wanted <jailname> remove <#> - Remove a wanted from this jail.
 # /soldiers jailstick - Replaces your hand with a jailstick.
+# /soldiers default <jailname> - Sets the default jail of the Soldiers.
 # Additional notes
 # - A SupremeWarden must add himself to a jail as a soldier
 # - If a Soldier/SupremeWarden with a Jail linked kills a Insurgent, he revives in jail
@@ -15,6 +16,8 @@
 # - soldier_jail [Used in Jails]
 # Notables created here
 # - jail_<name>_soldiers [Used in Jails]
+# Permissions used here
+# - soldier.jail
 
 Command_Soldier:
     type: command
@@ -27,10 +30,10 @@ Command_Soldier:
             - stop
         - choose <context.args.size>:
             - case 0:
-                - determine <list[add|remove|list|wanted|jailstick]>
+                - determine <list[add|default|remove|list|wanted|jailstick]>
             - case 1:
                 - if "!<context.raw_args.ends_with[ ]>":
-                    - determine <list[add|remove|list|wanted|jailstick].filter[starts_with[<context.args.first>]]>
+                    - determine <list[add|default|remove|list|wanted|jailstick].filter[starts_with[<context.args.first>]]>
                 - else:
                     - if <server.has_flag[prison_jails]> && <context.args.get[1]> != jailstick:
                         - determine <server.flag[prison_jails].parse[after[jail_]]>
@@ -66,7 +69,7 @@ Command_Soldier:
         - if <[action]> == jailstick:
             - give jailstick to:<player.inventory>
             - stop
-        - if <context.args.size> < 3:
+        - if <context.args.size> < 2:
             - goto syntax_error
         - define name <context.args.get[2]>
         - define jail_name jail_<[name]>
@@ -75,6 +78,10 @@ Command_Soldier:
             - stop
         - if <cuboid[<[jail_name]>]||null> == null:
             - narrate "<red> ERROR: Jail <[name]> doesn't exist."
+            - stop
+        - if <[action]> == default:
+            - flag server default_soldier_jail:<[jail_name]>
+            - narrate "<blue> <[name]> <green>is now the default jail of the soldiers!"
             - stop
         - if <[action]> == list:
             - if <context.args.size> < 4:
@@ -113,6 +120,8 @@ Command_Soldier:
                     - narrate "<blue> <[username].name> <green>removed from the wanted list!"
                     - stop
         - if <[action]> == add || <[action]> == remove:
+            - if <context.args.size> < 3:
+                - goto syntax_error
             - define username <server.match_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
@@ -162,14 +171,22 @@ Soldier_Script:
     events:
         on player right clicks player with:jailstick:
             - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
-                - if !<player.in_group[soldier]> || !<player.has_flag[soldier_jail]>:
-                    - narrate "<red>ERROR: What are you trying to do? You can't caught someone. <blue>Only JAIL SOLDIERS can!"
+                - if !<player.in_group[soldier]> && !<player.in_group[general]>:
+                    - narrate "<red>ERROR: What are you trying to do? You can't caught someone. <blue>Only SOLDIERS can!"
                     - stop
             - if !<script[Soldier_Script].cooled_down[<player>]>:
                 - stop
             - if !<player.has_flag[soldier_jail]>:
-                - narrate "<red> ERROR: Please add yourself to the soldiers of the jail"
+                - if <player.has_permission[soldier.jail]>:
+                    - if !<server.has_flag[default_soldier_jail]>:
+                        - narrate "<red> ERROR: No default Jail set for soldiers"
+                        - narrate "<white> Please tell a Supreme Warden or an OP to set the default jail of the Soldiers"
+                        - stop
+                    - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
+                    - goto default_soldier
+                - narrate "<red> ERROR: You don't belong to a Jail!"
                 - stop
+            - mark default_soldier
             - define jail <player.flag[soldier_jail]>
             - if <context.entity.in_group[slave]>:
                 - if !<context.entity.has_flag[slave_timer]>:
