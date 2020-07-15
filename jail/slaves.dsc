@@ -141,7 +141,10 @@ Command_Slaves:
             - flag <[username]> slave_timer:120
             - flag <[username]> jail_owner:!
             - flag <[username]> owner_block_limit:!
-            - execute as_server "lp user <[username].name> parent add slave" silent
+            - if <[username].groups.size> == 1 && <[username].groups.first> == default:
+                - execute as_server "lp user <[username].name> parent set slave" silent
+            - else:
+                - execute as_server "lp user <[username].name> parent add slave" silent
             - if <[username].is_online>:
                 - teleport <[username]> <location[<[jail_spawn]>]>
                 - narrate "<green> Welcome to the jail <red>SLAVE!" targets:<[username]>
@@ -215,6 +218,15 @@ Slave_Script:
                         - if <[slave_timer]> == 0.0:
                             - execute as_server "slaves jail <[owner].after[jail_]> remove <[server_player].name>" silent
                             - narrate "<green> You are free <red>SLAVE" targets:<[server_player]>
+        on command:
+            - if <player.in_group[slave]> && <player.has_flag[slave_timer]>:
+                - if <context.command> == tpa:
+                    - determine FULFILLED
+                - if <context.args.size> < 1:
+                    - stop
+                - if <context.command> == t || <context.command> == town:
+                    - if <context.args.get[1]> == spawn:
+                        - determine FULFILLED
 
 slave_pickaxe:
     type: item

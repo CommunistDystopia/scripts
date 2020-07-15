@@ -218,7 +218,10 @@ Soldier_Script:
             - if <server.has_flag[<[jail_wanted]>]>:
                 - if <server.flag[<[jail_wanted]>].contains[<context.entity>]>:
                     - flag server <[jail_wanted]>:<-:<context.entity>
-            - execute as_server "lp user <context.entity.name> parent add slave" silent
+            - if <context.entity.groups.size> == 1 && <context.entity.groups.first> == default:
+                - execute as_server "lp user <context.entity.name> parent set slave" silent
+            - else:
+                - execute as_server "lp user <context.entity.name> parent add slave" silent
             - flag <context.entity> owner:<[jail]>
             - flag <context.entity> slave_timer:120
             - flag server <[jail_slaves]>:|:<context.entity>
