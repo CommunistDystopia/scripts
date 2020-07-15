@@ -208,7 +208,7 @@ Soldier_Script:
                 - stop
             - if !<context.damager.has_flag[soldier_jail]>:
                 - stop
-            - if !<context.damager.in_group[supremewarden]> && !<context.damager.in_group[soldier]>:
+            - if !<context.damager.in_group[supremewarden]> && !<context.damager.in_group[soldier]> && !<context.damager.in_group[general]>:
                 - stop
             - define jail <context.damager.flag[soldier_jail]>
             - define jail_slaves <[jail]>_slaves
