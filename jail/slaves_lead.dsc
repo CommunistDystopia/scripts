@@ -3,6 +3,7 @@
 # /slavelead limit <slavename> <amount> - Sets the slave space between you and him. [Default: 10] [Min: 10] [Max: 30]
 # /slavelead control <slavename> - A SupremeWarden takes control or stop control of a slave that has a jail associated.
 # /slavelead free <slavename> - A Godvip or a SupremeWarden frees a slave
+# /slavelead lead - Gives the player a Slave Lead
 # Additional notes
 # - If a SupremeWarden controlling a slave leaves the server, the slave will go back to the jail.
 # Player flags created here
