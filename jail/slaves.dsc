@@ -216,7 +216,7 @@ Slave_Script:
                         - define owner <[server_player].flag[owner]>
                         - flag <[server_player]> slave_timer:-:10
                         - define slave_timer <[server_player].flag[slave_timer]>
-                        - if <[slave_timer]> == 0.0:
+                        - if <[slave_timer]> <= 0.0:
                             - execute as_server "slaves jail <[owner].after[jail_]> remove <[server_player].name>" silent
                             - narrate "<green> You are free <red>SLAVE" targets:<[server_player]>
         on command:
