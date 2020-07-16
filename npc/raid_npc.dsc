@@ -1,4 +1,4 @@
-Command_Raid:
+Command_Raid_NPC:
     type: command
     debug: false
     name: raid
