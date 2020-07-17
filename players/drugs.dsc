@@ -139,7 +139,7 @@ Drugs_Script:
                         - cast SLOW duration:<[server_player].flag[withdrawal_duration]>s amplifier:0 <[server_player]> hide_particles
                         - cast BLINDNESS duration:<[server_player].flag[withdrawal_duration]>s amplifier:0 <[server_player]> hide_particles
                         - if !<[server_player].has_flag[withdrawal_message_cooldown]>:
-                            - actionbar "<yellow> I need more<red>Heroine <yellow>or <red>BrownBrown <yellow>to feel better" target:<[server_player]>
+                            - actionbar "<yellow> I need more <red>Heroine <yellow>or <red>BrownBrown <yellow>to feel better" target:<[server_player]>
                             - flag <[server_player]> withdrawal_message_cooldown:300
                         - flag <[server_player]> withdrawal_cooldown:60
         on player consumes milk_bucket:
