@@ -1,4 +1,8 @@
 ## Drugs
+# /drugs
+# /drugs give <username> medicine <quantity> - Give X drug medicines to the user [quantity: 1~64]
+# /drugs give <username> <drugname> <quantity> - Give X drugs to the user [quantity: 1~64]
+# /drugs remove <username> - Remove the high effects of the drugs to the user. (It will have withdrawal symptoms)
 # Player flags created here
 # - drug_duration [60s ~ 600s]
 # - drug_used [heroine] [weed] [brown_brown] [drug_mushroom]
@@ -8,6 +12,82 @@
 # - withdrawal_cooldown [60s]
 # - withdrawal_duration [7200s]
 # - withdrawal_message_cooldown [300s]
+
+Command_Drug:
+    type: command
+    debug: false
+    name: drugs
+    description: Minecraft Player Drugs.
+    usage: /drugs
+    tab complete:
+        - if !<player.is_op||<context.server>>:
+            - stop
+        - choose <context.args.size>:
+            - case 0:
+                - determine <list[give|remove]>
+            - case 1:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <list[give|remove].filter[starts_with[<context.args.first>]]>
+                - else:
+                    - determine <server.online_players.parse[name]>
+            - case 2:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <server.online_players.parse[name]>
+                - else:
+                    - if <context.args.get[1]> == give:
+                        - determine <list[brownbrown|heroine|mushroom|weed|medicine]>
+            - case 3:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - if <context.args.get[1]> == give:
+                        - determine <list[brownbrown|heroine|mushroom|weed|medicine]>
+    script:
+        - if !<player.is_op||<context.server>>:
+                - narrate "<red>You do not have permission for that command."
+                - stop
+        - if <context.args.size> < 2:
+            - goto syntax_error
+        - define action <context.args.get[1]>
+        - define username <server.match_player[<context.args.get[2]>]||null>
+        - if <[username]> == null:
+            - narrate "<red> ERROR: Invalid player username OR the player is offline."
+            - stop
+        - if <[action]> == give:
+            - if <context.args.size> < 4:
+                - goto syntax_error
+            - define target <context.args.get[3]>
+            - define amount <context.args.get[4]>
+            - if <[amount]> > 0 && <[amount]> <= 64:
+                - choose <[target]>:
+                    - case heroine:
+                        - give drug_heroine to:<[username].inventory> quantity:<[amount]>
+                    - case brownbrown:
+                        - give drug_brown_brown to:<[username].inventory> quantity:<[amount]>
+                    - case weed:
+                        - give drug_weed to:<[username].inventory> quantity:<[amount]>
+                    - case mushroom:
+                        - give drug_mushroom to:<[username].inventory> quantity:<[amount]>
+                    - case medicine:
+                        - give medicine_drug to:<[username].inventory> quantity:<[amount]>
+                    - default:
+                        - narrate "<red> ERROR: That drug or medicine doesn't exist"
+                        - stop
+                - narrate "<green> <[target].to_titlecase> obtained: <blue><[username].name> <green>- Quantity: <yellow><[amount]>"
+                - stop
+        - if <[action]> == remove:
+            - if !<[username].has_flag[drug_duration]>:
+                - narrate "<red> ERROR: The user isn't under the effect of drugs"
+            - if <[username].has_flag[drug_used_queue]>:
+                - queue stop <[username].flag[drug_used_queue]>
+            - flag <[username]> drug_duration:!
+            - flag <[username]> drug_used_queue:!
+            - adjust <[username]> remove_effects
+            - narrate "<green> Drug effects removed: <blue><[username].name>"
+            - stop
+        - mark syntax_error
+        - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
+        - narrate "<yellow>-<red> To give a drug medicine: <white>/drugs give username medicine"
+        - narrate "<yellow>-<red> To give a drug: <white>/drugs give <yellow>username name quantity"
+        - narrate "<yellow>-<red> To remove the high effects of the drugs (It will have withdrawal symptoms): <white>/drugs remove <yellow>username"
 
 Drugs_Script:
     type: world
@@ -59,7 +139,7 @@ Drugs_Script:
                         - cast SLOW duration:<[server_player].flag[withdrawal_duration]>s amplifier:0 <[server_player]> hide_particles
                         - cast BLINDNESS duration:<[server_player].flag[withdrawal_duration]>s amplifier:0 <[server_player]> hide_particles
                         - if !<[server_player].has_flag[withdrawal_message_cooldown]>:
-                            - narrate "<yellow> I'm feeling bad after using drugs... My mind is telling me to use more <red>Heroine <yellow>or <red>BrownBrown <yellow>to feel better" target:<[server_player]>
+                            - actionbar "<yellow> I'm feeling bad after using drugs... My mind is telling me to use more <red>Heroine <yellow>or <red>BrownBrown <yellow>to feel better" target:<[server_player]>
                             - flag <[server_player]> withdrawal_message_cooldown:300
                         - flag <[server_player]> withdrawal_cooldown:60
         on player consumes milk_bucket:
