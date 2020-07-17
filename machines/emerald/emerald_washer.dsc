@@ -56,6 +56,7 @@ Emerald_Washer_Script:
 
 Emerald_Washer:
     type: item
+    debug: false
     material: tube_coral_block
     mechanisms:
         hides: enchants
@@ -81,6 +82,7 @@ Emerald_Washer:
 
 Emerald_Washer_T1:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T1
     lore:
@@ -93,6 +95,7 @@ Emerald_Washer_T1:
 
 Emerald_Washer_T2:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T2
     lore:
@@ -106,6 +109,7 @@ Emerald_Washer_T2:
 
 Emerald_Washer_T3:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T3
     lore:
@@ -118,6 +122,7 @@ Emerald_Washer_T3:
 
 Emerald_Washer_T4:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T4
     lore:
@@ -131,6 +136,7 @@ Emerald_Washer_T4:
 
 Emerald_Washer_T5:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T5
     lore:

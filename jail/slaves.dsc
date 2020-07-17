@@ -232,6 +232,7 @@ Slave_Script:
 
 slave_pickaxe:
     type: item
+    debug: false
     material: iron_pickaxe
     mechanisms:
         repair_cost: 99

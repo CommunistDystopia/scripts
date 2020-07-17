@@ -55,6 +55,7 @@ Emerald_Extractor_Script:
 
 green_crystal:
     type: item
+    debug: false
     material: prismarine_crystals
     mechanisms:
         hides: enchants
@@ -68,6 +69,7 @@ green_crystal:
 
 Emerald_Extractor:
     type: item
+    debug: false
     material: coal_block
     mechanisms:
         hides: enchants
@@ -92,6 +94,7 @@ Emerald_Extractor:
 
 Emerald_Extractor_T1:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T1
     lore:
@@ -104,6 +107,7 @@ Emerald_Extractor_T1:
         
 Emerald_Extractor_T2:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T2
     lore:
@@ -117,6 +121,7 @@ Emerald_Extractor_T2:
 
 Emerald_Extractor_T3:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T3
     lore:
@@ -129,6 +134,7 @@ Emerald_Extractor_T3:
 
 Emerald_Extractor_T4:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T4
     lore:
@@ -142,6 +148,7 @@ Emerald_Extractor_T4:
 
 Emerald_Extractor_T5:
     type: item
+    debug: false
     material: enchanted_book
     display name: <yellow>Upgrade T5
     lore:

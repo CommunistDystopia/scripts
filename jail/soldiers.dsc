@@ -152,6 +152,7 @@ Command_Soldier:
 
 jailstick:
     type: item
+    debug: false
     material: stick
     mechanisms:
         hides: enchants

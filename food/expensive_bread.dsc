@@ -1,5 +1,6 @@
 expensive_bread:
     type: item
+    debug: false
     material: bread
     display name: Bread
     recipes:

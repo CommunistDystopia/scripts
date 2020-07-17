@@ -1,5 +1,6 @@
 landminer:
     type: item
+    debug: false
     material: iron_shovel
     mechanisms:
         durability: 249
@@ -20,6 +21,7 @@ landminer:
 
 landmine:
     type: item
+    debug: false
     material: tnt
     display name: <red>Landmine
     lore:

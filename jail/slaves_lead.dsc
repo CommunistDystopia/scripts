@@ -88,6 +88,7 @@ Command_Slave_Lead:
 
 slave_lead:
     type: item
+    debug: false
     material: lead
     mechanisms:
         hides: enchants

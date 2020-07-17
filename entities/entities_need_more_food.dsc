@@ -1,5 +1,6 @@
 emerald_apple:
     type: item
+    debug: false
     material: apple
     mechanisms:
         hides: enchants
