@@ -170,7 +170,6 @@ Slave_Lead_Task:
             - flag <[slave]> owner:<player.uuid>
             - flag <[slave]> owner_block_limit:10
             - flag <player> owned_slaves:|:<[slave]>
-            - flag <[slave]> slave_timer:!
             - narrate "<green> You started getting the <red>slave <green>with you"
         - if !<[slave].flag[owner].contains_all_case_sensitive_text[<player.uuid>]>:
             - narrate "<red> ERROR: This slave isn't yours"
