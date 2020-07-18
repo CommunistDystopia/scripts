@@ -195,7 +195,7 @@ Command_Court:
             - if <[target]> == guilty || <[target]> == innocent:
                 - if <[target]> == guilty:
                     - teleport <[slave]> <location[<[slave].flag[owner]>_spawn]>
-                    - flag <[slave]> slave_timer:+:120
+                    - flag <[slave]> slave_timer:+:<script[Slaves_Config].data_key[court_fail_timer_add]>
                     - narrate "<white> The Slave <red><[slave].name> <white>is declared <red>Guilty" targets:<server.online_players>
                     - narrate "<white> Welcome back to the Jail! With <red>2 hours <white>more." targets:<[slave]>
                 - if <[target]> == innocent:

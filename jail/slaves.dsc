@@ -138,7 +138,7 @@ Command_Slaves:
                 - stop
             - flag server <[jail_slaves]>:|:<[username]>
             - flag <[username]> owner:<[jail_name]>
-            - flag <[username]> slave_timer:120
+            - flag <[username]> slave_timer:<script[Slaves_Config].data_key[slave_timer]>
             - flag <[username]> jail_owner:!
             - flag <[username]> owner_block_limit:!
             - if <[username].groups.size> == 1 && <[username].groups.first> == default:
@@ -217,7 +217,7 @@ Slave_Script:
                         - flag <[server_player]> slave_timer:-:10
                         - define slave_timer <[server_player].flag[slave_timer]>
                         - if <[slave_timer]> <= 0.0:
-                            - execute as_server "slaves jail <[owner].after[jail_]> remove <[server_player].name>" silent
+                            - execute as_server "slaves remove <[owner].after[jail_]> <[server_player].name>" silent
                             - narrate "<green> You are free <red>SLAVE" targets:<[server_player]>
         on command:
             - if <context.source_type> == PLAYER:

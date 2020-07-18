@@ -26,7 +26,7 @@ Command_Soldier:
     description: Minecraft Soldiers (Jail) system.
     usage: /soldiers
     tab complete:
-        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
+        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.has_permission[soldier.jail]>:
             - stop
         - choose <context.args.size>:
             - case 0:
@@ -62,9 +62,9 @@ Command_Soldier:
                     - if <context.args.get[1]> == wanted:
                         - determine <server.online_players.parse[name]>
     script:
-        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
-                - narrate "<red>You do not have permission for that command."
-                - stop
+        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.has_permission[soldier.jail]>:
+            - narrate "<red>You do not have permission for that command."
+            - stop
         - define action <context.args.get[1]>
         - if <[action]> == jailstick:
             - give jailstick to:<player.inventory>
@@ -80,6 +80,9 @@ Command_Soldier:
             - narrate "<red> ERROR: Jail <[name]> doesn't exist."
             - stop
         - if <[action]> == default:
+            - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
+                - narrate "<red>You do not have permission for that command."
+                - stop
             - flag server default_soldier_jail:<[jail_name]>
             - narrate "<blue> <[name]> <green>is now the default jail of the soldiers!"
             - stop
@@ -88,6 +91,9 @@ Command_Soldier:
                 - goto syntax_error
             - define target <context.args.get[3]>
             - if <[target]> == soldiers:
+                - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
+                    - narrate "<red>You do not have permission for that command."
+                    - stop
                 - define list_page <context.args.get[4]>
                 - run List_Task_Script def:<[jail_name]>|Soldier|<[list_page]>
                 - stop
@@ -96,6 +102,9 @@ Command_Soldier:
                 - run List_Task_Script def:<[jail_name]>|Wanted|<[list_page]>
                 - stop
         - if <[action]> == wanted:
+            - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
+                - narrate "<red>You do not have permission for that command."
+                - stop
             - if <context.args.size> < 4:
                 - goto syntax_error
             - define secondary_action <context.args.get[3]>
@@ -120,6 +129,9 @@ Command_Soldier:
                     - narrate "<blue> <[username].name> <green>removed from the wanted list!"
                     - stop
         - if <[action]> == add || <[action]> == remove:
+            - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
+                - narrate "<red>You do not have permission for that command."
+                - stop
             - if <context.args.size> < 3:
                 - goto syntax_error
             - define username <server.match_player[<context.args.get[3]>]||null>
@@ -194,7 +206,7 @@ Soldier_Script:
                     - narrate "<red> ERROR: This slave is property of someone!"
                     - stop
                 - if <context.entity.flag[owner]> == <[jail]>:
-                    - flag <context.entity> slave_timer:+:120
+                    - flag <context.entity> slave_timer:+:<script[Slaves_Config].data_key[slave_timer]>
                     - narrate "<green> Slave: <red><context.entity.name> <green>time extended by <blue>2 hours"
                     - narrate "<red> Your time got extended by <yellow>2 hours <red>SLAVE" targets:<context.entity>
                 - cooldown 10s script:Soldier_Script
@@ -217,14 +229,14 @@ Soldier_Script:
             - if !<context.entity.in_group[insurgent]> && !<server.has_flag[<[jail_wanted]>]>:
                 - stop
             - if <server.has_flag[<[jail_wanted]>]>:
-                - if <server.flag[<[jail_wanted]>].contains[<context.entity>]>:
+                - if <server.flag[<[jail_wanted]>].find[<context.entity>]>:
                     - flag server <[jail_wanted]>:<-:<context.entity>
             - if <context.entity.groups.size> == 1 && <context.entity.groups.first> == default:
                 - execute as_server "lp user <context.entity.name> parent set slave" silent
             - else:
                 - execute as_server "lp user <context.entity.name> parent add slave" silent
             - flag <context.entity> owner:<[jail]>
-            - flag <context.entity> slave_timer:120
+            - flag <context.entity> slave_timer:<script[Slaves_Config].data_key[slave_timer]>
             - flag server <[jail_slaves]>:|:<context.entity>
             - narrate "<green> Good job Soldier! You caught <red><context.entity.name> <green>breaking the rules." targets:<context.damager>
             - narrate "<green> Welcome to the jail <red>SLAVE!"
