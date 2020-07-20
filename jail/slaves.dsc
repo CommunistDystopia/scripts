@@ -3,6 +3,8 @@
 # /slaves list <jailname> <#> - List the slaves in this jail.
 # /slaves add <jailname> <username> - Adds a slaves to a jail.
 # /slaves remove <jailname> <username> - Removes a slaves from a Jail.
+# /slaves addmax <jailname> <username> - Adds a slaves to this jail. (It's meant for the max security jail)
+# /slaves removemax <jailname> <username> - Removes a slaves from this Jail. (It's meant for the max security jail)
 # /slaves time <jailname> info <username> - Checks the time in minutes of a slave.
 # /slaves time <jailname> add <username> <#> - Adds time in hours to a slave. (Each number is 1 hour)
 # /slaves time <jailname> remove <username> <#> - Remove time in hours to a slave. (Each number is 1 hour)
