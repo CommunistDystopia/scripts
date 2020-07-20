@@ -218,7 +218,7 @@ Slave_Script:
     debug: false
     events:
         after player respawns:
-            - if if <player.in_group[slave]> && <player.has_flag[owner]>:
+            - if <player.in_group[slave]> && <player.has_flag[owner]>:
                 - if <player.has_flag[slave_timer]> && !<player.has_flag[jail_owner]>:
                     - if <server.has_flag[court_active]>:
                         - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
