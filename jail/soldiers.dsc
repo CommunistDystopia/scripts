@@ -207,8 +207,8 @@ Soldier_Script:
                     - stop
                 - if <context.entity.flag[owner]> == <[jail]>:
                     - flag <context.entity> slave_timer:+:<script[Slaves_Config].data_key[slave_timer]>
-                    - narrate "<green> Slave: <red><context.entity.name> <green>time extended by <blue>2 hours"
-                    - narrate "<red> Your time got extended by <yellow>2 hours <red>SLAVE" targets:<context.entity>
+                    - narrate "<green> Slave: <red><context.entity.name> <green>time extended by <blue><script[Slaves_Config].data_key[slave_timer]> minutes"
+                    - narrate "<red> Your time got extended by <yellow><script[Slaves_Config].data_key[slave_timer]> minutes <red>SLAVE" targets:<context.entity>
                 - cooldown 10s script:Soldier_Script
                 - stop
             - if <context.entity.in_group[insurgent]> || <context.entity.in_group[civilian]> || <context.entity.in_group[default]> || <context.entity.in_group[vip]> || <context.entity.in_group[ultravip]> || <context.entity.in_group[supremevip]> || <context.entity.in_group[godvip]>:
