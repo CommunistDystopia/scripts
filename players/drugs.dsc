@@ -220,7 +220,7 @@ Drugs_Script:
 
 Drug_Particle_Task:
     type: task
-    debug: true
+    debug: false
     definitions: drug_name|particle_player|particle_duration|delay
     script:
             - flag <[particle_player]> drug_used_queue:<queue>
