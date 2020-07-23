@@ -30,10 +30,10 @@ Command_Soldier:
             - stop
         - choose <context.args.size>:
             - case 0:
-                - determine <list[add|default|remove|list|wanted|jailstick]>
+                - determine <list[add|default|remove|list|wanted|jailstick|sword]>
             - case 1:
                 - if "!<context.raw_args.ends_with[ ]>":
-                    - determine <list[add|default|remove|list|wanted|jailstick].filter[starts_with[<context.args.first>]]>
+                    - determine <list[add|default|remove|list|wanted|jailstick|sword].filter[starts_with[<context.args.first>]]>
                 - else:
                     - if <server.has_flag[prison_jails]> && <context.args.get[1]> != jailstick:
                         - determine <server.flag[prison_jails].parse[after[jail_]]>
@@ -66,6 +66,9 @@ Command_Soldier:
             - narrate "<red>You do not have permission for that command."
             - stop
         - define action <context.args.get[1]>
+        - if <[action]> == sword:
+            - give guard_sword to:<player.inventory>
+            - stop
         - if <[action]> == jailstick:
             - give jailstick to:<player.inventory>
             - stop
@@ -178,6 +181,22 @@ jailstick:
         - <gray>in the jail that you belong.
         - <red>Lost on death
 
+guard_sword:
+    type: item
+    debug: false
+    material: iron_sword
+    mechanisms:
+        hides: enchants
+    enchantments:
+        - unbreaking:1
+        - vanishing_curse
+    display name: <blue>Guard Sword
+    lore:
+        - <gray>Only does damage to slaves.
+        - <gray>Kill a slave to send them to
+        - <gray>the max security jail.
+        - <red>Lost on death
+
 Soldier_Script:
     type: world
     debug: false
@@ -216,10 +235,24 @@ Soldier_Script:
                 - narrate "<red><context.entity.name> <green>was added to the <yellow>WANTED <green>list"
                 - flag server <[jail_wanted]>:|:<context.entity>
                 - cooldown 10s script:Soldier_Script
+        on player damages player with:guard_sword:
+            - if <context.damager.has_flag[soldier_jail]>:
+                - if <context.entity.in_group[slave]> && <context.entity.has_flag[slave_timer]>:
+                    - stop
+            - determine cancelled
         on player kills player:
-            - if <context.entity.in_group[slave]>:
-                - stop
             - if !<context.damager.has_flag[soldier_jail]>:
+                - stop
+            - if <context.entity.in_group[slave]>:
+                - define killer_item <context.damager.inventory.slot[<context.damager.held_item_slot>]>
+                - if <[killer_item].has_script> && <[killer_item].script.name.contains_all_text[guard_sword]>:
+                    - if <context.entity.has_flag[slave_timer]>:
+                        - if <context.entity.has_flag[non_max_jail]>:
+                            - flag <context.entity> slave_max_timer:-:<script[Slaves_Config].data_key[slave_max_timer]>
+                            - stop
+                        - if <context.entity.has_flag[owner]>:
+                            - execute as_server "slaves addmax <script[Soldiers_Config].data_key[max_security_jail]> <context.entity.name>" silent
+                            - stop
                 - stop
             - if !<context.damager.is_op> && !<context.damager.in_group[supremewarden]> && !<context.damager.in_group[soldier]> && !<context.damager.in_group[general]>:
                 - stop

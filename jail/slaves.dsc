@@ -115,6 +115,8 @@ Command_Slaves:
                     - narrate "<green> Remaining time in Jail: <blue><[username].flag[slave_timer]> <green>minutes" targets:<[username]>
                     - stop
         - if <[action]> == add:
+            - if <context.args.size> < 3:
+                - goto syntax_error
             - define username <server.match_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
