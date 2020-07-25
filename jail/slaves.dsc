@@ -131,13 +131,12 @@ Command_Slaves:
             - flag <[username]> slave_timer:<script[Slaves_Config].data_key[slave_timer]>
             - flag <[username]> jail_owner:!
             - flag <[username]> owner_block_limit:!
-            - if <[username].groups.size> == 1 && <[username].groups.first> == default:
-                - execute as_server "lp user <[username].name> parent set slave" silent
-            - else:
-                - if !<player.in_group[slave]>:
-                    - execute as_server "lp user <[username].name> parent add slave" silent
+            - if !<[username].groups.is_empty>:
+                - flag <[username]> slave_groups:|:<[username].groups>
+            - execute as_server "lp user <[username].name> parent set slave" silent
             - if <[username].is_online>:
-                - teleport <[username]> <location[<[jail_spawn]>]>
+                - if !<context.server>:
+                    - teleport <[username]> <location[<[jail_spawn]>]>
                 - narrate "<green> Welcome to the jail <red>SLAVE!" targets:<[username]>
             - narrate "<green> Slave <blue><[username].name> <green>added to the Jail!"
             - stop
@@ -201,6 +200,10 @@ Command_Slaves:
             - flag <[username]> slave_lead_queue:!
             - flag <[username]> non_max_jail:!
             - flag <[username]> slave_max_timer:!
+            - if <[username].has_flag[slave_groups]>:
+                - foreach <[username].flag[slave_groups]> as:group:
+                    - execute as_server "lp user <[username].name> parent add <[group]>" silent
+            - flag <[username]> slave_groups:!
             - execute as_server "lp user <[username].name> parent remove slave" silent
             - narrate "<green> Slave <blue><[username].name> <green>removed!"
             - stop

@@ -96,9 +96,10 @@ Command_Jail:
             - define jail_wanted <[jail_name]>_wanteds
             - if <server.has_flag[<[jail_slaves]>]>:
                 - foreach <server.flag[<[jail_slaves]>]> as:slave:
-                    - execute as_server "lp user <[slave].name> parent remove slave" silent
-                    - flag <[slave]> owner:!
-                    - flag <[slave]> slave_timer:!
+                    - if <[slave].has_flag[jail_owner]>:
+                        - execute as_server "slaves remove <[slave].flag[jail_owner].after[jail_]> <[slave].name>" silent
+                    - else:
+                        - execute as_server "slaves remove <[slave].flag[owner].after[jail_]> <[slave].name>" silent
                 - flag server <[jail_slaves]>:!
             - if <server.has_flag[<[jail_soldiers]>]>:
                 - foreach <server.flag[<[jail_soldiers]>]> as:soldier:

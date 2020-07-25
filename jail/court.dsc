@@ -199,12 +199,7 @@ Command_Court:
                     - narrate "<white> The Slave <red><[slave].name> <white>is declared <red>Guilty" targets:<server.online_players>
                     - narrate "<white> Welcome back to the Jail! With <red>2 hours <white>more." targets:<[slave]>
                 - if <[target]> == innocent:
-                    - flag server <[slave].flag[owner]>_slaves:<-:<[slave]>
-                    - flag <[slave]> slave_timer:!
-                    - flag <[slave]> owner:!
-                    - flag <[slave]> jail_owner:!
-                    - flag <[slave]> owner_block_limit:!
-                    - execute as_server "lp user <[slave].name> parent remove slave" silent
+                    - execute as_server "slaves remove <[slave].flag[owner].after[jail_]> <[slave].name>" silent
                     - narrate "<white> The Slave <red><[slave].name> <white>is declared <green>Innocent" targets:<server.online_players>
                     - narrate "<green> You're free! <white>/t spawn out!" targets:<[slave]>
                 - run Court_Task_Script def:<[slave]>

@@ -72,12 +72,16 @@ Command_Slave_Lead:
             - stop
         - if <[action]> == free:
             - if <[slave].has_flag[jail_owner]>:
-                - define jail_slaves <[slave].flag[jail_owner]>_slaves
-                - flag server <[jail_slaves]>:<-:<[slave]>
+                - execute as_server "slaves remove <[slave].flag[jail_owner].after[jail_]> <[slave].name>" silent
+                - flag <[slave]> jail_owner:!
+                - stop
             - flag <[slave]> owner:!
-            - flag <[slave]> slave_timer:!
-            - flag <[slave]> jail_owner:!
             - flag <[slave]> owner_block_limit:!
+            - flag <[slave]> slave_lead_queue:!
+            - if <[slave].has_flag[slave_groups]>:
+                - foreach <[slave].flag[slave_groups]> as:group:
+                    - execute as_server "lp user <[slave].name> parent add <[group]>" silent
+            - flag <[slave]> slave_groups:!
             - execute as_server "lp user <[slave].name> parent remove slave" silent
             - narrate "<green> The slave <red><[slave].name> <green>is now free!"
             - stop

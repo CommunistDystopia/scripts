@@ -345,12 +345,4 @@ Soldier_Script:
             - if <server.has_flag[<[jail_wanted]>]>:
                 - if <server.flag[<[jail_wanted]>].find[<context.entity>]>:
                     - flag server <[jail_wanted]>:<-:<context.entity>
-            - if <context.entity.groups.size> == 1 && <context.entity.groups.first> == default:
-                - execute as_server "lp user <context.entity.name> parent set slave" silent
-            - else:
-                - execute as_server "lp user <context.entity.name> parent add slave" silent
-            - flag <context.entity> owner:<[jail]>
-            - flag <context.entity> slave_timer:<script[Slaves_Config].data_key[slave_timer]>
-            - flag server <[jail_slaves]>:|:<context.entity>
-            - narrate "<green> Good job Soldier! You caught <red><context.entity.name> <green>breaking the rules." targets:<context.damager>
-            - narrate "<green> Welcome to the jail <red>SLAVE!"
+            - execute as_server "slaves add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
