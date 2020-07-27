@@ -4,14 +4,9 @@
 # /drugs give <username> <drugname> <quantity> - Give X drugs to the user [quantity: 1~64]
 # /drugs remove <username> - Remove the high effects of the drugs to the user. (It will have withdrawal symptoms)
 # Player flags created here
-# - drug_duration [60s ~ 600s]
 # - drug_used [heroine] [weed] [brown_brown] [drug_mushroom]
 # - heroine_amount [1 ~ 10]
 # - heroine_tolerance [1 ~ 3]
-# - heroine_tolerance_cooldown [14440s]
-# - withdrawal_cooldown [60s]
-# - withdrawal_duration [7200s]
-# - withdrawal_message_cooldown [300s]
 
 Command_Drug:
     type: command
@@ -117,9 +112,7 @@ Drugs_Script:
                     - if <[server_player].flag[drug_duration]> <= 0:
                         - flag <[server_player]> drug_duration:!
                         - flag <[server_player]> drug_used_queue:!
-                - if <[server_player].has_flag[drug_used]> && !<[server_player].has_flag[drug_duration]>:
-                    - if !<[server_player].has_flag[withdrawal_duration]>:
-                        - flag <[server_player]> withdrawal_duration:7200
+                - if <[server_player].has_flag[withdrawal_duration]>:
                     - flag <[server_player]> withdrawal_duration:-:1
                     - if <[server_player].flag[withdrawal_duration]> <= 0:
                         - flag <[server_player]> withdrawal_duration:!
@@ -127,6 +120,9 @@ Drugs_Script:
                         - flag <[server_player]> withdrawal_cooldown:!
                         - flag <[server_player]> withdrawal_message_cooldown:!
                         - stop
+                - if <[server_player].has_flag[drug_used]> && !<[server_player].has_flag[drug_duration]>:
+                    - if !<[server_player].has_flag[withdrawal_duration]>:
+                        - flag <[server_player]> withdrawal_duration:<script[Drugs_Config].data_key[withdrawal_duration]>
                     - if <[server_player].has_flag[withdrawal_cooldown]>:
                         - flag <[server_player]> withdrawal_cooldown:-:1
                         - if <[server_player].flag[withdrawal_cooldown]> <= 0:
@@ -140,8 +136,8 @@ Drugs_Script:
                         - cast BLINDNESS duration:<[server_player].flag[withdrawal_duration]>s amplifier:0 <[server_player]> hide_particles
                         - if !<[server_player].has_flag[withdrawal_message_cooldown]>:
                             - actionbar "<yellow> I need more <red>Heroine <yellow>or <red>BrownBrown <yellow>to feel better" target:<[server_player]>
-                            - flag <[server_player]> withdrawal_message_cooldown:300
-                        - flag <[server_player]> withdrawal_cooldown:60
+                            - flag <[server_player]> withdrawal_message_cooldown:<script[Drugs_Config].data_key[withdrawal_message_cooldown]>
+                        - flag <[server_player]> withdrawal_cooldown:<script[Drugs_Config].data_key[withdrawal_cooldown]>
         on player consumes milk_bucket:
             - determine cancelled
         on player right clicks block with:drug_heroine|drug_brown_brown|drug_weed|drug_mushroom:
@@ -160,10 +156,10 @@ Drugs_Script:
                             - flag <player> heroine_tolerance:0
                         - if <player.flag[heroine_tolerance]> < 3:
                             - flag <player> heroine_tolerance:+:1
-                            - flag <player> heroine_tolerance_cooldown:14440
+                            - flag <player> heroine_tolerance_cooldown:<script[Drugs_Config].data_key[heroine_tolerance_cooldown]>
                             - narrate "<yellow> Tolerance level changed. The drug will last less time"
                             - narrate "<yellow> Wait 1 day to lower the tolerance by one level"
-                    - flag <player> drug_duration:600
+                    - flag <player> drug_duration:<script[Drugs_Config].data_key[drug_duration]>
                     - if <player.has_flag[heroine_tolerance]>:
                         - if <player.flag[heroine_tolerance]> == 1:
                             - flag <player> drug_duration:480
@@ -186,7 +182,7 @@ Drugs_Script:
                             - flag <player> heroine_tolerance:0
                         - if <player.flag[heroine_tolerance]> < 3:
                             - flag <player> heroine_tolerance:+:1
-                            - flag <player> heroine_tolerance_cooldown:14400
+                            - flag <player> heroine_tolerance_cooldown:<script[Drugs_Config].data_key[heroine_tolerance_cooldown]>
                             - narrate "<yellow> Tolerance level changed. The drug will last less time"
                             - narrate "<yellow> Wait 1 day to lower the tolerance by one level"
                         - hurt 999 <player>
@@ -195,24 +191,24 @@ Drugs_Script:
                         - cast remove BLINDNESS <player>
                         - cast remove CONFUSION <player>
                         - cast remove SLOW <player>
-                    - flag <player> drug_duration:600
+                    - flag <player> drug_duration:<script[Drugs_Config].data_key[drug_duration]>
                     - cast INCREASE_DAMAGE duration:<player.flag[drug_duration]>s amplifier:2 <player>
                     - cast SLOW_FALLING duration:<player.flag[drug_duration]>s amplifier:0 <player>
                     - cast NIGHT_VISION duration:<player.flag[drug_duration]>s amplifier:0 <player>
                     - cast REGENERATION duration:<player.flag[drug_duration]>s amplifier:1 <player>
                     - feed <player> amount:8 saturation:5
                     - flag <player> drug_used:brown_brown
-                    - run Drug_Particle_Task def:brown_brown|<player>|600|3
+                    - run Drug_Particle_Task def:brown_brown|<player>|<script[Drugs_Config].data_key[drug_duration]>|3
                 - case drug_weed:
-                    - flag <player> drug_duration:600
+                    - flag <player> drug_duration:<script[Drugs_Config].data_key[drug_duration]>
                     - cast NIGHT_VISION duration:<player.flag[drug_duration]>s amplifier:0 <player> hide_particles
                     - cast REGENERATION duration:<player.flag[drug_duration]>s amplifier:0 <player> hide_particles
                     - cast LUCK duration:<player.flag[drug_duration]>s amplifier:0 <player> hide_particles
                     - flag <player> drug_used:weed
                 - case drug_mushroom:
-                    - flag <player> drug_duration:600
+                    - flag <player> drug_duration:<script[Drugs_Config].data_key[drug_duration]>
                     - cast LUCK duration:<player.flag[drug_duration]>s amplifier:0 <player> hide_particles
-                    - run Drug_Particle_Task def:drug_mushroom|<player>|600|1
+                    - run Drug_Particle_Task def:drug_mushroom|<player>|<script[Drugs_Config].data_key[drug_duration]>|1
                     - flag <player> drug_used:drug_mushroom
                 - default:
                     - determine cancelled
