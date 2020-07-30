@@ -40,7 +40,7 @@ Command_Slave_Shop:
         - define action <context.args.get[1]>
         - define slave <server.match_player[<context.args.get[2]>]||null>
         - if <[slave]> == null:
-            - narrate "<red> ERROR: .Invalid player username OR the player is offline."
+            - narrate "<red> ERROR: Invalid player username OR the player is offline."
             - stop
         - if !<[slave].in_group[slave]> || !<[slave].has_flag[owner]>:
             - narrate "<red> ERROR: This user isn't a slave"
@@ -48,7 +48,10 @@ Command_Slave_Shop:
         - if !<[slave].has_flag[slave_timer]> && <[slave].has_flag[owner]> && <[slave].in_group[slave]>:
             - narrate "<red> ERROR: <yellow><[slave].name> <red>is already gotten by <gold>Godvip <red>or a <blue>SupremeWarden"
             - stop
-        - if <[action]> == sell && <player.in_group[supremewarden]>:
+        - if <[action]> == sell:
+            - if !<player.is_op> && !<player.in_group[supremewarden]>:
+                - narrate "<red>You do not have permission for that command"
+                - stop
             - if <server.has_flag[auction_highest_bid]>:
                 - narrate "<red> ERROR: There is a <gold>Godvip <red>auction active"
                 - stop
@@ -81,7 +84,7 @@ Command_Slave_Shop:
                 - flag server auction_highest_bidder:!
                 - flag server auction_highest_bid:!
                 - stop
-            - take <[highest_bidder]> money quantity:<server.flag[auction_highest_bid]>
+            - take from:<[highest_bidder].inventory> money quantity:<server.flag[auction_highest_bid]>
             - flag server auction_slave_jail:<[slave].flag[owner]>
             - if <[slave].has_flag[jail_owner]>:
                 - flag server auction_slave_jail:<[slave].flag[owner]>
@@ -98,15 +101,15 @@ Command_Slave_Shop:
             - flag server auction_highest_bidder:!
             - flag server auction_highest_bid:!
             - stop
-        - if <[action]> == bid && <context.args.size> == 3 && <player.in_group[godvip]>:
+        - if <[action]> == bid && <context.args.size> == 3:
             - define amount <context.args.get[3]>
             - if !<server.has_flag[auction_highest_bid]>:
                 - narrate "<red> ERROR: There is no <gold>Godvip <red>auction active"
                 - stop
-            - if <player.money> < amount:
+            - if <player.money> < <[amount]>:
                 - narrate "<red> ERROR: You don't have enough money to bid <yellow><[amount]>!"
                 - stop
-            - if <[amount]> < <server.flag[auction_highest_bid]>
+            - if <[amount]> < <server.flag[auction_highest_bid]>:
                 - narrate "<red> ERROR: You bid is lower than the highest. Please try a higher amount"
                 - stop
             - flag server auction_highest_bidder:<player>

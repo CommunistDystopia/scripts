@@ -5,7 +5,7 @@ Rotten_Silverfish_Script:
         on player closes inventory:
             - if <context.inventory.inventory_type> == SMOKER || <context.inventory.inventory_type> == FURNACE || <context.inventory.inventory_type> == CHEST:
                 - define map_inv <context.inventory.map_slots>
-                - foreach <[map_inv].list_keys> as:inv_slot:
+                - foreach <[map_inv].keys> as:inv_slot:
                     - if <context.inventory.slot[<[inv_slot]>].material.is_edible>:
                         - inventory adjust slot:<[inv_slot]> lore:expires_in:<util.time_now.add[1d].to_utc.format> d:<context.inventory>
         on player opens inventory:

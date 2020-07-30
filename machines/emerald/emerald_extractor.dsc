@@ -23,14 +23,14 @@ Emerald_Extractor_Script:
                 - determine cancelled
             - define key <context.item.script.name.replace_text[_T].with[_upgrade_]>
             - define upgrade_cost <script[Emerald_Extractor_Data].data_key[<[key]>].get[upgrade_cost]>
-            - foreach <[upgrade_cost].list_keys> as:upgrade_item:
+            - foreach <[upgrade_cost].keys> as:upgrade_item:
                 - define item_quantity <[upgrade_cost].get[<[upgrade_item]>]>
                 - if !<player.inventory.contains[<[upgrade_item]>].quantity[<[item_quantity]>]>:
                     - narrate "<red> ERROR: You don't have enough items to purchase this upgrade."
                     - inventory close d:<context.inventory>
                     - determine cancelled
                     - stop
-            - foreach <[upgrade_cost].list_keys> as:upgrade_item:
+            - foreach <[upgrade_cost].keys> as:upgrade_item:
                 - define item_quantity <[upgrade_cost].get[<[upgrade_item]>]>
                 - if <script[<[upgrade_item]>]||null> == null:
                     - take material:<[upgrade_item]> from:<player.inventory> quantity:<[item_quantity]>

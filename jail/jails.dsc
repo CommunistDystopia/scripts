@@ -69,7 +69,7 @@ Command_Jail:
                 - narrate "<red> ERROR: The name is used by other jail."
                 - stop
             - define jail <cuboid[<location[<[x1]>,<[y1]>,<[z1]>,world]>|<location[<[x2]>,<[y2]>,<[z2]>,world]>]>
-            - define jails <server.list_notables[cuboids].parse[notable_name].filter[starts_with[jail]]>
+            - define jails <server.notables[cuboids].parse[note_name].filter[starts_with[jail_]]>
             - foreach <[jails]> as:other_jail:
                 - if <[jail].intersects[<cuboid[<[other_jail]>]>]>:
                     - narrate "<red> ERROR: Your jail conflicts with other jail. Try to change the location of your jail."

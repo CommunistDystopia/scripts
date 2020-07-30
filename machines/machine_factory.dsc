@@ -13,7 +13,7 @@ Machine_Task:
             - repeat <[upgrade_amount]>:
                 - if <[machine_inventory].find_imperfect[<[machine_name]>_T<[value]>]> != -1 || <[item_drop].script.name||null> == <script[<[machine_name]>_T<[value]>].name>:
                     - define machine_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Upgrade_<[value]>]>
-                    - foreach <[machine_data].get[required_items].list_keys> as:machine_item:
+                    - foreach <[machine_data].get[required_items].keys> as:machine_item:
                         - define item_quantity <[machine_data].get[required_items].get[<[machine_item]>]>
                         - if <script[<[machine_item]>]||null> == null:
                             - if <[machine_inventory].quantity.material[<[machine_item]>]> < <[item_quantity]>:
@@ -23,7 +23,7 @@ Machine_Task:
                             - if <[machine_inventory].quantity[<[machine_item]>]> < <[item_quantity]>:
                                 - determine cancelled
                                 - stop
-                    - foreach <[machine_data].get[required_items].list_keys> as:machine_item:
+                    - foreach <[machine_data].get[required_items].keys> as:machine_item:
                         - define item_quantity <[machine_data].get[required_items].get[<[machine_item]>]>
                         - if <script[<[machine_item]>]||null> == null:
                             - take material:<[machine_item]> from:<[machine_inventory]> quantity:<[item_quantity]>
@@ -34,7 +34,7 @@ Machine_Task:
                     - determine <item[<script[<[machine_name]>_Data].data_key[product]>]>
                     - stop
             - define machine_default_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Default]>
-            - foreach <[machine_default_data].get[required_items].list_keys> as:machine_item:
+            - foreach <[machine_default_data].get[required_items].keys> as:machine_item:
                 - define item_quantity <[machine_default_data].get[required_items].get[<[machine_item]>]>
                 - if <script[<[machine_item]>]||null> == null:
                     - if <[machine_inventory].quantity.material[<[machine_item]>]> < <[item_quantity]>:
@@ -44,7 +44,7 @@ Machine_Task:
                     - if <[machine_inventory].quantity[<[machine_item]>]> < <[item_quantity]>:
                         - determine cancelled
                         - stop
-            - foreach <[machine_default_data].get[required_items].list_keys> as:machine_item:
+            - foreach <[machine_default_data].get[required_items].keys> as:machine_item:
                 - define item_quantity <[machine_default_data].get[required_items].get[<[machine_item]>]>
                 - if <script[<[machine_item]>]||null> == null:
                     - take material:<[machine_item]> from:<[machine_inventory]> quantity:<[item_quantity]>
@@ -68,7 +68,7 @@ Fill_Machine_Task:
             - repeat <[upgrade_amount]>:
                 - if <[machine_inventory].find_imperfect[<[machine_name]>_T<[value]>]> != -1:
                     - define machine_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Upgrade_<[value]>]>
-                    - foreach <[machine_data].get[required_items].list_keys> as:machine_item:
+                    - foreach <[machine_data].get[required_items].keys> as:machine_item:
                         - define item_quantity <[machine_data].get[required_items].get[<[machine_item]>]>
                         - if <script[<[machine_item]>]||null> == null:
                             - if !<[filler_inventory].contains[<[machine_item]>].quantity[<[item_quantity]>]>:
@@ -85,7 +85,7 @@ Fill_Machine_Task:
                             - inventory adjust slot:<[machine_slot]> d:<[machine_inventory]> lore:<[machine_lore].include[<red>Damaged]>
                             - narrate "<red> You acidentally damaged the machine when filling the dropper."
             - define machine_default_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Default]>
-            - foreach <[machine_default_data].get[required_items].list_keys> as:machine_item:
+            - foreach <[machine_default_data].get[required_items].keys> as:machine_item:
                 - define item_quantity <[machine_default_data].get[required_items].get[<[machine_item]>]>
                 - if <script[<[machine_item]>]||null> == null:
                     - if !<[filler_inventory].contains.material[<[machine_item]>].quantity[<[item_quantity]>]>:
@@ -119,7 +119,7 @@ Repair_Machine_Task:
             - repeat <[upgrade_amount]>:
                 - if <[machine_inventory].find_imperfect[<[machine_name]>_T<[value]>]> != -1:
                     - define machine_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Upgrade_<[value]>]>
-                    - foreach <[machine_data].get[repair_items].list_keys> as:machine_item:
+                    - foreach <[machine_data].get[repair_items].keys> as:machine_item:
                         - define item_quantity <[machine_data].get[repair_items].get[<[machine_item]>]>
                         - if <script[<[machine_item]>]||null> == null:
                             - if !<[filler_inventory].contains[<[machine_item]>].quantity[<[item_quantity]>]>:
@@ -135,7 +135,7 @@ Repair_Machine_Task:
                     - inventory adjust slot:<[machine_slot]> d:<[machine_inventory]> lore:<[machine_lore].exclude[<red>Damaged]>
                     - stop
             - define machine_default_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Default]>
-            - foreach <[machine_default_data].get[repair_items].list_keys> as:machine_item:
+            - foreach <[machine_default_data].get[repair_items].keys> as:machine_item:
                 - define item_quantity <[machine_default_data].get[repair_items].get[<[machine_item]>]>
                 - if <script[<[machine_item]>]||null> == null:
                     - if !<[filler_inventory].contains[<[machine_item]>].quantity[<[item_quantity]>]>:
@@ -171,7 +171,7 @@ Filter_Machine_Task:
     script:
         - if <[machine_inventory].find_imperfect[<[machine_name]>]> != -1:
             - define machine_default_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Default]>
-            - define required_items <[machine_default_data].get[required_items].list_keys>
+            - define required_items <[machine_default_data].get[required_items].keys>
             - if <[item_to_filter].has_script>:
                 - if <[required_items].find[<[item_to_filter].script.name>]> == -1:
                     - take <[item_to_filter]> from:<[machine_inventory]>
