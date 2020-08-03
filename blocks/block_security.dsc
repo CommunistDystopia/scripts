@@ -55,6 +55,11 @@ Region_Command:
         - if <[value].contains_all_text[region]>:
             - narrate "<red> ERROR: Don't use region in the name of the block security region"
             - stop
+        - if <server.has_flag[block_security_regions]>:
+            - foreach <server.flag[block_security_regions]> as:region:
+                - if <player.flag[ctool_selection].as_cuboid.intersects[<cuboid[<[region]>]>]>:
+                    - narrate "<red> ERROR: Your region conflicts with other region. Try to change the location of your region."
+                    - stop
         - note <player.flag[ctool_selection]> as:region_<[value]>
         - flag server block_security_regions:|:region_<[value]>
         - inject cuboid_tool_status_task
@@ -67,7 +72,7 @@ Region_Command:
             - stop
         - note remove as:region_<[value]>
         - flag server block_security_regions:<-:region_<[value]>
-        - narrate "<green> Block Security Region <red><[value]> removed"
+        - narrate "<green> Block Security Region <red><[value]> <green>removed"
         - stop
     - mark syntax_error
     - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
