@@ -240,7 +240,7 @@ Command_Soldier:
             - define secondary_action <context.args.get[2]>
             - if <[secondary_action]> == list:
                 - define list_page <context.args.get[3]>
-                - run List_Task_Script def:<[jail_name]>|Wanted|<[list_page]>
+                - run List_Task_Script def:<[jail_name]>_wanteds|Wanted|<[list_page]>
                 - stop
             - if <[secondary_action]> == add:
                 - define username <server.match_player[<context.args.get[3]>]||null>
