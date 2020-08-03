@@ -9,6 +9,8 @@
 # @author devnodachi
 # @date 2020/08/02
 # @denizen-build REL-1714
+# @dependency mcmonkey/cuboid_tool
+#
 #
 # Commands
 # /jail create <jailname> - Adds a jail
