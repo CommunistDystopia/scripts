@@ -85,7 +85,7 @@ Command_Jail:
             - stop
         - if <[action]> == list:
             - define list_page <context.args.get[2]>
-            - run List_Task_Script def:Prison|Jail|<[list_page]>
+            - run List_Task_Script def:prison_jails|Jail|<[list_page]>|false
             - stop
         - if <[action]> == delete:
             - if <cuboid[<[jail_name]>]||null> == null:

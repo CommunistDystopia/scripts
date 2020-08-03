@@ -2,6 +2,8 @@
 # |
 # | BLOCK SECURITY
 # |
+# | Protect your blocks.
+# |
 # +----------------------
 #
 # @author devnodachi
@@ -10,7 +12,9 @@
 # @dependency mcmonkey/cuboid_tool
 #
 # Commands
-# /blocksecurity <name>
+# /blocksecurity create <name>
+# /blocksecurity delete <name>
+# /blocksecurity list <#>
 # After selecting with the cuboid tool, save the region with this name.
 # The region will be protected from block break/place.
 # And the containers within the region can't be opened.
@@ -24,24 +28,53 @@ Region_Command:
     - blocksec
     description: Saves your selected region.
     usage: /blocksecurity [name]
+    tab complete:
+        - if !<player.is_op||<context.server>>:
+            - stop
+        - choose <context.args.size>:
+            - case 0:
+                - determine <list[create|delete|list]>
+            - case 1:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <list[create|delete|list].filter[starts_with[<context.args.first>]]>
     script:
-    - if !<player.is_op>:
+    - if !<player.is_op||<context.server>>:
         - narrate "<red>You do not have permission for that command."
         - stop
-    - if !<player.has_flag[ctool_selection]>:
-        - narrate "<red>You don't have any region selected."
+    - if <context.args.size> < 2:
+        - goto syntax_error
+    - define action <context.args.get[1]>
+    - define value <context.args.get[2]>
+    - if <[action]> == list:
+        - run List_Task_Script def:block_security_regions|Region|<[value]>|false
         - stop
-    - if <context.args.size> != 1:
-        - narrate "/region [name]"
+    - if <[action]> == create:
+        - if !<player.has_flag[ctool_selection]>:
+            - narrate "<red> ERROR: You don't have any region selected."
+            - stop
+        - if <[value].contains_all_text[region]>:
+            - narrate "<red> ERROR: Don't use region in the name of the block security region"
+            - stop
+        - note <player.flag[ctool_selection]> as:region_<[value]>
+        - flag server block_security_regions:|:region_<[value]>
+        - inject cuboid_tool_status_task
+        - narrate "<green>Block Security Region <aqua><[value]><green> added with <[message]>."
+        - flag <player> ctool_selection:!
         - stop
-    - if <context.args.get[1].contains_all_text[region]>:
-        - narrate "<red> Don't use region in the name of the region"
+    - if <[action]> == delete:
+        - if <cuboid[region_<[value]>]||null> == null:
+            - narrate "<red> ERROR: That block security region doesn't exist"
+            - stop
+        - note remove as:region_<[value]>
+        - flag server block_security_regions:<-:region_<[value]>
+        - narrate "<green> Block Security Region <red><[value]> removed"
         - stop
-    - note <player.flag[ctool_selection]> as:region_<context.args.get[1]>
-    - inject cuboid_tool_status_task
-    - narrate "<green>Region <aqua><context.args.get[1]><green> noted with <[message]>."
-    - flag <player> ctool_selection:!
-
+    - mark syntax_error
+    - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
+    - narrate "<yellow>-<white> To create a block security region: /blocksecurity create <yellow>name"
+    - narrate "<yellow>-<white> To delete a block security region: /blocksecurity delete <yellow>name"
+    - narrate "<yellow>-<white> To list the block security regions: /blocksecurity list"
+    
 Region_Script:
     type: world
     debug: false
