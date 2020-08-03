@@ -1,3 +1,32 @@
+# +----------------------
+# |
+# | M A C H I N E [ M A N A G E R ]
+# |
+# | After you craft a machine you become the manager.
+# | Use this to take full advantage of the machines.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+# @dependency devnodachi/machines
+#
+
+wrench:
+    type: item
+    debug: false
+    material: stick
+    mechanisms:
+        hides: enchants
+    enchantments:
+        - unbreaking:1
+    display name: <green>Wrench
+    lore:
+        - <gray>Used to repair machines
+        - <gray>Bring some <white>iron ingots
+        - <gray>And left click the machine to repair!
+
 Command_Manager:
     type: command
     debug: false

@@ -1,3 +1,16 @@
+# +----------------------
+# |
+# | L A N D M I N E
+# |
+# | Place a landmine. Walk over it. BOOM!
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+#
+
 landminer:
     type: item
     debug: false

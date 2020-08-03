@@ -1,3 +1,17 @@
+# +----------------------
+# |
+# | S O L D I E R S
+# |
+# | Have soldiers to send rule-breakers to the jail.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+# @dependency devnodachi/jails
+#
+# Commands
 # Soldiers Admin
 # /soldiersadmin Usage
 # /soldiers add <jailname> <username> - Adds a soldier to a jail.
@@ -302,19 +316,24 @@ Soldier_Script:
             - mark default_soldier
             - define jail <player.flag[soldier_jail]>
             - if <context.entity.in_group[slave]>:
-                - if !<context.entity.has_flag[slave_timer]>:
+                - if !<context.entity.has_flag[slave_timer]> || <context.entity.flag[owner]> != <[jail]>:
                     - narrate "<red> ERROR: This slave is property of someone!"
                     - stop
-                - if <context.entity.flag[owner]> == <[jail]>:
-                    - flag <context.entity> slave_timer:+:<script[Slaves_Config].data_key[slave_timer]>
-                    - narrate "<green> Slave: <red><context.entity.name> <green>time extended by <blue><script[Slaves_Config].data_key[slave_timer]> minutes"
-                    - narrate "<red> Your time got extended by <yellow><script[Slaves_Config].data_key[slave_timer]> minutes <red>SLAVE" targets:<context.entity>
+                - flag <context.entity> slave_timer:+:<script[Slaves_Config].data_key[slave_timer]>
+                - narrate "<green> Slave: <red><context.entity.name> <green>time extended by <blue><script[Slaves_Config].data_key[slave_timer]> minutes"
+                - narrate "<red> Your time got extended by <yellow><script[Slaves_Config].data_key[slave_timer]> minutes <red>SLAVE" targets:<context.entity>
                 - cooldown 10s script:Soldier_Script
                 - stop
             - if <context.entity.in_group[insurgent]> || <context.entity.in_group[civilian]> || <context.entity.in_group[default]> || <context.entity.in_group[vip]> || <context.entity.in_group[ultravip]> || <context.entity.in_group[supremevip]> || <context.entity.in_group[godvip]>:
-                - define jail_wanted <[jail]>_wanteds
-                - narrate "<red><context.entity.name> <green>was added to the <yellow>WANTED <green>list"
-                - flag server <[jail_wanted]>:|:<context.entity>
+                - if <server.has_flag[<[jail]>_wanteds]>:
+                    - if <server.flag[<[jail]>_wanteds].find[<context.entity>]> == -1:
+                        - flag server <[jail]>_wanteds:|:<context.entity>
+                        - narrate "<red><context.entity.name> <green>was added to the <yellow>WANTED <green>list"
+                    - else:
+                        - narrate "<red><context.entity.name> <green>is already in the <yellow>WANTED <green>list"
+                - else:
+                    - flag server <[jail]>_wanteds:|:<context.entity>
+                    - narrate "<red><context.entity.name> <green>was added to the <yellow>WANTED <green>list"
                 - cooldown 10s script:Soldier_Script
         on player damages player with:guard_sword:
             - if <context.damager.has_flag[soldier_jail]>:
@@ -340,9 +359,28 @@ Soldier_Script:
             - define jail <context.damager.flag[soldier_jail]>
             - define jail_slaves <[jail]>_slaves
             - define jail_wanted <[jail]>_wanteds
-            - if !<context.entity.in_group[insurgent]> && !<server.has_flag[<[jail_wanted]>]>:
-                - stop
             - if <server.has_flag[<[jail_wanted]>]>:
-                - if <server.flag[<[jail_wanted]>].find[<context.entity>]>:
+                - if <server.flag[<[jail_wanted]>].find[<context.entity>]> != -1:
                     - flag server <[jail_wanted]>:<-:<context.entity>
-            - execute as_server "slaves add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
+                    - execute as_server "slaves add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
+                    - stop
+            - if <context.entity.in_group[insurgent]>:
+                - execute as_server "slaves add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
+                - stop
+    # thanks to @mcmonkey for the idea
+        on player drops jailstick:
+            - remove <context.entity>
+        on player drops guard_sword:
+            - remove <context.entity>
+        on player clicks in inventory with:jailstick:
+            - inject locally abuse_prevention_click
+        on player drags jailstick in inventory:
+            - inject locally abuse_prevention_click
+    abuse_prevention_click:
+        - if <context.inventory.inventory_type> == player:
+            - stop
+        - if <context.inventory.inventory_type> == crafting:
+            - if <context.raw_slot||<context.raw_slots.numerical.first>> >= 6:
+                - stop
+        - determine passively cancelled
+        - inventory update

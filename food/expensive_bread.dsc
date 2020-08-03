@@ -1,3 +1,14 @@
+# +----------------------
+# |
+# | EXPENSIVE BREAD
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+#
+
 expensive_bread:
     type: item
     debug: false

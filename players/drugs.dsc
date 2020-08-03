@@ -1,5 +1,14 @@
-## Drugs
-# /drugs
+# +----------------------
+# |
+# | D R U G S
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+#
+# Commands.
 # /drugs give <username> medicine <quantity> - Give X drug medicines to the user [quantity: 1~64]
 # /drugs give <username> <drugname> <quantity> - Give X drugs to the user [quantity: 1~64]
 # /drugs remove <username> - Remove the high effects of the drugs to the user. (It will have withdrawal symptoms)

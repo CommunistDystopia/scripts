@@ -1,4 +1,18 @@
-# /court Usage
+# +----------------------
+# |
+# | C O U R T
+# |
+# | Give slaves a chance to be free.
+# | Open jobs for the Judge and Lawyer groups.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+# @dependency devnodachi/jails devnodachi/slaves
+#
+# Commands
 # - Slave Commands
 # /court request trial - The slave request a trial
 # /court request lawyer - The slave request a lawyer

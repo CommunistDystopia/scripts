@@ -1,3 +1,17 @@
+# +----------------------
+# |
+# | EMERALD EXTRACTOR
+# |
+# | A Machine that produces emeralds with green crystals.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+# @dependency devnodachi/machine_factory devnodachi/emerald/emerald_extractor
+#
+
 Emerald_Washer_Script:
     type: world
     debug: false

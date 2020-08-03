@@ -1,4 +1,17 @@
-# /slaveshop usage
+# +----------------------
+# |
+# | SLAVES AUCTION
+# |
+# | Sell slaves in jail to others.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+# @dependency devnodachi/jails devnodachi/slaves
+#
+# Commands
 # /slaveshop sell <slavename> - Starts an slave auction. [SupremeWarden]
 # /slaveshop bid <slavename> <amount> - Place a bid on an active auction. [Godvip]
 # Additional notes
@@ -9,12 +22,14 @@
 # Player flags created here
 # - owner_block_limit [Used in SlaveLead]
 
-Command_Slave_Shop:
+Command_Slave_Auction:
     type: command
     debug: false
-    name: slaveshop
+    name: slaveauction
+    aliases:
+        - slaveauc
     description: Minecraft slave auction system.
-    usage: /slaveshop
+    usage: /slaveauction
     tab complete:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.in_group[godvip]>:
             - stop

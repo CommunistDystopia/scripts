@@ -1,5 +1,15 @@
-
-# /raidtown Usage
+# +----------------------
+# |
+# | R A I D
+# |
+# | Raid other players ignoring Towny protection.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+#
 # /raidtown points add <username> <#> - Add raid points to a user.
 # /raidtown points remove <username> <#> - Removes raid points from a user.
 # /raidtown points info <username> - Show the current raid points of a user.
@@ -205,7 +215,7 @@ Raid_Town_Script:
     events:
         on player breaks block bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
-                - if !<context.location.regions.is_empty>:
+                - if !<context.location.cuboids.parse[note_name].filter[starts_with[region_]].is_empty>:
                     - stop
                 - if <context.material.is_ageable> || <context.material.name> == MELON:
                     - determine cancelled:false
@@ -221,7 +231,7 @@ Raid_Town_Script:
                     - stop
         after player places block bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
-                - if !<context.location.regions.is_empty>:
+                - if !<context.location.cuboids.parse[note_name].filter[starts_with[region_]].is_empty>:
                     - stop
                 - if !<player.inventory.slot[<player.held_item_slot>].repairable>:
                     - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.sub[1]>
@@ -236,7 +246,7 @@ Raid_Town_Script:
                     - stop
         on player clicks block bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
-                - if !<player.location.regions.is_empty>:
+                - if !<context.location.cuboids.parse[note_name].filter[starts_with[region_]].is_empty>:
                     - stop
                 - if <context.click_type> != RIGHT_CLICK_BLOCK || !<context.location.material.item.has_inventory>:
                     - determine cancelled:false
@@ -244,11 +254,11 @@ Raid_Town_Script:
                 - inventory open d:<context.location>
         on player damages ARMOR_STAND bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
-                - if !<player.location.regions.is_empty>:
+                - if !<context.location.cuboids.parse[note_name].filter[starts_with[region_]].is_empty>:
                     - stop
                 - determine cancelled:false
         on player damages ITEM_FRAME bukkit_priority:HIGHEST ignorecancelled:true:
             - if <server.has_flag[raid_active]>:
-                - if !<player.location.regions.is_empty>:
+                - if !<context.location.cuboids.parse[note_name].filter[starts_with[region_]].is_empty>:
                     - stop
                 - determine cancelled:false

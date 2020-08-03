@@ -1,4 +1,18 @@
-# /slavelead usage
+# +----------------------
+# |
+# | SLAVES LEAD
+# |
+# | Force slaves to follow you using a lead.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+# @dependency devnodachi/jails devnodachi/slaves
+# @soft-dependency devnodachi/slaves_auction
+#
+# Commands
 # /slavelead start <slavename> - Forces the slave to follow you within X blocks.
 # /slavelead limit <slavename> <amount> - Sets the slave space between you and him. [Default: 10] [Min: 10] [Max: 30]
 # /slavelead control <slavename> - A SupremeWarden takes control or stop control of a slave that has a jail associated.

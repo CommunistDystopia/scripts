@@ -1,3 +1,17 @@
+# +----------------------
+# |
+# | ROTTEN SILVERFISH
+# |
+# | After 1 day the food will rotten
+# | and the silverfish will come.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+#
+
 Rotten_Silverfish_Script:
     type: world
     debug: false

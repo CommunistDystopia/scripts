@@ -1,5 +1,17 @@
-# /jail Usage
-# /jail create <jailname> x1 y1 z1 x2 y2 z2 - Adds a jail (works like WorldEdit coordinates)
+# +----------------------
+# |
+# | J A I L S
+# |
+# | Create Jails that work with other plugins.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+#
+# Commands
+# /jail create <jailname> - Adds a jail
 # /jail delete <jailname> - Removes a jail
 # /jail list <#> - List all the jails in the prison
 # Notables created here
@@ -47,34 +59,25 @@ Command_Jail:
             - stop
         - define action <context.args.get[1]>
         - define name <context.args.get[2]>
-        - define jail_name jail_<[name]>
-        - if <[jail_name].ends_with[_spawn]> || <[jail_name].ends_with[prison]> || <[jail_name].contains[_jails]>:
-            - narrate "<red> ERROR: Invalid jail name. Please don't use _spawn or prison or _jails in your jail name."
+        - if <[name].ends_with[_spawn]> || <[name].ends_with[prison]> || <[name].contains_all_text[jail]> || <[name].contains_all_text[region]>:
+            - narrate "<red> ERROR: Invalid jail name. To avoid conflicts with other plugins avoid using that name."
             - stop
+        - define jail_name jail_<[name]>
         - if <[action]> == create:
-            - if <context.args.size> < 8:
-                - narrate "<red> ERROR: Not enough arguments."
-                - narrate  "<red> To create a jail: /jail create <yellow>jailname x1 y1 z1 x2 y2 z2"
-                - stop
-            - define x1 <context.args.get[3]>
-            - define y1 <context.args.get[4]>
-            - define z1 <context.args.get[5]>
-            - define x2 <context.args.get[6]>
-            - define y2 <context.args.get[7]>
-            - define z2 <context.args.get[8]>
-            - if <location[<[x1]>,<[y1]>,<[z1]>,world]||null> == null && <location[<[x2]>,<[y2]>,<[z2]>,world]||null> == null:
-                - narrate "<red> ERROR: The location of the jail is invalid."
+            - if !<player.has_flag[ctool_selection]>:
+                - narrate "<red>You don't have any region selected."
                 - stop
             - if <cuboid[<[jail_name]>]||null> != null:
                 - narrate "<red> ERROR: The name is used by other jail."
                 - stop
-            - define jail <cuboid[<location[<[x1]>,<[y1]>,<[z1]>,world]>|<location[<[x2]>,<[y2]>,<[z2]>,world]>]>
+            - define jail <player.flag[ctool_selection].as_cuboid>
             - define jails <server.notables[cuboids].parse[note_name].filter[starts_with[jail_]]>
             - foreach <[jails]> as:other_jail:
                 - if <[jail].intersects[<cuboid[<[other_jail]>]>]>:
                     - narrate "<red> ERROR: Your jail conflicts with other jail. Try to change the location of your jail."
                     - stop
             - note <[jail]> as:<[jail_name]>
+            - flag <player> ctool_selection:!
             - flag server prison_jails:|:<[jail_name]>
             - narrate "<green> Jail <blue><[name]> <green>created!"
             - narrate "<green> Remember to set the <red>spawn of the Jail"
@@ -110,6 +113,6 @@ Command_Jail:
             - narrate "<green> Jail <blue><[name]> <red>deleted!"
             - stop
         - narrate "<yellow>#<red><red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate  "<yellow>-<red><red> To create a jail: /jail create <yellow>jailname x1 y1 z1 x2 y2 z2"
-        - narrate  "<yellow>-<red><red> To delete a jail: /jail delete <yellow>jailname"
+        - narrate  "<yellow>-<red><red> To create a jail: /jail create <yellow>name"
+        - narrate  "<yellow>-<red><red> To delete a jail: /jail delete <yellow>name"
         - narrate  "<yellow>-<red><red> To list the jails: /jail list <yellow>number"

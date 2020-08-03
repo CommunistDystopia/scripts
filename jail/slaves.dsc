@@ -1,4 +1,17 @@
-# /slaves Usage
+# +----------------------
+# |
+# | S L A V E S
+# |
+# | Send slaves to the jails.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+# @dependency devnodachi/jails
+#
+# Commands
 # /slaves spawn <jailname> - Sets the spawn point of the slave in the player position.
 # /slaves list <jailname> <#> - List the slaves in this jail.
 # /slaves add <jailname> <username> - Adds a slaves to a jail.

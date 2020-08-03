@@ -1,3 +1,14 @@
+# +----------------------
+# |
+# | CROPS NEED ATTENTION
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+#
+
 Croops_Need_Attention_Script:
     type: world
     debug: false

@@ -1,5 +1,17 @@
-## Doctor
-# Interacts with players/drugs.dsc
+# +----------------------
+# |
+# | D O C T O R
+# |
+# | Cure the effect of drugs.
+# | Open job for the Doctor group.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+# @dependency devnodachi/drugs
+#
 
 Doctor_Script:
     type: world

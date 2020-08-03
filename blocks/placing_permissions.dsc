@@ -1,3 +1,14 @@
+# +----------------------
+# |
+# | PLACING PERMISSIONS
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+#
+
 Placing_Permissions_Script:
     type: world
     debug: false

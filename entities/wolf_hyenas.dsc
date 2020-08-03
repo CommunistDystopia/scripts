@@ -1,3 +1,16 @@
+# +----------------------
+# |
+# | WOLF HYENAS
+# |
+# | Wolfs will attack all passive mobs.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/08/02
+# @denizen-build REL-1714
+#
+
 Wolf_Hyenas_Script:
     type: world
     debug: false
