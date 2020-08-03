@@ -20,7 +20,7 @@
 # And the containers within the region can't be opened.
 #
 
-Region_Command:
+Block_Security_Command:
     type: command
     debug: false
     name: blocksecurity
@@ -80,7 +80,7 @@ Region_Command:
     - narrate "<yellow>-<white> To delete a block security region: /blocksecurity delete <yellow>name"
     - narrate "<yellow>-<white> To list the block security regions: /blocksecurity list"
     
-Region_Script:
+Block_Security_Script:
     type: world
     debug: false
     events:
