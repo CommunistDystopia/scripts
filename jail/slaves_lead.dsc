@@ -123,6 +123,8 @@ Slave_Lead_Script:
     debug: false
     events:
         on player right clicks player with:slave_lead:
+            - if !<player.in_group[supremewarden]> && !<player.is_op> && !<player.in_group[godvip]>:
+                - stop
             - if !<script[Slave_Lead_Script].cooled_down[<player>]>:
                 - stop
             - define slave <context.entity>
