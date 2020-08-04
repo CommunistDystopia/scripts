@@ -107,7 +107,7 @@ placeholder_carbine_csp:
         1:
             type: shaped
             input:
-                - emerald_block|emerald_block|flint_and_steel
+                - emerald_block|emerald_block|gunpowder
                 - emerald_block|firework_rocket|emerald_block
                 - stick|emerald_block|emerald_block
 
