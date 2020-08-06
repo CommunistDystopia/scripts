@@ -16,6 +16,13 @@ Compass_Command:
     description: Minecraft Tracker Compass system.
     permission: compass.tracker
     usage: /compass
+    tab complete:
+        - choose <context.args.size>:
+            - case 0:
+                - determine <server.online_players.parse[name].include_single[reset]>
+            - case 1:
+                - if "!<context.raw_args.ends_with[ ]>":
+                    - determine <server.online_players.parse[name].include_single[reset]>
     script:
         - if <context.args.size> == 1:
             - if <context.args.get[1]> == reset:

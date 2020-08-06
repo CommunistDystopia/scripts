@@ -24,6 +24,8 @@ CrackShotCraftable_Script:
             - determine <crackshot.weapon[Carbine_CSP]>
         on player crafts placeholder_desert_eagle_csp:
             - determine <crackshot.weapon[Desert_Eagle_CSP]>
+        on player crafts placeholder_grenade_csp:
+            - determine <crackshot.weapon[Grenade_CSP]>
         on placeholder_type95_csp recipe formed:
             - determine <crackshot.weapon[Type95_CSP]>
         on placeholder_ak47_csp recipe formed:
@@ -34,6 +36,8 @@ CrackShotCraftable_Script:
             - determine <crackshot.weapon[Carbine_CSP]>
         on placeholder_desert_eagle_csp recipe formed:
             - determine <crackshot.weapon[Desert_Eagle_CSP]>
+        on placeholder_grenade_csp recipe formed:
+            - determine <crackshot.weapon[Grenade_CSP]>
 
 placeholder_type95_csp:
     type: item
@@ -129,3 +133,22 @@ placeholder_desert_eagle_csp:
                 - quartz_slab|quartz_slab|emerald_block
                 - stick|air|air
                 - stick|air|air
+
+placeholder_grenade_csp:
+    type: item
+    debug: false
+    material: stick
+    mechanisms:
+        hides: enchants
+    enchantments:
+        - unbreaking:1
+    display name: <red>Grenade
+    lore:
+        - <gray>Placeholder item for Grenade
+    recipes:
+        1:
+            type: shaped
+            input:
+                - emerald|gunpowder|emerald
+                - emerald_block|tnt|emerald_block
+                - emerald|gunpowder|emerald
