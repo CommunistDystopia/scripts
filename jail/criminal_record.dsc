@@ -45,9 +45,6 @@ Command_Criminal_Record:
                     - if <context.args.get[1]> == check:
                         - determine 0
     script:
-        - if !<player.is_op||<context.server>>:
-            - narrate "<red>You do not have permission for that command."
-            - stop
         - if <context.args.size> < 2:
             - goto syntax_error
         - define action <context.args.get[1]>
@@ -56,12 +53,18 @@ Command_Criminal_Record:
             - narrate "<red> ERROR: Invalid player username OR the player is offline."
             - stop
         - if <[action]> == check:
+            - if !<player.is_op||<context.server>> && !<player.has_permission[criminalrecord.check]>:
+                - narrate "<red>You do not have permission for that command."
+                - stop
             - if <context.args.size> < 3:
                 - goto syntax_error
             - define list_page <context.args.get[3]>
             - run List_Task_Script def:<[username]>|criminal_record|Record|<[list_page]>|false
             - stop
         - if <[action]> == clear:
+            - if !<player.is_op||<context.server>>:
+                - narrate "<red>You do not have permission for that command."
+                - stop
             - if !<[username].has_flag[criminal_record]>:
                 - narrate "<red> ERROR: This player doesn't have any criminal record"
             - flag <[username]> criminal_record:!
