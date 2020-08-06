@@ -24,7 +24,7 @@ Command_Criminal_Record:
     aliases:
         - cr
     tab complete:
-        - if !<player.is_op||<context.server>>:
+        - if !<player.is_op||<context.server>> && !<player.has_permission[criminalrecord.check]>:
             - stop
         - choose <context.args.size>:
             - case 0:
