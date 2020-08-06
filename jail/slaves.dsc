@@ -144,6 +144,8 @@ Command_Slaves:
             - flag <[username]> slave_timer:<script[Slaves_Config].data_key[slave_timer]>
             - flag <[username]> jail_owner:!
             - flag <[username]> owner_block_limit:!
+            - define record "Jail [<util.time_now.to_utc.format>]"
+            - flag <[username]> criminal_record:|:<[record]>
             - if !<[username].groups.is_empty>:
                 - flag <[username]> slave_groups:|:<[username].groups>
             - execute as_server "lp user <[username].name> parent set slave" silent
@@ -194,7 +196,7 @@ Command_Slaves:
             - stop
         - if <[action]> == list && <context.args.size> == 3:
             - define list_page <context.args.get[3]>
-            - run List_Task_Script def:<[jail_name]>_slaves|Slave|<[list_page]>|true
+            - run List_Task_Script def:server|<[jail_name]>_slaves|Slave|<[list_page]>|true
             - stop
         - if <[action]> == remove && <context.args.size> == 3:
             - define username <server.match_player[<context.args.get[3]>]||null>

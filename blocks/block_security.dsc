@@ -46,7 +46,7 @@ Block_Security_Command:
     - define action <context.args.get[1]>
     - define value <context.args.get[2]>
     - if <[action]> == list:
-        - run List_Task_Script def:block_security_regions|Region|<[value]>|false
+        - run List_Task_Script def:server|block_security_regions|Region|<[value]>|false
         - stop
     - if <[action]> == create:
         - if !<player.has_flag[ctool_selection]>:
