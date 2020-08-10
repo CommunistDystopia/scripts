@@ -295,9 +295,6 @@ Court_Script:
     type: world
     debug: false
     events:
-        on shutdown:
-            - if <server.has_flag[court_active]>:
-                - run Court_Task_Script def:<player[<server.flag[court_slave]>]>
         on player quits:
             - if <server.has_flag[court_active]>:
                 - if <server.has_flag[court_witness]> && <server.flag[court_witness].contains_all_case_sensitive_text[<player.uuid>]>:

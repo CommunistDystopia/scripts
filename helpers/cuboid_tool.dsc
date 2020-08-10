@@ -53,6 +53,26 @@ ctool_command:
     - give cuboid_tool_item
     - narrate "<green>Here's your selection tool!"
 
+cnote_command:
+    type: command
+    debug: false
+    name: cnote
+    aliases:
+    - cuboidnote
+    permission: cuboidtool.cnote
+    description: Notes your selected cuboid.
+    usage: /cnote [name]
+    script:
+    - if !<player.has_flag[ctool_selection]>:
+        - narrate "<red>You don't have any cuboid selected."
+        - stop
+    - if <context.args.size> != 1:
+        - narrate "/cnote [name]"
+        - stop
+    - note <player.flag[ctool_selection]> as:<context.args.get[1]>
+    - inject cuboid_tool_status_task
+    - narrate "<green>Cuboid <aqua><context.args.get[1]><green> noted with <[message]>."
+
 cshow_command:
     type: command
     debug: false

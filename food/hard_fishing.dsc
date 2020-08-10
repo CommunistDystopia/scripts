@@ -23,7 +23,7 @@ Hard_Fishing_Script:
                 - narrate "<red> Failed to catch the fish! Try again"
                 - determine cancelled
                 - stop
-        on COD||SALMON||TROPICAL_FISH||PUFFERFISH spawns:
+        on COD|SALMON|TROPICAL_FISH|PUFFERFISH spawns because NATURAL:
             - define chance_to_spawn <util.random.int[1].to[100]>
             - if <[chance_to_spawn]> > 50.0:
                 - determine cancelled
