@@ -1,23 +1,16 @@
-Soldier_Exam_Data:
+Doctor_Exam_Data:
     type: data
     stages_config:
         1: none
-        2:
-            target_block: white_wool
-            background_block: yellow_terracotta
-            timer: 10
-            points: 1
-        3: none
-        4: none
     question_list:
         1:
-            question: 1+1?
+            question: 4+4?
             options:
                 A: 3
                 B: 1
-                C: 2
-                D: 5
-            answer: C
+                C: 0
+                D: 8
+            answer: D
         2:
             question: apple or pear?
             options:

@@ -73,19 +73,25 @@ Command_Written_Exam:
                 - flag <[username]> current_question_number:!
                 - if <server.has_flag[college_stage_1_players]>:
                     - flag server college_stage_1_players:<-:<[username]>
-                - teleport <[username]> <location[<[username].flag[current_exam]>_college_spawn]>
+                - teleport <[username]> <location[<[username].flag[college_current_exam]>_college_spawn]>
                 - narrate "<red> WRONG: <white>Try again the exam. Keep trying" targets:<[username]>
                 - stop
             - flag <[username]> current_answer:!
             - narrate "<green> CORRECT: <white>Good job. Keep going!" targets:<[username]>
-        - if <[username].has_flag[college_current_stage]>:
-            - flag <[username]> college_current_stage:++
         - if <server.has_flag[college_stage_1_players]>:
             - flag server college_stage_1_players:<-:<[username]>
         - flag <[username]> hasActiveWrittenExam:!
         - flag <[username]> current_question_number:!
-        - narrate "<red> Comrade<green>. Congratulations for passing the written exam" targets:<[username]>
-        - narrate "<white> Go to the <red>SIGN<white>, <red>RIGHT CLICK IT <white>to start the <red>NEXT STAGE" targets:<[username]>
+        - narrate "<red> Comrade<white>. Good job for passing the written exam" targets:<[username]>
+        - if <[username].has_flag[college_current_stage]>:
+            - flag <[username]> college_current_stage:++
+            - narrate "<white> Go to the <red>SIGN<white>, <red>RIGHT CLICK IT <white>to start the <red>NEXT STAGE" targets:<[username]>
+        - else:
+            - execute as_server "lp user <[username].name> parent add <[username].flag[college_current_exam]>"
+            - teleport <[username]> <location[<[username].flag[college_current_exam]>_college_spawn]>
+            - narrate "<green> ! -> CONGRATULATIONS! <white>You're a <yellow><[username].flag[college_current_exam].to_titlecase>" targets:<[username]>
+            - narrate "<green> ! -> <white>It's time to <red>work <white>and get some <green>money" targets:<[username]>
+            - flag <[username]> college_current_exam:!
 
 Command_Exams:
     type: command

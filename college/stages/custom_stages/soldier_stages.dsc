@@ -38,7 +38,7 @@ Soldier_Stages_Task:
                 - else:
                     - flag server college_stage_1_players:|:<[username]>
                 - teleport <[username]> <location[college_stage_1_spawn]>
-                - narrate "<white> Welcome to the first stage of the college, future member of the <red>Peoples Army" targets:<[username]>
+                - narrate "<white> Welcome to the first stage of the university, future member of the <red>Peoples Army" targets:<[username]>
                 - wait 1s
                 - narrate "<white> Your written exam will start in <red>5 seconds..."
                 - wait 5s
@@ -68,7 +68,7 @@ Soldier_Stage_2_Task:
         - teleport <[username]> <location[soldier_stage_2_spawn]>
         - inventory clear d:<[username].inventory>
         - give <crackshot.weapon[Desert_Eagle_CSP]> to:<[username].inventory>
-        - narrate "<white> Welcome to the second stage of the college, future member of the <red>Peoples Army" targets:<[username]>
+        - narrate "<white> Welcome to the second stage of the university, future member of the <red>Peoples Army" targets:<[username]>
         - define space " "
         - narrate "<white> To <green>PASS <white>this stage you need to <red>SHOOT <white>the <yellow><script[Soldier_Exam_Data].data_key[stages_config].get[2].get[target_block].to_titlecase.replace[_].with[<[space]>]> <white>to lower the <green>POINTS <white>in the right side" targets:<[username]>
         - narrate "<white> When you hit the block, the <green>POINTS <white>will decrease by 1." targets:<[username]>
@@ -104,6 +104,8 @@ Soldier_Stage_2_Task:
         - flag <[username]> soldier_stage_2_points_left:!
         - narrate "<red> Comrade<green>. Congratulations for passing the second stage" targets:<[username]>
         - narrate "<white> Go to the <red>SIGN<white>, <red>RIGHT CLICK IT <white>to start the <red>NEXT STAGE" targets:<[username]>
+        # TEMP LINE FOR TESTING
+        - flag <[username]> college_current_stage:!
 
 Soldier_Stage_2_Script:
     type: world
