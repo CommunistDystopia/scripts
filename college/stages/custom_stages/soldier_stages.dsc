@@ -67,6 +67,7 @@ Soldier_Stages_Script:
                     - cooldown 1m script:Command_College
                     - narrate "<red> FAILED: <white>Try again the exam. Keep trying"
                     - teleport <player> <location[soldier_college_spawn]>
+                    - run Failed_College_Task def:Soldier
             - if <context.area.note_name.contains_all_text[soldier_stage_4_player_zone]>:
                 - flag server soldier_stage_4_players:!
         on player dies by:NPC:
@@ -142,6 +143,7 @@ Soldier_Stage_2_Task:
             - teleport <player> <location[soldier_college_spawn]>
             - cooldown 1m script:Command_College
             - narrate "<red> FAILED: <white>Try again the exam. Keep trying"
+            - run Failed_College_Task def:Soldier
             - stop
         - if <player.has_flag[college_current_stage]>:
             - flag <player> college_current_stage:++
@@ -253,6 +255,7 @@ Soldier_Stage_4_Task:
             - teleport <player> <location[soldier_college_spawn]>
             - cooldown 1m script:Command_College
             - narrate "<red> FAILED: <white>Try again the exam. Keep trying"
+            - run Failed_College_Task def:Soldier
             - stop
         - flag server soldier_stage_4_players:!
         - if <player.has_flag[college_current_stage]>:

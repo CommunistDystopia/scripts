@@ -24,7 +24,7 @@ Soldier_Exam_Data:
             # How many NPCS will spawn?
             npc_amount: 4
             # The distance that the NPCs will spawn from the player
-            spawn_distance: 5
+            spawn_distance: 4
             # How much time the player need to survive to pass?
             timer: 60
             # Which weapon the NPC will have?

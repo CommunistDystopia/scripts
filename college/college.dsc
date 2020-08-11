@@ -41,7 +41,7 @@ Command_College:
             - narrate "<red> You have a criminal record, you can't a take an exam"
             - stop
         - if !<script.cooled_down[<player>]>:
-            - narrate "<red> ERROR: <white>You failed the exam recently. Wait <yellow><script.cooldown.in_seconds.truncate> seconds <white>before trying again."
+            - narrate "<red> ERROR: <white>You failed a exam recently. Wait <yellow><script.cooldown.in_seconds.truncate> seconds <white>before trying again."
             - stop
         - define data <script[<[target]>_Exam_Data]||null>
         - if <[data]> == null:
@@ -86,3 +86,13 @@ College_Script:
             - if <entity.is_npc||null> != null && <entity.is_npc>:
                 - stop
             - determine cancelled
+
+Failed_College_Task:
+    type: task
+    debug: false
+    definitions: target
+    script:
+        - if !<script.cooled_down[<player>]>:
+            - stop
+        - narrate "<red> ! -> <yellow><player.name> <red>FAILED <white>the <red>TEST <white>for <yellow><[target].to_uppercase>" targets:<server.online_players>
+        - cooldown 10m script:Failed_College_Task

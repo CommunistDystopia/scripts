@@ -69,6 +69,7 @@ Written_Exam_Task:
                 - flag <player> college_current_exam:!
                 - cooldown 1m script:Command_College
                 - narrate "<red> WRONG: <white>Try again the exam. Keep trying"
+                - run Failed_College_Task def:<[target]>
                 - stop
             - flag <player> random_options:!
             - flag <player> current_answer:!
