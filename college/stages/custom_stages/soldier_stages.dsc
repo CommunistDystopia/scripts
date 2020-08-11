@@ -66,15 +66,17 @@ Soldier_Stages_Script:
         on player exits soldier_stage_*_player_zone:
             - if !<player.is_op>:
                 - inventory clear d:<player.inventory>
-            - flag <player> soldier_stage_2_points_left:!
-            - flag server soldier_stage_2_players:!
-            - flag server soldier_stage_4_players:!
+            - if <context.area.note_name.contains_all_text[soldier_stage_2_player_zone]>:
+                - flag <player> soldier_stage_2_points_left:!
+                - flag server soldier_stage_2_players:!
             - if <context.area.note_name.contains_all_text[soldier_stage_3_player_zone]>:
                 - if <server.has_flag[soldier_stage_3_players]> && <server.flag[soldier_stage_3_players].parse[uuid].find[<player.uuid>]> != -1:
                     - adjust <player> collidable:true
                     - flag server soldier_stage_3_players:<-:<player>
                     - narrate "<red> FAILED: <white>Try again the exam. Keep trying"
                     - teleport <player> <location[soldier_college_spawn]>
+            - if <context.area.note_name.contains_all_text[soldier_stage_4_player_zone]>:
+                - flag server soldier_stage_4_players:!
         on player dies by:NPC:
             - if <server.has_flag[soldier_stage_4_players]>:
                 - flag server soldier_stage_4_players:!
@@ -130,6 +132,8 @@ Soldier_Stage_2_Task:
         - wait 5s
         - flag <[username]> soldier_stage_2_points_left:<[points_left]>
         - repeat <[time_remaining]>:
+            - if !<[username].has_flag[soldier_stage_2_points_left]>:
+                - repeat stop
             - define current_time <[value].sub[1]>
             - define time_remaining_text "<green> TIME REMAINING: <white><[time_remaining].sub[<[current_time]>]>"
             - define points_left_text "<green> POINTS: <yellow><[username].flag[soldier_stage_2_points_left]>"
@@ -143,7 +147,7 @@ Soldier_Stage_2_Task:
             - inventory clear d:<[username].inventory>
         - modifyblock <cuboid[soldier_stage_2_shooting_zone]> <[background_block]>
         - flag server soldier_stage_2_players:!
-        - if <[username].flag[soldier_stage_2_points_left]> > 0:
+        - if !<[username].has_flag[soldier_stage_2_points_left]> || <[username].flag[soldier_stage_2_points_left]> > 0:
             - flag <[username]> soldier_stage_2_points_left:!
             - teleport <[username]> <location[soldier_college_spawn]>
             - narrate "<red> FAILED: <white>Try again the exam. Keep trying" targets:<[username]>
@@ -227,7 +231,7 @@ Soldier_Stage_4_Task:
         - narrate "<white> To <green>PASS <white>you need to survive against the <red>RAIDERS <white>for a given time" targets:<[username]>
         - narrate "<white> If you <red>FAIL<white>, you will start again in this stage when you try again the exam." targets:<[username]>
         - wait 3s
-        - equip <[username]> hand:<[player_weapon]>
+        - give <[player_weapon]> to:<[username].inventory>
         - foreach <server.flag[soldier_stage_4_npcs]> as:npc:
             - define spawn_tries:3
             - while !<[npc].is_spawned> && <[spawn_tries]> > 0:
