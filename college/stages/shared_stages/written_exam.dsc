@@ -80,6 +80,7 @@ Command_Written_Exam:
                 - if <server.has_flag[college_stage_1_players]>:
                     - flag server college_stage_1_players:<-:<[username]>
                 - teleport <[username]> <location[<[username].flag[college_current_exam]>_college_spawn]>
+                - flag <[username]> college_current_exam:!
                 - narrate "<red> WRONG: <white>Try again the exam. Keep trying" targets:<[username]>
                 - stop
             - flag <[username]> current_answer:!
@@ -130,3 +131,11 @@ Written_Exam_Script:
         on player quits:
             - if <player.has_flag[hasActiveWrittenExam]>:
                 - flag <player> hasActiveWrittenExam:!
+                - wait 5m
+                - if !<player.is_online>:
+                    - flag <player> current_answer:!
+                    - flag <player> random_questions:!
+                    - flag <player> current_question_number:!
+                    - flag <player> college_current_exam:!
+                    - if <server.has_flag[college_stage_1_players]>:
+                        - flag server college_stage_1_players:<-:<player>
