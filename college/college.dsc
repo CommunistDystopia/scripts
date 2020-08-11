@@ -20,61 +20,67 @@ Command_College:
     description: Minecraft College system.
     usage: /college
     script:
-        - if !<player.is_op||<context.server>>:
+        - if !<player.is_op||<context.server>> && !<player.in_group[student]>:
             - narrate "<red>You do not have permission for that command."
             - stop
-        - if <context.args.size> < 2:
+        - if <context.args.size> < 1:
             - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax."
             - stop
+        - if !<player.is_op>:
+            - define job_groups <script[College_Config].data_key[job_groups]||null>
+            - if <[job_groups]> == null:
+                - narrate " <red>ERROR: The college config file has been corrupted!"
+                - narrate " <white>Please report this error to a higher rank or open a ticket in Discord."
+                - stop
+            - foreach <[job_groups]> as:job_group:
+                - if <player.in_group[<[job_group]>]>:
+                    - narrate "<red> You already have a job. Only players without a job can enter the college"
+                    - stop
         - define target <context.args.get[1]>
-        - define username <server.match_player[<context.args.get[2]>]||null>
-        - if <[username]> == null:
-            - narrate "<red> ERROR: Invalid player username OR the player is offline."
+        - if <player.has_flag[criminal_record]>:
+            - narrate "<red> You have a criminal record, you can't a take an exam"
+            - stop
+        - if !<script.cooled_down[<player>]>:
+            - narrate "<red> ERROR: <white>You failed the exam recently. Wait <yellow><script.cooldown.in_seconds.truncate> seconds <white>before trying again."
             - stop
         - define data <script[<[target]>_Exam_Data]||null>
         - if <[data]> == null:
             - narrate "<red> ERROR: The <[target]> exam doesn't exist."
-            - narrate "<white> Be sure that the first line in your config file is <[target].to_titlecase>_Exam_Data:" targets:<[username]>
-            - stop
-        - if <location[college_stage_1_spawn]||null> == null:
-            - narrate " <red>ERROR: Spawn is not set for the <yellow>STAGE 1<red> [COLLEGE]" targets:<[username]>
-            - narrate " <white>Please report this error to a higher rank or open a ticket in Discord." targets:<[username]>
-            - stop
-        - if <cuboid[college_stage_1_player_zone]||null> == null:
-            - narrate " <red>ERROR: Anti-teleport Zone is not set for the <yellow>STAGE 1<red> [COLLEGE]" targets:<[username]>
-            - narrate " <white>Please report this error to a higher rank or open a ticket in Discord." targets:<[username]>
+            - narrate "<white> Be sure that the first line in your config file is <[target].to_titlecase>_Exam_Data:" targets:<player>
             - stop
         - if <location[<[target]>_college_spawn]||null> == null:
-            - narrate " <red>ERROR: Spawn is not set for the <yellow><[target]> <red>in the college." targets:<[username]>
-            - narrate " <white>Please report this error to a higher rank or open a ticket in Discord." targets:<[username]>
+            - narrate " <red>ERROR: Spawn is not set for the <yellow><[target]> <red>in the college." targets:<player>
+            - narrate " <white>Please report this error to a higher rank or open a ticket in Discord." targets:<player>
             - stop
-        - if !<[username].has_flag[college_current_exam]>:
-            - flag <[username]> college_current_exam:<[target]>
+        - if !<player.has_flag[college_current_exam]>:
+            - flag <player> college_current_exam:<[target]>
         - if <[data].data_key[stages_config].size> > 1 && <script[<[target]>_Stages_Task]||null> != null:
-            - run <[target]>_Stages_Task def:<[username]>
+            - run <[target]>_Stages_Task
             - stop
-        - if <server.has_flag[college_stage_1_players]>:
-            - if <server.flag[college_stage_1_players].parse[uuid].find[<[username].uuid>]> == -1:
-                - flag server college_stage_1_players:|:<[username]>
-        - else:
-            - flag server college_stage_1_players:|:<[username]>
-        - teleport <[username]> <location[college_stage_1_spawn]>
-        - if !<[username].is_op>:
-            - inventory clear d:<[username].inventory>
-        - narrate "<white> Welcome to the written test, future <red><[target].to_titlecase>" targets:<[username]>
+        - if !<player.is_op>:
+            - inventory clear d:<player.inventory>
+        - narrate "<white> Welcome to the written test, future <red><[target].to_titlecase>" targets:<player>
         - wait 1s
         - narrate "<white> Your written exam will start in <red>5 seconds..."
         - wait 5s
-        - execute as_server "writtenexam <[target]> <[username].name>" silent
+        - run Written_Exam_Task def:<[target]>
 
 College_Script:
     type: world
     debug: false
     events:
         on player enters *_stage_*_player_zone:
+            - if <player.is_op> || <context.cause> != TELEPORT:
+                - stop
+            - if <player.has_flag[college_current_stage]>:
+                - if <player.flag[college_current_stage]> > 1 && <context.area.note_name.ends_with[_stage_2_player_zone]>:
+                    - stop
+                - if <player.flag[college_current_stage]> > 2 && <context.area.note_name.ends_with[_stage_3_player_zone]>:
+                    - stop
+                - if <player.flag[college_current_stage]> > 3 && <context.area.note_name.ends_with[_stage_4_player_zone]>:
+                    - stop
             - define allowed_players <context.area.note_name.before[_zone]>s
             - if <server.has_flag[<[allowed_players]>]>:
                 - if <server.flag[<[allowed_players]>].parse[uuid].find[<player.uuid>]> != -1:
                     - stop
-            - if <context.cause> == TELEPORT:
-                - determine cancelled
+            - determine cancelled

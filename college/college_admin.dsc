@@ -57,6 +57,9 @@ Command_Admin_College:
                     - stop
                 - define secondary_target <context.args.get[4]>
                 - define stage_number <context.args.get[5]>
+                - if <[stage_number]> == 1:
+                    - narrate "<red> You don't need to set anything for the stage 1. This is only for custom stages"
+                    - stop
                 - if <[stage_number]> > <[data].data_key[stages_config].size>:
                     - narrate "<red> ERROR: The value is higher than the highest stage number. Please try a lower value."
                     - stop
