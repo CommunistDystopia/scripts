@@ -91,5 +91,5 @@ Block_Security_Script:
             - if !<player.is_op>:
                 - determine cancelled
         on player right clicks block in:region_* priority:-1 ignorecancelled:true:
-            - if !<player.is_op> && <context.location.material.item.has_inventory>:
+            - if !<player.is_op> && <context.location.material.item.has_inventory||null> != null && <context.location.material.item.has_inventory>:
                 - determine cancelled
