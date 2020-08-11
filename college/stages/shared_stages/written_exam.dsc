@@ -44,8 +44,11 @@ Command_Written_Exam:
             - narrate "<red> ERROR: You have a <yellow><[username].flag[college_current_exam]> exam <red>active" targets:<[username]>
             - narrate "<white> Go back to your <yellow><[username].flag[college_current_exam]> exam <white>room!" targets:<[username]>
             - stop
+        - define question_list <[data].data_key[question_list]>
         - if !<[username].has_flag[hasActiveWrittenExam]>:
             - flag <[username]> hasActiveWrittenExam:true
+            - if !<[username].has_flag[random_questions]>:
+                - flag <[username]> random_questions:|:<[question_list].keys.random[9999]>
             - if !<[username].has_flag[current_question_number]>:
                 - flag <[username]> current_question_number:1
         - else:
@@ -57,19 +60,22 @@ Command_Written_Exam:
         - narrate "<green> Each question in the exam have multiple options but one answer." targets:<[username]>
         - narrate "<green> To answer the questions in the exam use /exams [option]" targets:<[username]>
         - narrate "<red> ============================================" targets:<[username]>
-        - define question_list <[data].data_key[question_list]>
-        - foreach <[question_list].keys.get[<[username].flag[current_question_number]>].to[last]> as:question_number:
-            - narrate "<yellow> <[question_number]>. <white><[question_list].get[<[question_number]>].get[question]>" targets:<[username]>
+        - foreach <[username].flag[random_questions].get[<[username].flag[current_question_number]>].to[last]> as:question_number:
+            - narrate "<yellow> <[loop_index]>. <white><[question_list].get[<[question_number]>].get[question]>" targets:<[username]>
             - flag <[username]> options_size:<[question_list].get[<[question_number]>].get[options].size>
             - flag <[username]> current_question_number:<[loop_index]>
+            - define answer_option <[question_list].get[<[question_number]>].get[answer]>
+            - define answer <[question_list].get[<[question_number]>].get[options].get[<[answer_option]>]>
             - foreach <[question_list].get[<[question_number]>].get[options]> as:option:
                 - narrate "<red> <[key]> -> <green><[option]>" targets:<[username]>
             - waituntil rate:1s !<[username].is_online> || <[username].has_flag[current_answer]>
             - if !<[username].is_online>:
                 - stop
-            - if !<[question_list].get[<[question_number]>].get[answer].contains_all_case_sensitive_text[<[username].flag[current_answer]>]>:
+            - define selected_answer <[question_list].get[<[question_number]>].get[options].get[<[username].flag[current_answer]>]>
+            - if !<[answer].contains_all_case_sensitive_text[<[selected_answer]>]>:
                 - flag <[username]> current_answer:!
                 - flag <[username]> hasActiveWrittenExam:!
+                - flag <[username]> random_questions:!
                 - flag <[username]> current_question_number:!
                 - if <server.has_flag[college_stage_1_players]>:
                     - flag server college_stage_1_players:<-:<[username]>
@@ -81,6 +87,7 @@ Command_Written_Exam:
         - if <server.has_flag[college_stage_1_players]>:
             - flag server college_stage_1_players:<-:<[username]>
         - flag <[username]> hasActiveWrittenExam:!
+        - flag <[username]> random_questions:!
         - flag <[username]> current_question_number:!
         - narrate "<red> Comrade<white>. Good job for passing the written exam" targets:<[username]>
         - if <[username].has_flag[college_current_stage]>:

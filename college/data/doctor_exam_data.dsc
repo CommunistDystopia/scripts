@@ -17,3 +17,21 @@ Doctor_Exam_Data:
                 A: apple
                 B: pear
             answer: A
+        3:
+            question: 3+3?
+            options:
+                A: 4
+                B: 6
+            answer: B
+        4:
+            question: 0-0?
+            options:
+                A: 0
+                B: 1
+            answer: A
+        5:
+            question: true or false?
+            options:
+                A: true
+                B: false
+            answer: A
