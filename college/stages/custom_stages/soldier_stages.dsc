@@ -69,10 +69,12 @@ Soldier_Stages_Script:
             - flag <player> soldier_stage_2_points_left:!
             - flag server soldier_stage_2_players:!
             - flag server soldier_stage_4_players:!
-            - if <server.has_flag[soldier_stage_3_players]> && <server.flag[soldier_stage_3_players]>:
-                - flag server soldier_stage_3_players:<-:<player>
-                - if <player.is_online>:
-                    - narrate "<red> FAILED: <white>Try again the exam. Keep trying" <player>
+            - if <context.area.note_name.contains_all_text[soldier_stage_3_player_zone]>:
+                - if <server.has_flag[soldier_stage_3_players]> && <server.flag[soldier_stage_3_players].parse[uuid].find[<player.uuid>]> != -1:
+                    - adjust <player> collidable:true
+                    - flag server soldier_stage_3_players:<-:<player>
+                    - narrate "<red> FAILED: <white>Try again the exam. Keep trying"
+                    - teleport <player> <location[soldier_college_spawn]>
         on player dies by:NPC:
             - if <server.has_flag[soldier_stage_4_players]>:
                 - flag server soldier_stage_4_players:!
@@ -83,8 +85,8 @@ Soldier_Stages_Script:
             - if <server.has_flag[soldier_stage_3_players]> && <server.flag[soldier_stage_3_players].parse[uuid].find[<player.uuid>]> == 1:
                 - flag server soldier_stage_3_players:<-:<player>
                 - if <player.has_flag[college_current_stage]>:
+                    - adjust <player> collidable:true
                     - flag <player> college_current_stage:++
-                - if <player.is_online>:
                     - narrate "<red> Comrade<green>. Congratulations for passing the third stage"
                     - teleport <player> <location[soldier_college_spawn]>
                     - narrate "<white> Go to the <red>SIGN<white>, <red>RIGHT CLICK IT <white>to start the <red>LAST STAGE"
@@ -125,9 +127,7 @@ Soldier_Stage_2_Task:
         - narrate "<white> To <green>PASS <white>this stage you need to <red>SHOOT <white>the <yellow><script[Soldier_Exam_Data].data_key[stages_config].get[2].get[target_block].to_titlecase.replace[_].with[<[space]>]> <white>to lower the <green>POINTS <white>in the right side" targets:<[username]>
         - narrate "<white> When you hit the block, the <green>POINTS <white>will decrease by 1." targets:<[username]>
         - narrate "<white> If you <red>FAIL<white>, you will start again in this stage when you try again the exam." targets:<[username]>
-        - wait 3s
-        - narrate "<green> The stage will start in <red>10 seconds<green>..." targets:<[username]>
-        - wait 10s
+        - wait 5s
         - flag <[username]> soldier_stage_2_points_left:<[points_left]>
         - repeat <[time_remaining]>:
             - define current_time <[value].sub[1]>
@@ -171,6 +171,7 @@ Soldier_Stage_3_Task:
             - narrate " <white>Please report this error to a higher rank or open a ticket in Discord." targets:<[username]>
             - stop
         - teleport <[username]> <location[soldier_stage_3_spawn]>
+        - adjust <[username]> collidable:false
         - if <server.has_flag[soldier_stage_3_players]>:
             - if <server.flag[soldier_stage_3_players].parse[uuid].find[<[username].uuid>]> == -1:
                 - flag server soldier_stage_3_players:|:<[username]>
@@ -226,8 +227,6 @@ Soldier_Stage_4_Task:
         - narrate "<white> To <green>PASS <white>you need to survive against the <red>RAIDERS <white>for a given time" targets:<[username]>
         - narrate "<white> If you <red>FAIL<white>, you will start again in this stage when you try again the exam." targets:<[username]>
         - wait 3s
-        - narrate "<green> The stage will start in <red>10 seconds<green>..." targets:<[username]>
-        - wait 10s
         - equip <[username]> hand:<[player_weapon]>
         - foreach <server.flag[soldier_stage_4_npcs]> as:npc:
             - define spawn_tries:3
