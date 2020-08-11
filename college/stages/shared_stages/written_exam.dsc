@@ -60,22 +60,23 @@ Command_Written_Exam:
         - narrate "<green> Each question in the exam have multiple options but one answer." targets:<[username]>
         - narrate "<green> To answer the questions in the exam use /exams [option]" targets:<[username]>
         - narrate "<red> ============================================" targets:<[username]>
+        - define alphabet:|:A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
         - foreach <[username].flag[random_questions].get[<[username].flag[current_question_number]>].to[last]> as:question_number:
             - narrate "<yellow> <[loop_index]>. <white><[question_list].get[<[question_number]>].get[question]>" targets:<[username]>
             - flag <[username]> options_size:<[question_list].get[<[question_number]>].get[options].size>
             - flag <[username]> current_question_number:<[loop_index]>
-            - define answer_option <[question_list].get[<[question_number]>].get[answer]>
-            - define answer <[question_list].get[<[question_number]>].get[options].get[<[answer_option]>]>
-            - foreach <[question_list].get[<[question_number]>].get[options]> as:option:
-                - narrate "<red> <[key]> -> <green><[option]>" targets:<[username]>
+            - flag <[username]> random_options:|:<[question_list].get[<[question_number]>].get[options].keys.random[9999]>
+            - foreach <[username].flag[random_options]> as:option:
+                - narrate "<red> <[alphabet].get[<[loop_index]>]> -> <green><[option]>" targets:<[username]>
             - waituntil rate:1s !<[username].is_online> || <[username].has_flag[current_answer]>
             - if !<[username].is_online>:
                 - stop
-            - define selected_answer <[question_list].get[<[question_number]>].get[options].get[<[username].flag[current_answer]>]>
-            - if !<[answer].contains_all_case_sensitive_text[<[selected_answer]>]>:
+            - define selected_option <[question_list].get[<[question_number]>].get[options].get[<[username].flag[current_answer]>]||null>
+            - if <[selected_option]> != null && !<[selected_option]>:
                 - flag <[username]> current_answer:!
                 - flag <[username]> hasActiveWrittenExam:!
                 - flag <[username]> random_questions:!
+                - flag <[username]> random_options:!
                 - flag <[username]> current_question_number:!
                 - if <server.has_flag[college_stage_1_players]>:
                     - flag server college_stage_1_players:<-:<[username]>
@@ -83,6 +84,7 @@ Command_Written_Exam:
                 - flag <[username]> college_current_exam:!
                 - narrate "<red> WRONG: <white>Try again the exam. Keep trying" targets:<[username]>
                 - stop
+            - flag <[username]> random_options:!
             - flag <[username]> current_answer:!
             - narrate "<green> CORRECT: <white>Good job. Keep going!" targets:<[username]>
         - if <server.has_flag[college_stage_1_players]>:
@@ -91,7 +93,7 @@ Command_Written_Exam:
         - flag <[username]> random_questions:!
         - flag <[username]> current_question_number:!
         - narrate "<red> Comrade<white>. Good job for passing the written exam" targets:<[username]>
-        - if <[username].has_flag[college_current_stage]>:
+        - if <[data].data_key[stages_config].size> > 1 && <script[<[target]>_Stages_Task]||null> != null::
             - flag <[username]> college_current_stage:++
             - teleport <[username]> <location[<[username].flag[college_current_exam]>_college_spawn]>
             - narrate "<white> Go to the <red>SIGN<white>, <red>RIGHT CLICK IT <white>to start the <red>NEXT STAGE" targets:<[username]>
@@ -119,10 +121,11 @@ Command_Exams:
         - define answer <context.args.get[1]>
         - define alphabet:|:A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
         - define used_alphabet_letters <[alphabet].get[1].to[<player.flag[options_size]>]>
-        - if <[used_alphabet_letters].find[<[answer]>]> == -1:
+        - define selected_letter <[used_alphabet_letters].find[<[answer]>]>
+        - if <[selected_letter]> == -1:
             - narrate "<red> ERROR: That option doesn't exist. Check the question options."
             - stop
-        - flag <player> current_answer:<[answer].to_uppercase>
+        - flag <player> current_answer:<player.flag[random_options].get[<[selected_letter]>]>
 
 Written_Exam_Script:
     type: world
@@ -135,6 +138,7 @@ Written_Exam_Script:
                 - if !<player.is_online>:
                     - flag <player> current_answer:!
                     - flag <player> random_questions:!
+                    - flag <player> random_options:!
                     - flag <player> current_question_number:!
                     - flag <player> college_current_exam:!
                     - if <server.has_flag[college_stage_1_players]>:

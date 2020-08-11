@@ -38,14 +38,12 @@ Soldier_Exam_Data:
         1:
             question: 1+1?
             options:
-                A: 3
-                B: 1
-                C: 2
-                D: 5
-            answer: C
+                3: false
+                1: false
+                2: true
+                5: false
         2:
             question: apple or pear?
             options:
-                A: apple
-                B: pear
-            answer: A
+                apple: true
+                pear: false

@@ -6,32 +6,22 @@ Doctor_Exam_Data:
         1:
             question: 4+4?
             options:
-                A: 3
-                B: 1
-                C: 0
-                D: 8
-            answer: D
+                3: false
+                1: false
+                0: false
+                8: true
         2:
             question: apple or pear?
             options:
-                A: apple
-                B: pear
-            answer: A
+                apple: true
+                pear: false
         3:
             question: 3+3?
             options:
-                A: 4
-                B: 6
-            answer: B
+                4: false
+                6: true
         4:
             question: 0-0?
             options:
-                A: 0
-                B: 1
-            answer: A
-        5:
-            question: true or false?
-            options:
-                A: true
-                B: false
-            answer: A
+                0: true
+                1: false
