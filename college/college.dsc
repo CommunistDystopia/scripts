@@ -9,6 +9,7 @@
 # @author devnodachi
 # @date 2020/08/10
 # @denizen-build REL-1714
+# @soft-dependency devnodachi/criminal_record
 #
 # Commands
 # /college [exam] [username] - Starts or resumes an exam for that username.

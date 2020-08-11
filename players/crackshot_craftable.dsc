@@ -20,8 +20,6 @@ CrackShotCraftable_Script:
             - determine <crackshot.weapon[AK-47_CSP]>
         on player crafts placeholder_bazooka_csp:
             - determine <crackshot.weapon[Bazooka_CSP]>
-        on player crafts placeholder_carbine_csp:
-            - determine <crackshot.weapon[Carbine_CSP]>
         on player crafts placeholder_desert_eagle_csp:
             - determine <crackshot.weapon[Desert_Eagle_CSP]>
         on player crafts placeholder_grenade_csp:
@@ -32,8 +30,6 @@ CrackShotCraftable_Script:
             - determine <crackshot.weapon[AK-47_CSP]>
         on placeholder_bazooka_csp recipe formed:
             - determine <crackshot.weapon[Bazooka_CSP]>
-        on placeholder_carbine_csp recipe formed:
-            - determine <crackshot.weapon[Carbine_CSP]>
         on placeholder_desert_eagle_csp recipe formed:
             - determine <crackshot.weapon[Desert_Eagle_CSP]>
         on placeholder_grenade_csp recipe formed:
@@ -94,25 +90,6 @@ placeholder_bazooka_csp:
             input:
                 - emerald_block|emerald_block|fire_charge
                 - emerald_block|stick|emerald_block
-                - stick|emerald_block|emerald_block
-
-placeholder_carbine_csp:
-    type: item
-    debug: false
-    material: stick
-    mechanisms:
-        hides: enchants
-    enchantments:
-        - unbreaking:1
-    display name: <red>Carbine
-    lore:
-        - <gray>Placeholder item for Carbine
-    recipes:
-        1:
-            type: shaped
-            input:
-                - emerald_block|emerald_block|gunpowder
-                - emerald_block|firework_rocket|emerald_block
                 - stick|emerald_block|emerald_block
 
 placeholder_desert_eagle_csp:
