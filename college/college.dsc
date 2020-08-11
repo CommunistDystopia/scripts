@@ -57,8 +57,6 @@ Command_College:
         - if <[data].data_key[stages_config].size> > 1 && <script[<[target]>_Stages_Task]||null> != null:
             - run <[target]>_Stages_Task
             - stop
-        - if !<player.is_op>:
-            - inventory clear d:<player.inventory>
         - narrate "<white> Welcome to the written test, future <red><[target].to_titlecase>" targets:<player>
         - wait 1s
         - narrate "<white> Your written exam will start in <red>5 seconds..."

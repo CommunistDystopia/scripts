@@ -31,8 +31,6 @@ Soldier_Stages_Task:
             - stop
         - choose <[stage]>:
             - case 1:
-                - if !<player.is_op>:
-                    - inventory clear d:<player.inventory>
                 - narrate "<white> Welcome to the first stage of the university, future member of the <red>Peoples Army"
                 - wait 1s
                 - narrate "<white> Your written exam will start in <red>5 seconds..."
