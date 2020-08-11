@@ -59,6 +59,8 @@ Command_College:
         - else:
             - flag server college_stage_1_players:|:<[username]>
         - teleport <[username]> <location[college_stage_1_spawn]>
+        - if !<[username].is_op>:
+            - inventory clear d:<[username].inventory>
         - narrate "<white> Welcome to the written test, future <red><[target].to_titlecase>" targets:<[username]>
         - wait 1s
         - narrate "<white> Your written exam will start in <red>5 seconds..."

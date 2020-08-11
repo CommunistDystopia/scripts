@@ -61,6 +61,14 @@ Command_Admin_College:
                     - narrate "<red> ERROR: The value is higher than the highest stage number. Please try a lower value."
                     - stop
                 - if <[secondary_target]> == spawn:
+                    - define player_zone <cuboid[<[exam]>_stage_<[stage_number]>_player_zone]||null>
+                    - if <[player_zone]> == null:
+                        - narrate "<red> ERROR: The player zone is not set for this stage."
+                        - narrate "<white> Set it with <yellow>/admincollege set stage zone <[stage_number]>"
+                        - stop
+                    - if !<[player_zone].contains_location[<player.location>]>:
+                        - narrate "<red> ERROR: You need to be inside the zone of this stage to set the spawn"
+                        - stop
                     - note <player.location> as:<[exam]>_stage_<[stage_number]>_spawn
                     - narrate "<green> SUCCESS: The place where you're standing is the new spawn for the <[exam]> stage <[stage_number]>"
                     - narrate "<white> To change it, run the command again."
@@ -70,7 +78,7 @@ Command_Admin_College:
                         - narrate "<red> ERROR: You don't have any zone selected."
                         - narrate "<white> Use <red>/ctool <white>to select one"
                         - stop
-                    - note <player.flag[ctool_selection]> as:<[exam]>_stage_<[stage_nuber]>_player_zone
+                    - note <player.flag[ctool_selection]> as:<[exam]>_stage_<[stage_number]>_player_zone
                     - inject cuboid_tool_status_task
                     - narrate "<green> SUCCESS: The selection has been set as the Anti-Teleport zone for the <[exam]> stage <[stage_number]>"
                     - flag <player> ctool_selection:!

@@ -33,12 +33,20 @@ Entities_Need_More_Food_Script:
     debug: false
     events:
         on entity despawns:
-            - if <context.entity.is_player>:
+            - define isValidPlayer <context.entity.is_player||null>
+            - define isValidNPC <context.entity.is_npc||null>
+            - if <[isValidPlayer]> != null && <[isValidPlayer]>:
+                - stop
+            - if <[isValidNPC]> != null && <[isValidNPC]>:
                 - stop
             - if <context.entity.has_flag[last_food]>:
                 - flag <context.entity> last_food:!
         on entity death:
-            - if <context.entity.is_player>:
+            - define isValidPlayer <context.entity.is_player||null>
+            - define isValidNPC <context.entity.is_npc||null>
+            - if <[isValidPlayer]> != null && <[isValidPlayer]>:
+                - stop
+            - if <[isValidNPC]> != null && <[isValidNPC]>:
                 - stop
             - if <context.entity.has_flag[last_food]>:
                 - flag <context.entity> last_food:!

@@ -92,6 +92,7 @@ Command_Written_Exam:
         - narrate "<red> Comrade<white>. Good job for passing the written exam" targets:<[username]>
         - if <[username].has_flag[college_current_stage]>:
             - flag <[username]> college_current_stage:++
+            - teleport <[username]> <location[<[username].flag[college_current_exam]>_college_spawn]>
             - narrate "<white> Go to the <red>SIGN<white>, <red>RIGHT CLICK IT <white>to start the <red>NEXT STAGE" targets:<[username]>
         - else:
             - execute as_server "lp user <[username].name> parent add <[username].flag[college_current_exam]>"
