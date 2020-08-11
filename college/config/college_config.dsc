@@ -3,3 +3,28 @@ College_Config:
     job_groups:
         - soldier
         - doctor
+        - conscript
+        - author
+        - merchant
+        - border
+        - border-director
+        - brewer
+        - chef
+        - distributer
+        - doctor
+        - driver
+        - general
+        - judge
+        - lawyer
+        - rancher
+        - regional-overseer
+        - teacher
+        - tourism
+        - teamster
+        - agent
+        - rationer
+        - renovator
+        - inspector
+        - supremewarden
+        - prisonguard
+        - labordep

@@ -82,3 +82,7 @@ College_Script:
                 - if <server.flag[<[allowed_players]>].parse[uuid].find[<player.uuid>]> != -1:
                     - stop
             - determine cancelled
+        on entity prespawns because NATURAL in:*_stage_*_player_zone:
+            - if <entity.is_npc||null> != null && <entity.is_npc>:
+                - stop
+            - determine cancelled
