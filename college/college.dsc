@@ -33,10 +33,9 @@ Command_College:
                 - narrate " <red>ERROR: The college config file has been corrupted!"
                 - narrate " <white>Please report this error to a higher rank or open a ticket in Discord."
                 - stop
-            - foreach <[job_groups]> as:job_group:
-                - if <player.in_group[<[job_group]>]>:
-                    - narrate "<red> You already have a job. Only players without a job can enter the college"
-                    - stop
+            - if !<[job_groups].shared_contents[<player.groups>].is_empty>:
+                - narrate "<red> You already have a job. Only players without a job can enter the college"
+                - stop
         - define target <context.args.get[1]>
         - if <player.has_flag[criminal_record]>:
             - narrate "<red> You have a criminal record, you can't a take an exam"
