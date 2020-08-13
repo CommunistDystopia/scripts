@@ -86,6 +86,13 @@ College_Script:
             - if <entity.is_npc||null> != null && <entity.is_npc>:
                 - stop
             - determine cancelled
+        after player logs in for the first time:
+            - flag <player> college_lock_timer:<script[College_Config].data_key[college_lock_timer]>
+        on system time minutely:
+            - if <player.has_flag[college_lock_timer]>:
+                - flag <player> college_lock_timer:-:1
+                - if <player.flag[college_lock_timer]> <= 0:
+                    - flag <player> college_lock_timer:!
 
 Failed_College_Task:
     type: task

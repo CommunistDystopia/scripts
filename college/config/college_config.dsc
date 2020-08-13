@@ -1,5 +1,9 @@
 College_Config:
     type: data
+    # Time (in minutes) that a new player has to be in the server
+    # to use the college
+    college_lock_timer: 120
+    # Valid job groups for the college
     job_groups:
         - soldier
         - doctor
@@ -28,3 +32,4 @@ College_Config:
         - supremewarden
         - prisonguard
         - labordep
+        - worker
