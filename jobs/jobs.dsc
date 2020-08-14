@@ -79,6 +79,36 @@ Job_Group_Clear_Task:
                 - group remove <[job]>
                 - narrate " <red> Job <yellow><[job]> <red>quit"
             - if <queue.player||null> != null && <queue.player> == <[username]>:
-                - narrate "<green> DONE! Jobs removed. Go ahead and pick a new career if you want!"
+                - narrate "<green> DONE! Job(s) removed. Go ahead and pick a new career if you want!"
             - else:
-                - narrate "<green> DONE! <yellow><[username].name> <green>jobs has been removed."
+                - narrate "<green> DONE! <yellow><[username].name> <green>job(s) has been removed."
+
+Job_Script:
+    type: world
+    debug: false
+    events:
+        on lp command:
+            - if <context.args.size> == 5:
+                - if <context.args.get[1]> == user && <context.args.get[3]> == parent && <context.args.get[4]> == add:
+                    - define username <server.match_offline_player[<context.args.get[2]>]||null>
+                    - if <[username]> == null:
+                        - stop
+                    - adjust <queue> linked_player:<[username]>
+                    - define group <context.args.get[5]>
+                    - define validjobs <script[College_Config].data_key[job_groups]||null>
+                    - if <[validjobs]> == null:
+                        - narrate "<red>ERROR: The college config file used for the valid jobs has been corrupted!"
+                        - narrate "<white>Please report this error to a higher rank or open a ticket in Discord."
+                        - stop
+                    - if <[validjobs].find[<[group]>]> == -1:
+                        - stop
+                    - define player_jobs <[validjobs].shared_contents[<player.groups>]>
+                    - if <[player_jobs].is_empty>:
+                        - stop
+                    - foreach <[player_jobs]> as:job:
+                        - if <player.in_group[<[job]>]>:
+                            - if <[job]> == soldier:
+                                - if <player.has_flag[soldier_jail]>:
+                                    - flag server <player.flag[soldier_jail]>_soldiers:<-:<player>
+                                    - flag <player> soldier_jail:!
+                            - group remove <[job]>
