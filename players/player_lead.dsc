@@ -61,19 +61,6 @@ Command_Player_Lead:
             - flag <[username]> lead_block_limit:<[limit_number]>
             - narrate "<green> The space between <[username].name> and you will be <yellow><[limit_number]> <green>blocks"
             - stop
-        - if <[action]> == free && <player.in_group[godvip]>:
-            - if <[username].has_flag[owner]> && !<[username].flag[owner].starts_with[jail_]>:
-                - if !<[username].flag[owner].contains_all_case_sensitive_text[<player.uuid>]>:
-                    - narrate "<red>ERROR: <yellow><[username].name> <red>isnt't your slave."
-                    - stop
-            - flag <[username]> owner:!
-            - if <[username].has_flag[slave_groups]>:
-                - foreach <[username].flag[slave_groups]> as:group:
-                    - execute as_server "lp user <[username].name> parent add <[group]>" silent
-            - flag <[username]> slave_groups:!
-            - execute as_server "lp user <[username].name> parent remove slave" silent
-            - narrate "<green> The slave <red><[username].name> <green>is now free!"
-            - stop
         - mark syntax_error
         - narrate "<red> Usage: <white>/lead limit <yellow>[10-30]"
 
