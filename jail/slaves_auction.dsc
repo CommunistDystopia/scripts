@@ -19,8 +19,6 @@
 # Server flags created here
 # - auction_highest_bidder
 # - auction_highest_bid
-# Player flags created here
-# - owner_block_limit [Used in SlaveLead]
 
 Command_Slave_Auction:
     type: command
@@ -100,14 +98,8 @@ Command_Slave_Auction:
                 - flag server auction_highest_bid:!
                 - stop
             - take from:<[highest_bidder].inventory> money quantity:<server.flag[auction_highest_bid]>
-            - flag server auction_slave_jail:<[slave].flag[owner]>
-            - if <[slave].has_flag[jail_owner]>:
-                - flag server auction_slave_jail:<[slave].flag[owner]>
-            - define auction_slave_jail_slaves "<server.flag[auction_slave_jail]>_slaves"
-            - flag server <[auction_slave_jail_slaves]>:<-:<[slave]>
-            - flag server auction_slave_jail:!
+            - flag server <[slave].flag[owner]>_slaves:<-:<[slave]>
             - flag <[slave]> owner:<[highest_bidder].uuid>
-            - flag <[slave]> owner_block_limit:10
             - flag <[slave]> slave_timer:!
             - if <[highest_bidder].is_online>:
                 - teleport <[slave]> <[highest_bidder].location>

@@ -142,8 +142,6 @@ Command_Slaves:
             - flag server <[jail_slaves]>:|:<[username]>
             - flag <[username]> owner:<[jail_name]>
             - flag <[username]> slave_timer:<script[Slaves_Config].data_key[slave_timer]>
-            - flag <[username]> jail_owner:!
-            - flag <[username]> owner_block_limit:!
             - define record "Jail [<util.time_now.to_utc.format>]"
             - flag <[username]> criminal_record:|:<[record]>
             - if !<[username].groups.is_empty>:
@@ -167,13 +165,8 @@ Command_Slaves:
                 - if <location[<[jail_name]>_spawn]||null> == null:
                     - narrate "<red> Jail <[name]> doesn't have a spawn set."
                     - stop
-                - if <[username].has_flag[jail_owner]>:
-                    - flag <[username]> non_max_jail:<[username].flag[jail_owner]>
-                    - flag <[username]> jail_owner:!
-                    - flag <[username]> owner:<[jail_name]>
-                - else:
-                    - flag <[username]> non_max_jail:<[username].flag[owner]>
-                    - flag <[username]> owner:<[jail_name]>
+                - flag <[username]> non_max_jail:<[username].flag[owner]>
+                - flag <[username]> owner:<[jail_name]>
                 - teleport <[username]> <location[<[username].flag[owner]>_spawn]>
                 - narrate "<red> <[username].name> <green>was added to the max security Jail."
                 - stop
@@ -210,9 +203,6 @@ Command_Slaves:
             - flag server <[jail_slaves]>:<-:<[username]>
             - flag <[username]> owner:!
             - flag <[username]> slave_timer:!
-            - flag <[username]> jail_owner:!
-            - flag <[username]> owner_block_limit:!
-            - flag <[username]> slave_lead_queue:!
             - flag <[username]> non_max_jail:!
             - flag <[username]> slave_max_timer:!
             - if <[username].has_flag[slave_groups]>:
@@ -239,19 +229,14 @@ Slave_Script:
     events:
         after player respawns:
             - if <player.in_group[slave]> && <player.has_flag[owner]>:
-                - if <player.has_flag[slave_timer]> && !<player.has_flag[jail_owner]>:
+                - if <player.has_flag[slave_timer]>:
                     - if <server.has_flag[court_active]>:
                         - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
                             - stop
                     - define owner_name_spawn <player.flag[owner]>_spawn
                     - teleport <player> <location[<[owner_name_spawn]>]>
                     - narrate "<red> You died but you're a slave. Now you're with your owner."
-                - if <player.has_flag[jail_owner]>:
-                    - define owner <server.match_player[<player.flag[owner]>]||null>
-                    - if <[owner]> != null:
-                        - teleport <player> <[owner].location>
-                        - narrate "<red> You died but you're a slave. Now you're with your owner."
-                - if !<player.has_flag[slave_timer]> && !<player.has_flag[jail_owner]>:
+                - else:
                     - define owner <server.match_player[<player.flag[owner]>]||null>
                     - if <[owner]> != null:
                         - teleport <player> <[owner].location>
