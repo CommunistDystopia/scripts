@@ -8,7 +8,7 @@
 # @date 2020/08/12
 # @denizen-build REL-1714
 # @dependency devnodachi/college_config
-# @soft-dependency devnodachi/soldiers
+# @soft-dependency devnodachi/soldiers devnodachi/player_lead
 #
 
 Command_Job:
@@ -70,12 +70,19 @@ Job_Group_Clear_Task:
             - else:
                 - narrate "<red> ERROR: <[username].name> doesn't have a valid job to quit!"
             - stop
+        - if <[username].has_flag[lead_owner]>:
+            - narrate " <red>! -> <yellow><[username].name> <red>quit <white>the job! It's released out of the lead" targets:<[username].flag[lead_owner]>
+            - flag <[username]> lead_owner:!
+            - if <queue.player||null> != null && <queue.player> == <[username]>:
+                - narrate "<green> You're released out of the lead!"
+            - else:
+                - narrate "<green> DONE! <yellow><[username].name> <green>was released out of the lead."
         - foreach <[player_jobs]> as:job:
-            - if <player.in_group[<[job]>]>:
+            - if <[username].in_group[<[job]>]>:
                 - if <[job]> == soldier:
-                    - if <player.has_flag[soldier_jail]>:
-                        - flag server <player.flag[soldier_jail]>_soldiers:<-:<player>
-                        - flag <player> soldier_jail:!
+                    - if <[username].has_flag[soldier_jail]>:
+                        - flag server <[username].flag[soldier_jail]>_soldiers:<-:<[username]>
+                        - flag <[username]> soldier_jail:!
                 - group remove <[job]>
                 - narrate " <red> Job <yellow><[job]> <red>quit"
             - if <queue.player||null> != null && <queue.player> == <[username]>:

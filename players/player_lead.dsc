@@ -45,6 +45,7 @@ Command_Player_Lead:
         - define action <context.args.get[1]>
         - if <[action]> == releaseall:
             - inject Player_Lead_Stop_All_Task instantly
+            - stop
         - if <context.args.size> < 2:
             - goto syntax_error
         - define username <server.match_player[<context.args.get[2]>]||null>
@@ -69,6 +70,7 @@ Command_Player_Lead:
             - stop
         - if <[action]> == release:
             - inject Player_Lead_Stop_Task instantly
+            - stop
         - mark syntax_error
         - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
         - narrate "<yellow>-<red> Release all leaded players: <white>/lead releaseall"
@@ -87,7 +89,7 @@ Player_Lead_Script:
             - inject Player_Lead_Start_Task instantly
         on player quits:
             - inject Player_Lead_Stop_All_Task instantly
-            - if <player.has_flag[lead_owner]>:
+            - if <player.has_flag[lead_owner]> || <player.has_flag[lead_queue]>:
                 - flag <player.flag[lead_owner]> players_in_lead:<-:<player>
                 - flag <player> lead_owner:!
                 - flag <player> lead_block_limit:!
@@ -154,6 +156,10 @@ Player_Lead_Start_Task:
             - if <player.location.points_between[<[username].location>].size> > <[username].flag[lead_block_limit]>:
                 - teleport <[username]> <player.location>
             - wait 1s
+        - if !<[username].has_flag[lead_owner]>:
+            - flag <[username]> lead_block_limit:!
+            - flag <[username]> lead_queue:!
+            - flag <player> players_in_lead:<-:<[username]>
 
 Player_Lead_Stop_Task:
     type: task
@@ -195,4 +201,3 @@ Player_Lead_Stop_All_Task:
         - else:
             - if <player.is_online>:
                 - narrate "<red> ERROR: You aren't leading anyone"
-        - stop
