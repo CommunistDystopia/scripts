@@ -12,8 +12,10 @@
 # @soft-dependency devnodachi/slaves
 #
 # Commands
+# /lead releaseall - Release all leaded players
 # /lead start [username] - Forces the player to follow you within X blocks.
-# /lead limit [username] [10-30] - Sets the space between the leaded player and you. [Default: 10] [Min: 10] [Max: 30]
+# /lead limit [username] [10-100] - Sets the space between the leaded player and you. [Default: 20] [Min: 10] [Max: 100]
+# /lead release [username] - Release a leaded player
 
 Command_Player_Lead:
     type: command
@@ -22,14 +24,14 @@ Command_Player_Lead:
     description: Minecraft player lead system.
     usage: /lead
     tab complete:
-        - if !<context.server>:
+        - if <context.server>:
             - stop
         - choose <context.args.size>:
             - case 0:
-                - determine <list[start|limit]>
+                - determine <list[start|limit|release|releaseall]>
             - case 1:
                 - if "!<context.raw_args.ends_with[ ]>":
-                    - determine <list[start|limit].filter[starts_with[<context.args.first>]]>
+                    - determine <list[start|limit|release|releaseall].filter[starts_with[<context.args.first>]]>
                 - else:
                     - determine <server.online_players.parse[name]>
             - case 2:
@@ -38,9 +40,13 @@ Command_Player_Lead:
     script:
         - if <context.server>:
             - stop
-        - if <context.args.size> < 2:
+        - if <context.args.size> < 1:
             - goto syntax_error
         - define action <context.args.get[1]>
+        - if <[action]> == releaseall:
+            - inject Player_Lead_Stop_All_Task instantly
+        - if <context.args.size> < 2:
+            - goto syntax_error
         - define username <server.match_player[<context.args.get[2]>]||null>
         - if <[username]> == null:
             - narrate "<red> ERROR: Invalid player username OR the player is offline."
@@ -55,14 +61,19 @@ Command_Player_Lead:
                 - narrate "<red> ERROR: You aren't leading that player to change the block limit"
                 - stop
             - define limit_number <context.args.get[3]>
-            - if <[limit_number]> < 10 && <[limit_number]> > 30:
-                - narrate "<red> ERROR: The space limit between <[username].name> and you needs to be in the range of <yellow>10-30 <red>blocks"
+            - if <[limit_number]> < 10 && <[limit_number]> > 100:
+                - narrate "<red> ERROR: The space limit between <[username].name> and you needs to be in the range of <yellow>10-100 <red>blocks"
                 - stop
             - flag <[username]> lead_block_limit:<[limit_number]>
             - narrate "<green> The space between <[username].name> and you will be <yellow><[limit_number]> <green>blocks"
             - stop
+        - if <[action]> == release:
+            - inject Player_Lead_Stop_Task instantly
         - mark syntax_error
-        - narrate "<red> Usage: <white>/lead limit <yellow>[10-30]"
+        - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
+        - narrate "<yellow>-<red> Release all leaded players: <white>/lead releaseall"
+        - narrate "<yellow>-<red> Limit the blocks between the leaded player: <white>/lead limit <yellow>username [10-100]"
+        - narrate "<yellow>-<red> Release a leaded player: <white>/lead release <yellow>username"
 
 Player_Lead_Script:
     type: world
@@ -73,19 +84,9 @@ Player_Lead_Script:
             - ratelimit <player> 5s
             - if !<player.is_op>:
                 - inject Player_Lead_Check_Task instantly
-            - inject Player_Lead_Task instantly
+            - inject Player_Lead_Start_Task instantly
         on player quits:
-            - if <player.has_flag[players_in_lead]>:
-                - foreach <player.flag[players_in_lead]> as:lead_player:
-                    - define username <[lead_player].as_player>
-                    - flag <[username]> lead_owner:!
-                    - flag <[username]> lead_block_limit:!
-                    - flag <[username]> lead_queue:!
-                    - if <[username].is_online> && <[username].in_group[slave]> && <[username].has_flag[owner]> && <[username].flag[owner].starts_with[jail_]>:
-                        - teleport <[username]> <location[<[username].flag[owner]>_spawn]>
-                        - narrate "<yellow> <player.name> <red>log out. <green>Welcome back to Jail" targets:<[username]>
-                - flag <player> players_in_lead:!
-                - stop
+            - inject Player_Lead_Stop_All_Task instantly
             - if <player.has_flag[lead_owner]>:
                 - flag <player.flag[lead_owner]> players_in_lead:<-:<player>
                 - flag <player> lead_owner:!
@@ -136,26 +137,14 @@ Player_Lead_Check_Task:
                     - narrate "<red> You can't lead that player!"
                     - stop
 
-Player_Lead_Task:
+Player_Lead_Start_Task:
     type: task
     debug: false
     definitions: username
     script:
-        - if <[username].has_flag[lead_queue]>:
-            - queue <[username].flag[lead_queue]> stop
-            - if <player.has_flag[players_in_lead]> && <player.flag[players_in_lead].find[<[username]>]> != -1:
-                - flag <player> players_in_lead:<-:<[username]>
-                - if <[username].has_flag[lead_owner]>:
-                    - flag <[username]> lead_owner:!
-                    - flag <[username]> lead_block_limit:!
-            - else:
-                - narrate " <red> ERROR: You can't lead <yellow><[username].name><red>. The player is being leaded by <yellow><[username].flag[lead_owner].name>"
-                - stop
-            - flag <[username]> lead_queue:!
-            - narrate "<green> The Lead on <red><[username].name> <green>stopped"
-            - stop
+        - inject Player_Lead_Stop_Task instantly
         - flag <[username]> lead_owner:<player>
-        - flag <[username]> lead_block_limit:10
+        - flag <[username]> lead_block_limit:20
         - flag <[username]> lead_queue:<queue>
         - flag <player> players_in_lead:|:<[username]>
         - narrate "<green> Starting to force the player <red><[username].name> <green>to stay within <yellow><[username].flag[lead_block_limit]> <green>blocks"
@@ -165,3 +154,45 @@ Player_Lead_Task:
             - if <player.location.points_between[<[username].location>].size> > <[username].flag[lead_block_limit]>:
                 - teleport <[username]> <player.location>
             - wait 1s
+
+Player_Lead_Stop_Task:
+    type: task
+    debug: false
+    definitions: username
+    script:
+        - if <[username].has_flag[lead_queue]>:
+            - if <player.has_flag[players_in_lead]> && <player.flag[players_in_lead].find[<[username]>]> != -1:
+                - queue <[username].flag[lead_queue]> stop
+                - flag <player> players_in_lead:<-:<[username]>
+                - if <[username].has_flag[lead_owner]>:
+                    - flag <[username]> lead_owner:!
+                    - flag <[username]> lead_block_limit:!
+                    - flag <[username]> lead_queue:!
+                    - if <[username].is_online> && <[username].in_group[slave]> && <[username].has_flag[owner]> && <[username].flag[owner].starts_with[jail_]>:
+                        - teleport <[username]> <location[<[username].flag[owner]>_spawn]>
+                        - narrate "<yellow> <player.name> <red>released you. <green>Welcome back to Jail" targets:<[username]>
+                    - narrate "<green> The Lead on <red><[username].name> <green>stopped"
+            - else:
+                - narrate " <red> ERROR: You can't start or stop the lead of <yellow><[username].name><red>. The player is being leaded by <yellow><[username].flag[lead_owner].name>"
+            - stop
+
+Player_Lead_Stop_All_Task:
+    type: task
+    debug: false
+    script:
+        - if <player.has_flag[players_in_lead]>:
+            - foreach <player.flag[players_in_lead]> as:lead_player:
+                - define username <[lead_player].as_player>
+                - flag <[username]> lead_owner:!
+                - flag <[username]> lead_block_limit:!
+                - flag <[username]> lead_queue:!
+                - if <[username].is_online> && <[username].in_group[slave]> && <[username].has_flag[owner]> && <[username].flag[owner].starts_with[jail_]>:
+                    - teleport <[username]> <location[<[username].flag[owner]>_spawn]>
+                    - narrate "<yellow> <player.name> <red>released you. <green>Welcome back to Jail" targets:<[username]>
+            - flag <player> players_in_lead:!
+            - if <player.is_online>:
+                - narrate "<green> All players linked to the lead has been <red>released"
+        - else:
+            - if <player.is_online>:
+                - narrate "<red> ERROR: You aren't leading anyone"
+        - stop
