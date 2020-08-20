@@ -7,7 +7,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/10
+# @date 2020/08/19
 # @denizen-build REL-1714
 # @dependency devnodachi/college
 #
@@ -51,14 +51,14 @@ Soldier_Stages_Script:
             - if <server.has_flag[soldier_stage_2_players]>:
                 - if <context.shooter||null> != null && <server.flag[soldier_stage_2_players].parse[uuid].filter[contains_all_case_sensitive_text[<context.shooter.uuid>]].size> == 1:
                     - if <context.location.material.name.contains_all_text[<script[Soldier_Exam_Data].data_key[stages_config].get[2].get[target_block]>]>:
-                        - flag <context.shooter> soldier_stage_2_points_left:--
-                        - define points_left_text "<green> POINTS LEFT: <yellow><player.flag[soldier_stage_2_points_left]>"
+                        - flag <context.shooter> soldier_stage_2_points:++
+                        - define points_left_text "<green> POINTS LEFT: <yellow><player.flag[soldier_stage_2_points]>"
                         - sidebar set_line score:1 values:<[points_left_text]>
         on player exits soldier_stage_*_player_zone:
             - if !<player.is_op>:
                 - inventory clear d:<player.inventory>
             - if <context.area.note_name.contains_all_text[soldier_stage_2_player_zone]>:
-                - flag <player> soldier_stage_2_points_left:!
+                - flag <player> soldier_stage_2_points:!
                 - flag server soldier_stage_2_players:!
             - if <context.area.note_name.contains_all_text[soldier_stage_3_player_zone]>:
                 - if <server.has_flag[soldier_stage_3_players]> && <server.flag[soldier_stage_3_players].parse[uuid].find[<player.uuid>]> != -1:
@@ -99,10 +99,10 @@ Soldier_Stage_2_Task:
             - narrate " <white>Please report this error to a higher rank or open a ticket in Discord."
             - stop
         - define time_remaining <script[Soldier_Exam_Data].data_key[stages_config].get[2].get[timer]||null>
-        - define points_left <script[Soldier_Exam_Data].data_key[stages_config].get[2].get[points]||null>
+        - define points <script[Soldier_Exam_Data].data_key[stages_config].get[2].get[points]||null>
         - define target_block <script[Soldier_Exam_Data].data_key[stages_config].get[2].get[target_block]||null>
         - define background_block <script[Soldier_Exam_Data].data_key[stages_config].get[2].get[background_block]||null>
-        - if <[time_remaining]> == null || <[points_left]> == null || <[target_block]> == null || <[background_block]> == null:
+        - if <[time_remaining]> == null || <[points]> == null || <[target_block]> == null || <[background_block]> == null:
             - narrate " <red>ERROR: The stage 2 config file has been corrupted! [SOLDIER]"
             - narrate " <white>Please report this error to a higher rank or open a ticket in Discord."
             - stop
@@ -117,20 +117,19 @@ Soldier_Stage_2_Task:
         - give <crackshot.weapon[Desert_Eagle_CSP]> to:<player.inventory>
         - narrate "<white> Welcome to the second stage of the university, future member of the <red>Peoples Army"
         - define space " "
-        - narrate "<white> To <green>PASS <white>this stage you need to <red>SHOOT <white>the <yellow><script[Soldier_Exam_Data].data_key[stages_config].get[2].get[target_block].to_titlecase.replace[_].with[<[space]>]> <white>to lower the <green>POINTS <white>in the right side"
-        - narrate "<white> When you hit the block, the <green>POINTS <white>will decrease by 1."
+        - narrate "<white> To <green>PASS <white>this stage you need to <red>SHOOT <white>the <yellow><script[Soldier_Exam_Data].data_key[stages_config].get[2].get[target_block].to_titlecase.replace[_].with[<[space]>]> <red><[points]> TIMES <white> to <green>WIN!"
         - narrate "<white> If you <red>FAIL<white>, you will start again in this stage when you try again the exam."
         - wait 5s
-        - flag <player> soldier_stage_2_points_left:<[points_left]>
+        - flag <player> soldier_stage_2_points:0
         - repeat <[time_remaining]>:
-            - if !<player.has_flag[soldier_stage_2_points_left]>:
+            - if !<player.has_flag[soldier_stage_2_points]>:
                 - repeat stop
             - define current_time <[value].sub[1]>
             - define time_remaining_text "<green> TIME REMAINING: <white><[time_remaining].sub[<[current_time]>]>"
-            - define points_left_text "<green> POINTS: <yellow><player.flag[soldier_stage_2_points_left]>"
+            - define points_left_text "<green> POINTS: <yellow><player.flag[soldier_stage_2_points]>"
             - sidebar set "title:<white>== <yellow>STAGE 2: <white>Soldier Exam" values:<[time_remaining_text]>|<[points_left_text]> players:<player>
             - modifyblock <cuboid[soldier_stage_2_shooting_zone]> <[background_block]>|<[target_block]> 80|20
-            - if <player.flag[soldier_stage_2_points_left]> <= 0:
+            - if <player.flag[soldier_stage_2_points]> >= <[points]>:
                 - repeat stop
             - wait 1s
         - sidebar remove players:<player>
@@ -138,8 +137,8 @@ Soldier_Stage_2_Task:
             - inventory clear d:<player.inventory>
         - modifyblock <cuboid[soldier_stage_2_shooting_zone]> <[background_block]>
         - flag server soldier_stage_2_players:!
-        - if !<player.has_flag[soldier_stage_2_points_left]> || <player.flag[soldier_stage_2_points_left]> > 0:
-            - flag <player> soldier_stage_2_points_left:!
+        - if !<player.has_flag[soldier_stage_2_points]> || <player.flag[soldier_stage_2_points]> < <[points]>:
+            - flag <player> soldier_stage_2_points:!
             - teleport <player> <location[soldier_college_spawn]>
             - cooldown 1m script:Command_College
             - narrate "<red> FAILED: <white>Try again the exam. Keep trying"
@@ -147,7 +146,7 @@ Soldier_Stage_2_Task:
             - stop
         - if <player.has_flag[college_current_stage]>:
             - flag <player> college_current_stage:++
-        - flag <player> soldier_stage_2_points_left:!
+        - flag <player> soldier_stage_2_points:!
         - narrate "<red> Comrade<green>. Congratulations for passing the second stage"
         - execute as_player "college soldier"
 

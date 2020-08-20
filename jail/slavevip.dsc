@@ -64,4 +64,4 @@ Command_Slavevip:
             - narrate "<green> The slave <red><[slave].name> <green>is now free!"
             - stop
         - mark syntax_error
-        - narrate "<red> Usage: <white>/slavevip free [username]"
+        - narrate "<red> USAGE: <white>/slavevip free [username]"
