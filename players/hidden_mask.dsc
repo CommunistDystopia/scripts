@@ -85,11 +85,11 @@ Hidden_Mask_Action_Task:
                     - choose <[action_type]>:
                         - case EQUIP:
                             - if <context.new_item> == <server.flag[<[mask].get[flag]>].as_item>:
-                                - adjust <player> name:<element[]>
+                                - team name:white add:<player.name> option:NAME_TAG_VISIBILITY status:NEVER
                                 - foreach stop
                         - case UNEQUIP:
                             - if <context.new_item> != <server.flag[<[mask].get[flag]>].as_item> && <context.old_item> == <server.flag[<[mask].get[flag]>].as_item>:
-                                - adjust <player> name:<player.name>
+                                - team name:white remove:<player.name>
                                 - foreach stop
                         - case DEATH:
                             - if <context.damager.inventory.find[<server.flag[<[mask].get[flag]>].as_item>]> == 40:
