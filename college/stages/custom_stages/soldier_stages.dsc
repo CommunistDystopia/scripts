@@ -226,17 +226,17 @@ Soldier_Stage_4_Task:
             - while !<[npc].is_spawned> && <[spawn_tries]> > 0:
                 - random:
                     - if <player.location.add[<[spawn_distance]>,0,0].material.name> == AIR && <player.location.add[<[spawn_distance]>,0,0].above.material.name> == AIR:
-                        - adjust <[npc]> spawn:<player.location.add[<[spawn_distance]>,0,0]>
+                        - spawn <[npc]> <player.location.add[<[spawn_distance]>,0,0]>
                     - if <player.location.sub[<[spawn_distance]>,0,0].material.name> == AIR && <player.location.sub[<[spawn_distance]>,0,0].above.material.name> == AIR:
-                        - adjust <[npc]> spawn:<player.location.sub[<[spawn_distance]>,0,0]>
+                        - spawn <[npc]> <player.location.sub[<[spawn_distance]>,0,0]>
                     - if <player.location.add[0,0,<[spawn_distance]>].material.name> == AIR && <player.location.add[0,0,<[spawn_distance]>].above.material.name> == AIR:
-                        - adjust <[npc]> spawn:<player.location.add[0,0,<[spawn_distance]>]>
+                        - spawn <[npc]> <player.location.add[0,0,<[spawn_distance]>]>
                     - if <player.location.sub[0,0,<[spawn_distance]>].material.name> == AIR && <player.location.sub[0,0,<[spawn_distance]>].above.material.name> == AIR:
-                        - adjust <[npc]> spawn:<player.location.sub[0,0,<[spawn_distance]>]>
+                        - spawn <[npc]> <player.location.sub[0,0,<[spawn_distance]>]>
                     - if <player.location.add[<[spawn_distance]>,0,<[spawn_distance]>].material.name> == AIR && <player.location.add[<[spawn_distance]>,0,<[spawn_distance]>].above.material.name> == AIR:
-                        - adjust <[npc]> spawn:<player.location.add[<[spawn_distance]>,0,<[spawn_distance]>]>
+                        - spawn <[npc]> <player.location.add[<[spawn_distance]>,0,<[spawn_distance]>]>
                     - if <player.location.sub[<[spawn_distance]>,0,<[spawn_distance]>].material.name> == AIR && <player.location.sub[<[spawn_distance]>,0,<[spawn_distance]>].above.material.name> == AIR:
-                        - adjust <[npc]> spawn:<player.location.sub[<[spawn_distance]>,0,<[spawn_distance]>]>
+                        - spawn <[npc]> <player.location.sub[<[spawn_distance]>,0,<[spawn_distance]>]>
                 - wait 1T
                 - adjust <[NPC]> skin_blob:eyJ0aW1lc3RhbXAiOjE1ODU2MDUyODM5NjAsInByb2ZpbGVJZCI6IjkxZmUxOTY4N2M5MDQ2NTZhYTFmYzA1OTg2ZGQzZmU3IiwicHJvZmlsZU5hbWUiOiJoaGphYnJpcyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGM2NWQ4OTdlNWRkNzdiZjgxYTNjZjhkZTllMWQxMmRlYTI1NmU4MWE5ZjcxMTBhYmNhMzU2NjkyYTE3MDNhYSJ9fX0=;XJotIjWxKr+So/pSF3wOmWext7giPtdhh2IoJVOoy4lLE3w88MwM+JWUBnsDQud2EAjX2P9NFOtGb/7Mat22w0nqoMezQlR5CmN3857MWz/JeMV7N+JvZWya9HsyWv6Wermo+4wl+XK6R8cqoeHC+mIIceKLyz4pytb4biklFPoII6MLbPuQKCSWrxKQ/3oByZokHqRv7ArxOysUVlJurpOsYT7vfJUATgHn9c23f/A3Gh2O5QJ9fYZ5/6ybqJAEocOEZbnZ+vTGNqMVztwYN+7fx1cAbfLl0SYXoG2oX12aJWWw4mXt5U1nsTw7+M5ZqTjo5zBMhpztIS5ds76alD1oWu0ni6kbKmVsm7Pv1U8Fg1Bptp1fVZq2T9d/+Dx+uZy7Gp/oX4HFtn3g9NraPdPkyKPgVsn23BL9scUek2iLrRZC5OamTVtszUHfkSDfCwr9r0bipNkfBE+FidooaT6qbiOXGrztp6CIUP457qVg/3BWxVYdn9tOX3C9lt2mvpADVKuCDrvoVDfOSx811V0MECpYejaXzCDy0xy/iSASpgz0V6CAmfSIXtvTWo8xwX6VGLDSHfT3pdjUOju3sKvg0VuQtk/gEadn9quMgw4FS/hiJ4wHkzNR2cdOwWFYVzcxHsWsOO9GIHTZCkCDNsGvkCX0mrxZ3Rokw54WzO4=;http://textures.minecraft.net/texture/8c65d897e5dd77bf81a3cf8de9e1d12dea256e81a9f7110abca356692a1703aa
                 - wait 1T
