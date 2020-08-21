@@ -16,10 +16,6 @@ Croops_Need_Attention_Script:
         on block grows:
             - if !<context.location.chunk.is_loaded>:
                 - stop
-            - define players_in_chunk <context.location.chunk.players>
-            - if <[players_in_chunk].is_empty>:
-                - determine cancelled
-                - stop
             - if <context.location.biome.name> == DESERT || <context.location.biome.name> == DESERT_HILLS || <context.location.biome.name> == DESERT_LAKES:
                 - determine cancelled
             - if <context.location.biome.name> == SNOWY_BEACH || <context.location.biome.name> == SNOWY_MOUNTAINS || <context.location.biome.name> == SNOWY_TAIGA || <context.location.biome.name> == SNOWY_TAIGA_HILLS || <context.location.biome.name> == SNOWY_TUNDRA || <context.location.biome.name> == SNOWY_TAIGA_MOUNTAINS:
