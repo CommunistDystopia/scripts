@@ -15,12 +15,15 @@ Worker_Script:
     events:
         on system time minutely:
             - foreach <server.online_players> as:server_player:
-                - if <[server_player].in_group[worker]>:
+                - define hasJob <script[College_Config].data_key[job_groups].shared_contents[<[server_player].groups>].is_empty||null>
+                - if <[hasJob]> == null:
+                    - stop
+                - if !<[hasJob]>:
                     - flag <[server_player]> worker_timer:+:1
                     - if <[server_player].flag[worker_timer]> >= 20:
                         - flag <[server_player]> worker_timer:0
-                        - money give quantity:10 players:<[server_player]>
-                        - narrate "<white> You got paid <green>[10$] <white>for working <yellow>20 minutes" targets:<[server_player]>
+                        - give 1_Bill quantity:5 to:<[server_player].inventory>
+                        - narrate "<white> You got paid <green>[5$] <white>for working <yellow>20 minutes" targets:<[server_player]>
         on player quits:
             - if <player.has_flag[worker_timer]>:
                 - flag <player> worker_timer:!
