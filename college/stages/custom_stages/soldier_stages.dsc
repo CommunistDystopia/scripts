@@ -50,7 +50,7 @@ Soldier_Stages_Script:
         on projectile hits block in:soldier_stage_2_shooting_zone:
             - if <server.has_flag[soldier_stage_2_players]>:
                 - if <context.shooter||null> != null && <server.flag[soldier_stage_2_players].parse[uuid].filter[contains_all_case_sensitive_text[<context.shooter.uuid>]].size> == 1:
-                    - if <context.location.material.name.contains_all_text[<script[Soldier_Exam_Data].data_key[stages_config].get[2].get[target_block]>]>:
+                    - if <context.location.material.name.contains_all_text[<yaml[soldier_data].read[stages_config].get[2].get[target_block]>]>:
                         - flag <context.shooter> soldier_stage_2_points:++
                         - define points_left_text "<green> POINTS LEFT: <yellow><player.flag[soldier_stage_2_points]>"
                         - sidebar set_line score:1 values:<[points_left_text]>
@@ -98,14 +98,10 @@ Soldier_Stage_2_Task:
             - narrate " <red>ERROR: The stage 2 Shooting Zone is not set [SOLDIER]"
             - narrate " <white>Please report this error to a higher rank or open a ticket in Discord."
             - stop
-        - define time_remaining <script[Soldier_Exam_Data].data_key[stages_config].get[2].get[timer]||null>
-        - define points <script[Soldier_Exam_Data].data_key[stages_config].get[2].get[points]||null>
-        - define target_block <script[Soldier_Exam_Data].data_key[stages_config].get[2].get[target_block]||null>
-        - define background_block <script[Soldier_Exam_Data].data_key[stages_config].get[2].get[background_block]||null>
-        - if <[time_remaining]> == null || <[points]> == null || <[target_block]> == null || <[background_block]> == null:
-            - narrate " <red>ERROR: The stage 2 config file has been corrupted! [SOLDIER]"
-            - narrate " <white>Please report this error to a higher rank or open a ticket in Discord."
-            - stop
+        - define time_remaining <yaml[soldier_data].read[stages_config].get[2].get[timer]||null>
+        - define points <yaml[soldier_data].read[stages_config].get[2].get[points]||null>
+        - define target_block <yaml[soldier_data].read[stages_config].get[2].get[target_block]||null>
+        - define background_block <yaml[soldier_data].read[stages_config].get[2].get[background_block]||null>
         - if <server.has_flag[soldier_stage_2_players]>:
             - narrate "It seems that someone is currently doing that stage. Try again later"
             - stop
@@ -117,7 +113,7 @@ Soldier_Stage_2_Task:
         - give <crackshot.weapon[Desert_Eagle_CSP]> to:<player.inventory>
         - narrate "<white> Welcome to the second stage of the university, future member of the <red>Peoples Army"
         - define space " "
-        - narrate "<white> To <green>PASS <white>this stage you need to <red>SHOOT <white>the <yellow><script[Soldier_Exam_Data].data_key[stages_config].get[2].get[target_block].to_titlecase.replace[_].with[<[space]>]> <red><[points]> TIMES <white> to <green>WIN!"
+        - narrate "<white> To <green>PASS <white>this stage you need to <red>SHOOT <white>the <yellow><yaml[soldier_data].read[stages_config].get[2].get[target_block].to_titlecase.replace[_].with[<[space]>]> <red><[points]> TIMES <white> to <green>WIN!"
         - narrate "<white> If you <red>FAIL<white>, you will start again in this stage when you try again the exam."
         - wait 5s
         - flag <player> soldier_stage_2_points:0
@@ -184,15 +180,11 @@ Soldier_Stage_4_Task:
     type: task
     debug: false
     script:
-        - define npc_amount <script[Soldier_Exam_Data].data_key[stages_config].get[4].get[npc_amount]||null>
-        - define npc_weapon <script[Soldier_Exam_Data].data_key[stages_config].get[4].get[npc_weapon]||null>
-        - define spawn_distance <script[Soldier_Exam_Data].data_key[stages_config].get[4].get[spawn_distance]||null>
-        - define player_weapon <script[Soldier_Exam_Data].data_key[stages_config].get[4].get[player_weapon]||null>
-        - define time_remaining <script[Soldier_Exam_Data].data_key[stages_config].get[4].get[timer]||null>
-        - if <[npc_amount]> == null || <[npc_weapon]> == null || <[spawn_distance]> == null || <[player_weapon]> == null || <[time_remaining]> == null:
-            - narrate " <red>ERROR: The stage 4 config file has been corrupted! [SOLDIER]"
-            - narrate " <white>Please report this error to a higher rank or open a ticket in Discord."
-            - stop
+        - define npc_amount <yaml[soldier_data].read[stages_config].get[4].get[npc_amount]||null>
+        - define npc_weapon <yaml[soldier_data].read[stages_config].get[4].get[npc_weapon]||null>
+        - define spawn_distance <yaml[soldier_data].read[stages_config].get[4].get[spawn_distance]||null>
+        - define player_weapon <yaml[soldier_data].read[stages_config].get[4].get[player_weapon]||null>
+        - define time_remaining <yaml[soldier_data].read[stages_config].get[4].get[timer]||null>
         - if <server.has_flag[soldier_stage_4_players]>:
             - narrate "It seems that someone is currently doing that stage. Try again later"
             - stop

@@ -58,12 +58,8 @@ Job_Group_Clear_Task:
     debug: false
     definitions: username
     script:
-        - define validjobs <script[College_Config].data_key[job_groups]||null>
-        - if <[validjobs]> == null:
-            - narrate "<red>ERROR: The college config file used for the valid jobs has been corrupted!"
-            - narrate "<white>Please report this error to a higher rank or open a ticket in Discord."
-            - stop
-        - define player_jobs <[validjobs].shared_contents[<[username].groups>]>
+        - ~yaml load:data/college/config.yml id:college_data
+        - define player_jobs <yaml[college_data].read[job_groups].shared_contents[<[username].groups>]>
         - if <[player_jobs].is_empty>:
             - if <queue.player||null> != null && <queue.player> == <[username]>:
                 - narrate "<red> ERROR: You don't have a valid job to quit!"
@@ -102,14 +98,10 @@ Job_Script:
                         - stop
                     - adjust <queue> linked_player:<[username]>
                     - define group <context.args.get[5]>
-                    - define validjobs <script[College_Config].data_key[job_groups]||null>
-                    - if <[validjobs]> == null:
-                        - narrate "<red>ERROR: The college config file used for the valid jobs has been corrupted!"
-                        - narrate "<white>Please report this error to a higher rank or open a ticket in Discord."
+                    - ~yaml load:data/college/config.yml id:college_data
+                    - if <yaml[college_data].read[job_groups].find[<[group]>]> == -1:
                         - stop
-                    - if <[validjobs].find[<[group]>]> == -1:
-                        - stop
-                    - define player_jobs <[validjobs].shared_contents[<player.groups>]>
+                    - define player_jobs <yaml[college_data].read[job_groups].shared_contents[<player.groups>]>
                     - if <[player_jobs].is_empty>:
                         - stop
                     - foreach <[player_jobs]> as:job:

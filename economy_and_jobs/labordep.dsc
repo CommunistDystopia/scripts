@@ -25,10 +25,10 @@ Command_Labordep:
             - stop
         - choose <context.args.size>:
             - case 0:
-                - determine <list[pull|request]>
+                - determine <list[demand|pull]>
             - case 1:
                 - if "!<context.raw_args.ends_with[ ]>":
-                    - determine <list[pull|request].filter[starts_with[<context.args.first>]]>
+                    - determine <list[demand|pull].filter[starts_with[<context.args.first>]]>
                 - else:
                     - determine <server.online_players.parse[name]>
             - case 2:
@@ -46,12 +46,8 @@ Command_Labordep:
             - narrate "<red> ERROR: Invalid player username OR the player is offline."
             - stop
         - if <[action]> == demand:
-            - define validjobs <script[College_Config].data_key[job_groups]||null>
-            - if <[validjobs]> == null:
-                - narrate "<red>ERROR: The college config file used for the valid jobs has been corrupted!"
-                - narrate "<white>Please report this error to a higher rank or open a ticket in Discord."
-                - stop
-            - foreach <[validjobs]> as:job:
+            - ~yaml load:data/college/config.yml id:college_data
+            - foreach <yaml[college_data].read[job_groups]> as:job:
                 - if <[username].in_group[<[job]>]>:
                     - narrate "<red> ERROR: <yellow><[username].name> <red>has a job."
                     - stop

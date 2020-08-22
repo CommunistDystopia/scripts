@@ -20,18 +20,11 @@ Written_Exam_Task:
     debug: false
     definitions: target
     script:
-        - define data <script[<[target]>_Exam_Data]||null>
-        - if <[data]> == null:
-            - narrate "<red> ERROR: This exam doesn't exist. Be sure to type the correct name from the data file."
-            - stop
-        - if <player> == null:
-            - narrate "<red> ERROR: Invalid player username OR the player is offline."
-            - stop
+        - define question_list <yaml[<[target]>_data].read[question_list]>
         - if <player.has_flag[college_current_exam]> && !<player.flag[college_current_exam].contains_all_text[<[target]>]>:
             - narrate "<red> ERROR: You have a <yellow><player.flag[college_current_exam]> exam <red>active"
             - narrate "<white> Go back to your <yellow><player.flag[college_current_exam]> exam <white>room!"
             - stop
-        - define question_list <[data].data_key[question_list]>
         - if !<player.has_flag[hasActiveWrittenExam]>:
             - flag <player> hasActiveWrittenExam:true
             - if !<player.has_flag[random_questions]>:
@@ -81,7 +74,7 @@ Written_Exam_Task:
         - flag <player> current_question_number:!
         - flag <player> hasPassed:!
         - narrate "<red> Comrade<white>. Good job for passing the written exam"
-        - if <[data].data_key[stages_config].size> > 1 && <script[<[target]>_Stages_Task]||null> != null::
+        - if <yaml[<[target]>_data].read[stages_config].size> > 1 && <script[<[target]>_Stages_Task]||null> != null::
             - flag <player> college_current_stage:++
             - execute as_player "college <[target]>"
         - else:

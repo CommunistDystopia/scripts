@@ -28,14 +28,11 @@ Command_College:
             - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax."
             - stop
         - if !<player.is_op>:
-            - define job_groups <script[College_Config].data_key[job_groups]||null>
-            - if <[job_groups]> == null:
-                - narrate " <red>ERROR: The college config file has been corrupted!"
-                - narrate " <white>Please report this error to a higher rank or open a ticket in Discord."
-                - stop
-            - if !<[job_groups].shared_contents[<player.groups>].is_empty>:
+            - ~yaml load:data/college/config.yml id:college_data
+            - if !<yaml[college_data].read[job_groups].shared_contents[<player.groups>].is_empty>:
                 - narrate "<red> You already have a job. Only players without a job can enter the college"
                 - stop
+            - yaml unload id:college_data
         - define target <context.args.get[1]>
         - if <player.has_flag[criminal_record]>:
             - narrate "<red> You have a criminal record, you can't a take an exam"
@@ -43,18 +40,14 @@ Command_College:
         - if !<script.cooled_down[<player>]>:
             - narrate "<red> ERROR: <white>You failed a exam recently. Wait <yellow><script.cooldown.in_seconds.truncate> seconds <white>before trying again."
             - stop
-        - define data <script[<[target]>_Exam_Data]||null>
-        - if <[data]> == null:
-            - narrate "<red> ERROR: The <[target]> exam doesn't exist."
-            - narrate "<white> Be sure that the first line in your config file is <[target].to_titlecase>_Exam_Data:" targets:<player>
-            - stop
+        - ~yaml load:data/college/<[target]>.yml id:<[target]>_data
         - if <location[<[target]>_college_spawn]||null> == null:
             - narrate " <red>ERROR: Spawn is not set for the <yellow><[target]> <red>in the college." targets:<player>
             - narrate " <white>Please report this error to a higher rank or open a ticket in Discord." targets:<player>
             - stop
         - if !<player.has_flag[college_current_exam]>:
             - flag <player> college_current_exam:<[target]>
-        - if <[data].data_key[stages_config].size> > 1 && <script[<[target]>_Stages_Task]||null> != null:
+        - if <yaml[<[target]>_data].read[stages_config].size> > 1 && <script[<[target]>_Stages_Task]||null> != null:
             - run <[target]>_Stages_Task
             - stop
         - narrate "<white> Welcome to the written test, future <red><[target].to_titlecase>" targets:<player>
@@ -87,7 +80,8 @@ College_Script:
                 - stop
             - determine cancelled
         after player logs in for the first time:
-            - flag <player> college_lock_timer:<script[College_Config].data_key[college_lock_timer]>
+            - ~yaml load:data/college/config.yml id:college_data
+            - flag <player> college_lock_timer:<yaml[college_data].read[college_lock_timer]>
         on system time minutely:
             - foreach <server.online_players> as:server_player:
                 - if <[server_player].has_flag[college_lock_timer]>:

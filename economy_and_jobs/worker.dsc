@@ -15,7 +15,8 @@ Worker_Script:
     events:
         on system time minutely:
             - foreach <server.online_players> as:server_player:
-                - define hasJob <script[College_Config].data_key[job_groups].shared_contents[<[server_player].groups>].is_empty||null>
+                - ~yaml load:data/college/config.yml id:college_data
+                - define hasJob <yaml[college_data].read[job_groups].shared_contents[<[server_player].groups>].is_empty||null>
                 - if <[hasJob]> == null:
                     - stop
                 - if !<[hasJob]>:
