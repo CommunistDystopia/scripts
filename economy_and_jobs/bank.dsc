@@ -51,7 +51,7 @@ Withdraw_Command:
                 - give 1_Bill to:<player.inventory>
                 - money take quantity:1
                 - flag <player> withdraw_amount:-:1
-        - narrate "<green> You withdrew <yellow><[withdraw_amount]>$ <green>from your account in the <gold>Bank of Somalia"
+        - narrate "<green> You withdrew <yellow>$<[withdraw_amount]> <green>from your account in the <gold>Bank of Somalia"
 
 ####################
 ## BANK
@@ -79,7 +79,7 @@ Deposit_Command:
         - run Bank_Deposit_Check_Task def:20_Bill
         - run Bank_Deposit_Check_Task def:100_Bill
         - if <player.flag[inventory_item_money]> < <player.flag[bank_deposit_amount]>:
-            - narrate "<red> ERROR: You don't have enough money in your inventory to deposit."
+            - narrate "<red> ERROR: <white>You don't have enough money in your inventory to deposit $<[deposit_amount]>."
             - flag <player> inventory_item_money:!
             - flag <player> bank_deposit_amount:!
             - stop
@@ -94,7 +94,7 @@ Deposit_Command:
         - run Bank_Deposit_Change_Task def:20_Bill
         - run Bank_Deposit_Change_Task def:10_Bill
         - flag <player> bank_change:!
-        - narrate "<green> You deposited <yellow><[deposit_amount]>$ <green>into your account in the <gold>Bank of Somalia"
+        - narrate "<green> You deposited <yellow>$<[deposit_amount]> <green>into your account in the <gold>Bank of Somalia"
 
 Bank_Deposit_Check_Task:
     type: task
@@ -167,7 +167,7 @@ Bank_Deposit_Change_Task:
     material: paper
     mechanisms:
         custom_model_data: 1
-    display name: <green>1$
+    display name: <green>$1
     lore:
         - <gray>Bank of Somalia
 
@@ -177,7 +177,7 @@ Bank_Deposit_Change_Task:
     material: paper
     mechanisms:
         custom_model_data: 2
-    display name: <green>10$
+    display name: <green>$10
     lore:
         - <gray>Bank of Somalia
 
@@ -187,7 +187,7 @@ Bank_Deposit_Change_Task:
     material: paper
     mechanisms:
         custom_model_data: 3
-    display name: <green>20$
+    display name: <green>$20
     lore:
         - <gray>Bank of Somalia
 
@@ -197,6 +197,6 @@ Bank_Deposit_Change_Task:
     material: paper
     mechanisms:
         custom_model_data: 4
-    display name: <green>100$
+    display name: <green>$100
     lore:
         - <gray>Bank of Somalia
