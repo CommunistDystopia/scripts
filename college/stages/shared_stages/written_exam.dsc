@@ -69,6 +69,7 @@ Written_Exam_Task:
             - flag <player> random_questions:!
             - flag <player> random_options:!
             - flag <player> current_question_number:!
+            - flag <player> hasPassed:!
             - teleport <player> <location[<player.flag[college_current_exam]>_college_spawn]>
             - flag <player> college_current_exam:!
             - cooldown 1m script:Command_College
@@ -78,6 +79,7 @@ Written_Exam_Task:
         - flag <player> hasActiveWrittenExam:!
         - flag <player> random_questions:!
         - flag <player> current_question_number:!
+        - flag <player> hasPassed:!
         - narrate "<red> Comrade<white>. Good job for passing the written exam"
         - if <[data].data_key[stages_config].size> > 1 && <script[<[target]>_Stages_Task]||null> != null::
             - flag <player> college_current_stage:++
@@ -126,3 +128,4 @@ Written_Exam_Script:
                     - flag <player> random_options:!
                     - flag <player> current_question_number:!
                     - flag <player> college_current_exam:!
+                    - flag <player> hasPassed:!
