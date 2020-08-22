@@ -60,20 +60,21 @@ Written_Exam_Task:
                 - stop
             - define selected_option <[question_list].get[<[question_number]>].get[options].get[<player.flag[current_answer]>]||null>
             - if <[selected_option]> != null && !<[selected_option]>:
-                - flag <player> current_answer:!
-                - flag <player> hasActiveWrittenExam:!
-                - flag <player> random_questions:!
-                - flag <player> random_options:!
-                - flag <player> current_question_number:!
-                - teleport <player> <location[<player.flag[college_current_exam]>_college_spawn]>
-                - flag <player> college_current_exam:!
-                - cooldown 1m script:Command_College
-                - narrate "<red> WRONG: <white>Try again the exam. Keep trying"
-                - run Failed_College_Task def:<[target]>
-                - stop
+                - flag <player> hasPassed:false
             - flag <player> random_options:!
             - flag <player> current_answer:!
-            - narrate "<green> CORRECT: <white>Good job. Keep going!"
+        - if <player.has_flag[hasPassed]> && !<player.flag[hasPassed]>:
+            - flag <player> current_answer:!
+            - flag <player> hasActiveWrittenExam:!
+            - flag <player> random_questions:!
+            - flag <player> random_options:!
+            - flag <player> current_question_number:!
+            - teleport <player> <location[<player.flag[college_current_exam]>_college_spawn]>
+            - flag <player> college_current_exam:!
+            - cooldown 1m script:Command_College
+            - narrate "<red> WRONG: <white>Try again the exam. Keep trying"
+            - run Failed_College_Task def:<[target]>
+            - stop
         - flag <player> hasActiveWrittenExam:!
         - flag <player> random_questions:!
         - flag <player> current_question_number:!
