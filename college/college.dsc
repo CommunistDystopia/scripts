@@ -7,7 +7,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/10
+# @date 2020/08/23
 # @denizen-build REL-1714
 # @soft-dependency devnodachi/criminal_record
 #
@@ -21,13 +21,13 @@ Command_College:
     description: Minecraft College system.
     usage: /college
     script:
-        - if !<player.is_op||<context.server>> && !<player.in_group[student]>:
+        - if !<player.is_op||<context.server>> && !<player.in_group[student]> && !<player.in_group[conscript]>:
             - narrate "<red>You do not have permission for that command."
             - stop
         - if <context.args.size> < 1:
             - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax."
             - stop
-        - if !<player.is_op>:
+        - if !<player.is_op> && !<player.in_group[conscript]>:
             - ~yaml load:data/college/config.yml id:college_data
             - if !<yaml[college_data].read[job_groups].shared_contents[<player.groups>].is_empty>:
                 - narrate "<red> You already have a job. Only players without a job can enter the college"
