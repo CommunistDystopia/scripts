@@ -5,7 +5,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/21
+# @date 2020/08/23
 # @denizen-build REL-1714
 #
 
@@ -60,6 +60,8 @@ Entity_Food_Task:
     type: task
     debug: false
     script:
+        - if !<context.entity.is_spawned>:
+            - stop
         - if <context.entity.tameable> && !<context.entity.is_tamed>:
             - stop
         - ratelimit <player> 2s
