@@ -103,10 +103,10 @@ Job_Script:
                     - if <yaml[college_data].read[job_groups].find[<[group]>]> == -1:
                         - stop
                     - define player_jobs <yaml[college_data].read[job_groups].shared_contents[<player.groups>]>
-                    - if <[player_jobs].is_empty>:
+                    - if <[player_jobs].size> == 1:
                         - stop
                     - foreach <[player_jobs]> as:job:
-                        - if <player.in_group[<[job]>]>:
+                        - if <player.in_group[<[job]>]> && <[job]> != <[group]>:
                             - if <[job]> == soldier:
                                 - if <player.has_flag[soldier_jail]>:
                                     - flag server <player.flag[soldier_jail]>_soldiers:<-:<player>
