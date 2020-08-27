@@ -18,7 +18,7 @@ Command_Job:
     description: Minecraft Job system.
     usage: /job
     tab complete:
-        - if <context.server>:
+        - if !<player.is_op||<context.server>>:
             - stop
         - choose <context.args.size>:
             - case 0:
@@ -34,8 +34,9 @@ Command_Job:
                     - if <context.args.get[1]> == clear:
                         - determine <server.online_players.parse[name]>
     script:
-        - if <context.server>:
-            - narrate "<red> ERROR: This command is only runnable by players!"
+        - if <player.is_op||<context.server>>:
+            - narrate "<red>You do not have permission for that command."
+            - stop
         - if <context.args.size> < 1:
             - narrate "<red> USAGE: <white>/job quit"
             - stop
@@ -43,7 +44,7 @@ Command_Job:
         - if <[action]> == quit:
             - run Job_Group_Clear_Task def:<player>
             - stop
-        - if <[action]> == clear && <player.is_op>:
+        - if <[action]> == clear && <player.is_op||<context.server>>:
             - if <context.args.size> < 2:
                 - narrate "<red> USAGE: <white>/job clear [username]"
                 - stop

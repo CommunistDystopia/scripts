@@ -21,7 +21,7 @@ Command_Labordep:
     description: Minecraft player labor deputy system.
     usage: /labordep
     tab complete:
-        - if <context.server>:
+        - if !<player.is_op||<context.server>> && !<player.in_group[labordep]>:
             - stop
         - choose <context.args.size>:
             - case 0:
@@ -35,7 +35,7 @@ Command_Labordep:
                 - if "!<context.raw_args.ends_with[ ]>":
                     - determine <server.online_players.parse[name]>
     script:
-        - if <player.is_op> && <player.in_group[labordep]>:
+        - if <player.is_op||<context.server>> && <player.in_group[labordep]>:
             - narrate "<red>You do not have permission for that command."
             - stop
         - if <context.args.size> < 2:
