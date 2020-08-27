@@ -48,7 +48,10 @@ Landmine_Script:
             - if <context.location.town||null> != null:
                 - determine cancelled
             - equip <player> hand:air
-            - note <context.location.up[1]> as:landmine_<context.location.center.xyz.replace[,].with[-]>-<context.location.world>
+            - if <context.location.material.is_slab>:
+                - note <context.location.up[0.5]> as:landmine_<context.location.up[0.5].center.xyz.replace[,].with[-]>-<context.location.world>
+            - else:
+                - note <context.location.up[1]> as:landmine_<context.location.up[1].center.xyz.replace[,].with[-]>-<context.location.world>
             - narrate "<green>Landmine placed! <red>Be careful"
             - determine cancelled
         on player walks over notable:
