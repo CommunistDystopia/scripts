@@ -38,3 +38,5 @@ Rotten_Silverfish_Script:
                 - if <context.item.has_lore> && <context.item.material.is_edible>:
                     - foreach <context.slots> as:slot_for:
                         - inventory adjust slot:<[slot_for]> lore:<list[]>
+        on silverfish spawns bukkit_priority:HIGHEST ignorecancelled:true:
+            - determine cancelled:false
