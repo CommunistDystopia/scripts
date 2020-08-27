@@ -14,7 +14,7 @@ PVP_Protection_Script:
     debug: false
     events:
         on player joins:
-            - flag <player> hasPvpProtection:true duration:11s
+            - flag <player> hasPvpProtection:true duration:10s
         on player damaged:
-            - if <player.has_flag[hasPvpProtection]>:
+            - if <context.entity.has_flag[hasPvpProtection]>:
                 - determine cancelled
