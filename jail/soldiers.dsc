@@ -340,8 +340,13 @@ Soldier_Script:
                     - stop
             - determine cancelled
         on player kills player:
-            - if !<context.damager.has_permission[soldier.jail.wanted]> || !<context.damager.has_flag[soldier_jail]>:
+            - if !<context.damager.has_permission[soldier.jail.wanted]>:
                 - stop
+            - if !<context.damager.has_flag[soldier_jail]>:
+                - if <server.has_flag[default_soldier_jail]>:
+                    - flag <context.damager> soldier_jail:<server.flag[default_soldier_jail]>
+                - else:
+                    - stop
             - if <context.entity.in_group[slave]>:
                 - define killer_item <context.damager.inventory.slot[<context.damager.held_item_slot>]>
                 - if <[killer_item].has_script> && <[killer_item].script.name.contains_all_text[guard_sword]>:
