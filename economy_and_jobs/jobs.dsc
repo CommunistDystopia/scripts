@@ -91,7 +91,7 @@ Job_Script:
     type: world
     debug: false
     events:
-        on lp command:
+        after lp command:
             - if <context.args.size> == 5:
                 - if <context.args.get[1]> == user && <context.args.get[3]> == parent && <context.args.get[4]> == add:
                     - define username <server.match_offline_player[<context.args.get[2]>]||null>
@@ -105,10 +105,13 @@ Job_Script:
                     - define player_jobs <yaml[college_data].read[job_groups].shared_contents[<player.groups>]>
                     - if <[player_jobs].size> == 1:
                         - stop
+                    - if <player.has_flag[soldier_jail]>:
+                        - flag server <player.flag[soldier_jail]>_soldiers:<-:<player>
+                        - flag <player> soldier_jail:!
                     - foreach <[player_jobs]> as:job:
                         - if <player.in_group[<[job]>]> && <[job]> != <[group]>:
-                            - if <[job]> == soldier:
-                                - if <player.has_flag[soldier_jail]>:
-                                    - flag server <player.flag[soldier_jail]>_soldiers:<-:<player>
-                                    - flag <player> soldier_jail:!
                             - group remove <[job]>
+                    - if <[group]> == soldier || <[group]> == conscript || <[group]> == supremewarden:
+                        - if <server.has_flag[default_soldier_jail]>:
+                            - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
+                            - flag server <server.flag[default_soldier_jail]>_soldiers:|:<[username]>

@@ -91,6 +91,13 @@ Command_Soldier_Admin:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
             - narrate "<red>You do not have permission for that command."
             - stop
+        - if !<player.has_flag[soldier_jail]>:
+            - if !<server.has_flag[default_soldier_jail]>:
+                - narrate "<red> ERROR: No default Jail set for soldiers"
+                - narrate "<white> Please tell a Supreme Warden or an OP to set the default jail of the Soldiers"
+                - stop
+            - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
+            - flag server <server.flag[default_soldier_jail]>_soldiers:|:<player>
         - define action <context.args.get[1]>
         - if <[action]> == sword:
             - give guard_sword to:<player.inventory>
@@ -181,9 +188,8 @@ Command_Soldier:
     name: soldiers
     description: Minecraft Soldiers (Jail) system.
     usage: /soldiers
+    permission: soldier.jail.command
     tab complete:
-        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.has_permission[soldier.jail]>:
-            - stop
         - choose <context.args.size>:
             - case 0:
                 - determine <list[wanted|jailstick|sword]>
@@ -209,9 +215,13 @@ Command_Soldier:
                     - if <context.args.get[2]> == list:
                         - determine 0
     script:
-        - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.has_permission[soldier.jail]>:
-            - narrate "<red>You do not have permission for that command."
-            - stop
+        - if !<player.has_flag[soldier_jail]>:
+            - if !<server.has_flag[default_soldier_jail]>:
+                - narrate "<red> ERROR: No default Jail set for soldiers"
+                - narrate "<white> Please tell a Supreme Warden or an OP to set the default jail of the Soldiers or add you to a Jail"
+                - stop
+            - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
+            - flag server <server.flag[default_soldier_jail]>_soldiers:|:<player>
         - define action <context.args.get[1]>
         - if <[action]> == sword:
             - give guard_sword to:<player.inventory>
@@ -221,12 +231,6 @@ Command_Soldier:
             - stop
         - if <context.args.size> < 2:
             - goto syntax_error
-        - if !<player.has_flag[soldier_jail]>:
-            - if !<server.has_flag[default_soldier_jail]>:
-                - narrate "<red> ERROR: No default Jail set for soldiers"
-                - narrate "<white> Please tell a Supreme Warden or an OP to set the default jail of the Soldiers"
-                - stop
-            - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
         - define jail_name <player.flag[soldier_jail]>
         - if <[jail_name].ends_with[_spawn]>:
             - narrate "<red> ERROR: Invalid jail name. Please don't use _spawn in your jail name."
@@ -297,23 +301,18 @@ Soldier_Script:
     debug: false
     events:
         on player right clicks player with:jailstick:
-            - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
-                - if !<player.in_group[soldier]> && !<player.in_group[general]>:
+            - if !<player.is_op||<context.server>> && !<player.has_permission[soldier.jail.jailstick]>:
                     - narrate "<red>ERROR: What are you trying to do? You can't caught someone. <blue>Only SOLDIERS can!"
                     - stop
             - if !<script[Soldier_Script].cooled_down[<player>]>:
                 - stop
             - if !<player.has_flag[soldier_jail]>:
-                - if <player.has_permission[soldier.jail]>:
-                    - if !<server.has_flag[default_soldier_jail]>:
-                        - narrate "<red> ERROR: No default Jail set for soldiers"
-                        - narrate "<white> Please tell a Supreme Warden or an OP to set the default jail of the Soldiers"
-                        - stop
-                    - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
-                    - goto default_soldier
-                - narrate "<red> ERROR: You don't belong to a Jail!"
-                - stop
-            - mark default_soldier
+                - if !<server.has_flag[default_soldier_jail]>:
+                    - narrate "<red> ERROR: No default Jail set for soldiers"
+                    - narrate "<white> Please tell a Supreme Warden or an OP to set the default jail of the Soldiers"
+                    - stop
+                - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
+                - flag server <server.flag[default_soldier_jail]>_soldiers:|:<player>
             - define jail <player.flag[soldier_jail]>
             - if <context.entity.in_group[slave]>:
                 - if !<context.entity.has_flag[slave_timer]> || <context.entity.flag[owner]> != <[jail]>:
@@ -341,7 +340,7 @@ Soldier_Script:
                     - stop
             - determine cancelled
         on player kills player:
-            - if !<context.damager.has_flag[soldier_jail]>:
+            - if !<context.damager.has_permission[soldier.jail.wanted]> || !<context.damager.has_flag[soldier_jail]>:
                 - stop
             - if <context.entity.in_group[slave]>:
                 - define killer_item <context.damager.inventory.slot[<context.damager.held_item_slot>]>
