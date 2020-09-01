@@ -18,8 +18,6 @@ Command_Job:
     description: Minecraft Job system.
     usage: /job
     tab complete:
-        - if !<player.is_op||<context.server>>:
-            - stop
         - choose <context.args.size>:
             - case 0:
                 - determine <list[clear|quit]>
@@ -34,9 +32,6 @@ Command_Job:
                     - if <context.args.get[1]> == clear:
                         - determine <server.online_players.parse[name]>
     script:
-        - if <player.is_op||<context.server>>:
-            - narrate "<red>You do not have permission for that command."
-            - stop
         - if <context.args.size> < 1:
             - narrate "<red> USAGE: <white>/job quit"
             - stop
