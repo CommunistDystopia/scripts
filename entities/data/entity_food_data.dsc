@@ -29,10 +29,6 @@ Entity_Food_Data:
             food:
                 - hay_block
             quantity: 1
-        VILLAGER:
-            food:
-                - cooked_beef
-            quantity: 9
         WOLF:
             food:
                 - pufferfish
