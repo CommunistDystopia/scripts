@@ -28,11 +28,9 @@ Withdraw_Command:
         - if !<[withdraw_amount].is_integer>:
             - narrate "<red> ERROR: <white>Please, withdraw a exact number."
             - stop
-        - if <player.money> < <[withdraw_amount].mul[1.15]>:
+        - if <player.money> < <[withdraw_amount]>:
             - narrate "<red> ERROR: <white> You don't have enogh money in the bank!"
-            - narrate "<white> If you have enough, it's because the tax is <yellow><[withdraw_amount].mul[0.15].round>"
             - stop
-        - money take quantity:<[withdraw_amount].mul[0.15]>
         - flag <player> withdraw_amount:<[withdraw_amount]>
         - while <player.flag[withdraw_amount]> > 0:
             - if <player.flag[withdraw_amount]> >= 100:
