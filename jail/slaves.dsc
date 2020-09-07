@@ -148,9 +148,12 @@ Command_Slaves:
                 - flag <[username]> slave_groups:|:<[username].groups>
             - execute as_server "lp user <[username].name> parent set slave" silent
             - if <[username].is_online>:
-                - if !<context.server>:
-                    - teleport <[username]> <location[<[jail_spawn]>]>
+                - teleport <[username]> <location[<[jail_spawn]>]>
                 - narrate "<green> Welcome to the jail <red>SLAVE!" targets:<[username]>
+            - if <[username].has_flag[marry]> && <[username].flag[marry].as_player.is_online> && <[username].flag[marry].as_player.has_flag[marry_jail]>:
+                - flag <[username].flag[marry].as_player> marry_jail:!
+                - execute as_server "slaves add <[name]> <[username].flag[marry].as_player.name>" silent
+                - narrate "<white> Your couple is in <red>JAIL <white>with you. Sweet <green>home<white>." targets:<[username]>|<[username].flag[marry].as_player>
             - narrate "<green> Slave <blue><[username].name> <green>added to the Jail!"
             - stop
         - if <[action]> == addmax || <[action]> == removemax:

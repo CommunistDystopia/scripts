@@ -225,9 +225,11 @@ Command_Soldier:
         - define action <context.args.get[1]>
         - if <[action]> == sword:
             - give guard_sword to:<player.inventory>
+            - narrate "<white> Check your inventory, you got a <yellow>Guard Sword"
             - stop
         - if <[action]> == jailstick:
             - give jailstick to:<player.inventory>
+            - narrate "<white> Check your inventory, you got a <yellow>Jailstick"
             - stop
         - if <context.args.size> < 2:
             - goto syntax_error
@@ -272,7 +274,7 @@ jailstick:
         hides: enchants
     enchantments:
         - unbreaking:1
-        - vanishing_curse
+        - vanishing_curse:1
     display name: <blue>Jailstick
     lore:
         - <gray>Defend your country <blue>SOLDIER!
@@ -288,7 +290,7 @@ guard_sword:
         hides: enchants
     enchantments:
         - unbreaking:1
-        - vanishing_curse
+        - vanishing_curse:1
     display name: <blue>Guard Sword
     lore:
         - <gray>Only does damage to slaves.
@@ -366,9 +368,13 @@ Soldier_Script:
             - if <server.has_flag[<[jail_wanted]>]>:
                 - if <server.flag[<[jail_wanted]>].find[<context.entity>]> != -1:
                     - flag server <[jail_wanted]>:<-:<context.entity>
+                    - if <context.entity.has_flag[marry]>:
+                        - flag <context.entity.flag[marry].as_player> marry_jail:<[jail]>
                     - execute as_server "slaves add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
                     - stop
             - if <context.entity.in_group[insurgent]>:
+                - if <context.entity.has_flag[marry]>:
+                    - flag <context.entity.flag[marry].as_player> marry_jail:<[jail]>
                 - execute as_server "slaves add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
                 - stop
     # thanks to @mcmonkey for the idea
