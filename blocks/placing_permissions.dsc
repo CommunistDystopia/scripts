@@ -11,12 +11,12 @@
 
 Placing_Permissions_Script:
     type: world
-    debug: true
+    debug: false
     events:
-        on player right clicks block with:item_frame:
+        on player right clicks block with:item_frame using:either_hand:
             - if !<player.has_permission[place.item_frame]>:
                 - determine cancelled
-        on player right clicks block with:*_bucket:
+        on player right clicks block with:*_bucket using:either_hand:
             - if !<player.is_op> && <context.click_type> != RIGHT_CLICK_AIR:
                 - if <context.item.material.name> == LAVA_BUCKET:
                     - if !<player.has_permission[place.lava]>:
@@ -24,7 +24,7 @@ Placing_Permissions_Script:
                 - else:
                     - if !<player.has_permission[place.water]>:
                         - determine cancelled
-        on player right clicks block with:*_boat:
+        on player right clicks block with:*_boat using:either_hand:
             - if !<player.is_op> && <context.click_type> != RIGHT_CLICK_AIR:
                 - if <context.location.material.name> != WATER:
                     - determine cancelled
