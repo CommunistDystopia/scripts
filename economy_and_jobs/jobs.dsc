@@ -5,7 +5,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/12
+# @date 2020/09/12
 # @denizen-build REL-1714
 # @dependency devnodachi/college_config
 # @soft-dependency devnodachi/soldiers devnodachi/player_lead
@@ -54,33 +54,34 @@ Job_Group_Clear_Task:
     debug: false
     definitions: username
     script:
-        - ~yaml load:data/college/config.yml id:college_data
-        - define player_jobs <yaml[college_data].read[job_groups].shared_contents[<[username].groups>]>
-        - if <[player_jobs].is_empty>:
-            - if <queue.player||null> != null && <queue.player> == <[username]>:
-                - narrate "<red> ERROR: You don't have a valid job to quit!"
-            - else:
-                - narrate "<red> ERROR: <[username].name> doesn't have a valid job to quit!"
-            - stop
-        - if <[username].has_flag[lead_owner]>:
-            - narrate " <red>! -> <yellow><[username].name> <red>quit <white>the job! It's released out of the lead" targets:<[username].flag[lead_owner]>
-            - flag <[username]> lead_owner:!
-            - if <queue.player||null> != null && <queue.player> == <[username]>:
-                - narrate "<green> You're released out of the lead!"
-            - else:
-                - narrate "<green> DONE! <yellow><[username].name> <green>was released out of the lead."
-        - foreach <[player_jobs]> as:job:
-            - if <[username].in_group[<[job]>]>:
-                - if <[job]> == soldier:
-                    - if <[username].has_flag[soldier_jail]>:
-                        - flag server <[username].flag[soldier_jail]>_soldiers:<-:<[username]>
-                        - flag <[username]> soldier_jail:!
-                - group remove <[job]>
-                - narrate " <red> Job <yellow><[job]> <red>quit"
-            - if <queue.player||null> != null && <queue.player> == <[username]>:
-                - narrate "<green> DONE! Job(s) removed. Go ahead and pick a new career if you want!"
-            - else:
-                - narrate "<green> DONE! <yellow><[username].name> <green>job(s) has been removed."
+        - if <server.has_file[data/college/config.yml]>:
+            - ~yaml load:data/college/config.yml id:college_data
+            - define player_jobs <yaml[college_data].read[job_groups].shared_contents[<[username].groups>]>
+            - if <[player_jobs].is_empty>:
+                - if <queue.player||null> != null && <queue.player> == <[username]>:
+                    - narrate "<red> ERROR: You don't have a valid job to quit!"
+                - else:
+                    - narrate "<red> ERROR: <[username].name> doesn't have a valid job to quit!"
+                - stop
+            - if <[username].has_flag[lead_owner]>:
+                - narrate " <red>! -> <yellow><[username].name> <red>quit <white>the job! It's released out of the lead" targets:<[username].flag[lead_owner]>
+                - flag <[username]> lead_owner:!
+                - if <queue.player||null> != null && <queue.player> == <[username]>:
+                    - narrate "<green> You're released out of the lead!"
+                - else:
+                    - narrate "<green> DONE! <yellow><[username].name> <green>was released out of the lead."
+            - foreach <[player_jobs]> as:job:
+                - if <[username].in_group[<[job]>]>:
+                    - if <[job]> == soldier:
+                        - if <[username].has_flag[soldier_jail]>:
+                            - flag server <[username].flag[soldier_jail]>_soldiers:<-:<[username]>
+                            - flag <[username]> soldier_jail:!
+                    - group remove <[job]>
+                    - narrate " <red> Job <yellow><[job]> <red>quit"
+                - if <queue.player||null> != null && <queue.player> == <[username]>:
+                    - narrate "<green> DONE! Job(s) removed. Go ahead and pick a new career if you want!"
+                - else:
+                    - narrate "<green> DONE! <yellow><[username].name> <green>job(s) has been removed."
 
 Job_Script:
     type: world
@@ -94,19 +95,20 @@ Job_Script:
                         - stop
                     - adjust <queue> linked_player:<[username]>
                     - define group <context.args.get[5]>
-                    - ~yaml load:data/college/config.yml id:college_data
-                    - if <yaml[college_data].read[job_groups].find[<[group]>]> == -1:
-                        - stop
-                    - define player_jobs <yaml[college_data].read[job_groups].shared_contents[<player.groups>]>
-                    - if <[player_jobs].size> == 1:
-                        - stop
-                    - if <player.has_flag[soldier_jail]>:
-                        - flag server <player.flag[soldier_jail]>_soldiers:<-:<player>
-                        - flag <player> soldier_jail:!
-                    - foreach <[player_jobs]> as:job:
-                        - if <player.in_group[<[job]>]> && <[job]> != <[group]>:
-                            - group remove <[job]>
-                    - if <[group]> == soldier || <[group]> == conscript || <[group]> == supremewarden:
-                        - if <server.has_flag[default_soldier_jail]>:
-                            - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
-                            - flag server <server.flag[default_soldier_jail]>_soldiers:|:<[username]>
+                    - if <server.has_file[data/college/config.yml]>:
+                        - ~yaml load:data/college/config.yml id:college_data
+                        - if <yaml[college_data].read[job_groups].find[<[group]>]> == -1:
+                            - stop
+                        - define player_jobs <yaml[college_data].read[job_groups].shared_contents[<player.groups>]>
+                        - if <[player_jobs].size> == 1:
+                            - stop
+                        - if <player.has_flag[soldier_jail]>:
+                            - flag server <player.flag[soldier_jail]>_soldiers:<-:<player>
+                            - flag <player> soldier_jail:!
+                        - foreach <[player_jobs]> as:job:
+                            - if <player.in_group[<[job]>]> && <[job]> != <[group]>:
+                                - group remove <[job]>
+                        - if <[group]> == soldier || <[group]> == conscript || <[group]> == supremewarden:
+                            - if <server.has_flag[default_soldier_jail]>:
+                                - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
+                                - flag server <server.flag[default_soldier_jail]>_soldiers:|:<[username]>

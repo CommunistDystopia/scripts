@@ -7,7 +7,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/15
+# @date 2020/09/12
 # @denizen-build REL-1714
 #
 # Commands
@@ -46,6 +46,10 @@ Command_Labordep:
             - narrate "<red> ERROR: Invalid player username OR the player is offline."
             - stop
         - if <[action]> == demand:
+            - if !<server.has_file[data/college/config.yml]>:
+                - narrate "<red> ERROR: <white>The config file of the college is missing."
+                - narrate "<white> Please report this error to a higher rank or open a ticket in Discord."
+                - stop
             - ~yaml load:data/college/config.yml id:college_data
             - foreach <yaml[college_data].read[job_groups]> as:job:
                 - if <[username].in_group[<[job]>]>:

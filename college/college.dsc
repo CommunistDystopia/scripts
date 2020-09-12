@@ -7,7 +7,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/23
+# @date 2020/09/12
 # @denizen-build REL-1714
 # @soft-dependency devnodachi/criminal_record
 #
@@ -21,11 +21,21 @@ Command_College:
     description: Minecraft College system.
     usage: /college
     script:
-        - if !<player.is_op||<context.server>> && !<player.in_group[student]> && !<player.in_group[conscript]>:
-            - narrate "<red>You do not have permission for that command."
-            - stop
         - if <context.args.size> < 1:
-            - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax."
+            - narrate "<red> ERROR: Not enough arguments. <white>Follow the command syntax: <yellow>/college [exam]"
+            - stop
+        - define target <context.args.get[1]>
+        - if <[target]> == soldier
+        - if !<player.is_op||<context.server>>:
+            - if <[target]> == soldier && !<player.in_group[conscript]>:
+                - narrate "<red>You do not have permission for that command."
+                - stop
+            - if <[target]> != soldier && !<player.in_group[student]>:
+                - narrate "<red>You do not have permission for that command."
+                - stop
+        - if !<server.has_file[data/college/config.yml]>:
+            - narrate "<red> ERROR: <white>The config file of the college is missing."
+            - narrate "<white> Please report this error to a higher rank or open a ticket in Discord."
             - stop
         - if !<player.is_op> && !<player.in_group[conscript]>:
             - ~yaml load:data/college/config.yml id:college_data
@@ -33,24 +43,26 @@ Command_College:
                 - narrate "<red> You already have a job. Only players without a job can enter the college"
                 - stop
             - yaml unload id:college_data
-        - define target <context.args.get[1]>
         - if <player.has_flag[criminal_record]>:
             - narrate "<red> You have a criminal record, you can't a take an exam"
             - stop
         - if !<script.cooled_down[<player>]>:
             - narrate "<red> ERROR: <white>You failed a exam recently. Wait <yellow><script.cooldown.in_seconds.truncate> seconds <white>before trying again."
             - stop
+        - if !<server.has_file[data/college/<[target]>.yml]>:
+            - narrate "<red> ERROR: <white>The exam <red><[target]> <white>doesn't exist."
+            - stop
         - ~yaml load:data/college/<[target]>.yml id:<[target]>_data
         - if <location[<[target]>_college_spawn]||null> == null:
-            - narrate " <red>ERROR: Spawn is not set for the <yellow><[target]> <red>in the college." targets:<player>
-            - narrate " <white>Please report this error to a higher rank or open a ticket in Discord." targets:<player>
+            - narrate "<red> ERROR: Spawn is not set for the <yellow><[target]> <red>in the college."
+            - narrate "<white> Please report this error to a higher rank or open a ticket in Discord."
             - stop
         - if !<player.has_flag[college_current_exam]>:
             - flag <player> college_current_exam:<[target]>
         - if <yaml[<[target]>_data].read[stages_config].size> > 1 && <script[<[target]>_Stages_Task]||null> != null:
             - run <[target]>_Stages_Task
             - stop
-        - narrate "<white> Welcome to the written test, future <red><[target].to_titlecase>" targets:<player>
+        - narrate "<white> Welcome to the written test, future <red><[target].to_titlecase>"
         - wait 1s
         - narrate "<white> Your written exam will start in <red>5 seconds..."
         - wait 5s
