@@ -31,6 +31,9 @@ Town_Book_Script:
                         - give town_book
         on player dies cause:STARVATION:
             - flag <player> deaths_by_starvation:++
+        on system time hourly every:168:
+            - foreach <server.players.filter[has_flag[deaths_by_starvation]]> as:server_player:
+                - flag <[server_player].as_player> deaths_by_starvation:!
 
 Town_Book_Command:
     type: command
