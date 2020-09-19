@@ -1,3 +1,17 @@
+# +----------------------
+# |
+# | MARRY
+# |
+# | The Good, The Bad and The Ugly.
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/09/19
+# @denizen-build REL-1714
+# @dependency devnodachi/slaves
+#
+
 Marry_Command_Script:
     type: command
     debug: false

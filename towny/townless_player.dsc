@@ -1,3 +1,15 @@
+# +----------------------
+# |
+# | TOWNLESS PLAYER
+# |
+# +----------------------
+#
+# @author devnodachi
+# @date 2020/09/19
+# @denizen-build REL-1714
+# @dependency TownyAdvanced/Towny
+#
+
 Townless_Player_Script:
     type: world
     debug: false
