@@ -37,13 +37,12 @@ Command_Admin_College:
         - define action <context.args.get[2]>
         - define target <context.args.get[3]>
         - define dev_data <script[College_Config_Dev]||null>
-        - define data <script[<[exam]>_Exam_Data]||null>
+        - if !<server.has_file[data/college/<[exam]>.yml]>:
+            - narrate "<red> ERROR: <white>The exam <red><[exam]> <white>doesn't exist."
+            - stop
+        - ~yaml load:data/college/<[exam]>.yml id:<[exam]>_data
         - if <[dev_data]> == null:
             - narrate "ERROR: Developer data missing. Contact the developer."
-            - stop
-        - if <[data]> == null:
-            - narrate "<red> ERROR: This exam doesn't exist."
-            - narrate " The first line in your config file should be <red><[exam].to_titlecase>_Exam_Data"
             - stop
         - if <[action]> == set:
             - if <[target]> == spawn:
@@ -60,7 +59,7 @@ Command_Admin_College:
                 - if <[stage_number]> == 1:
                     - narrate "<red> You don't need to set anything for the stage 1. This is only for custom stages"
                     - stop
-                - if <[stage_number]> > <[data].data_key[stages_config].size>:
+                - if <[stage_number]> > <yaml[<[exam]>_data].read[stages_config].size>:
                     - narrate "<red> ERROR: The value is higher than the highest stage number. Please try a lower value."
                     - stop
                 - if <[secondary_target]> == spawn:
