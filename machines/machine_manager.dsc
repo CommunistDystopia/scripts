@@ -51,7 +51,7 @@ Command_Manager:
         - define action <context.args.get[1]>
         - define target <context.args.get[2]>
         - if <[action]> == trust:
-            - define username <server.match_player[<[target]>]||null>
+            - define username <server.match_offline_player[<[target]>]||null>
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop

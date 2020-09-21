@@ -60,12 +60,6 @@ Command_Raid_Town:
                 - stop
         - if <context.args.size> < 2:
             - narrate "<yellow>#<red> ERROR: Not enough arguments."
-            - narrate "<yellow>-<red> To add raid points to a user: /raidtown points add <yellow>username <yellow>number"
-            - narrate "<yellow>-<red> To remove raid points to a user: /raidtown points remove <yellow>username <yellow>number"
-            - narrate "<yellow>-<red> To check the raid points of a user: /raidtown points info <yellow>username"
-            - narrate "<yellow>-<red> To add or remove the permission to start a raid of a user: /raidtown points permission <yellow>username"
-            - narrate "<yellow>-<red> To start a raid: /raidtown raid start <yellow>number"
-            - narrate "<yellow>-<red> To stop the current raid: /raidtown raid stop"
             - stop
         - define target <context.args.get[1]>
         - define action <context.args.get[2]>
@@ -74,9 +68,9 @@ Command_Raid_Town:
                 - if !<player.is_op||<context.server>>:
                     - narrate "<red> ERROR: Only operators can do that!"
                     - stop
-                - define username <server.match_player[<context.args.get[3]>]||null>
+                - define username <server.match_offline_player[<context.args.get[3]>]||null>
                 - if <[username]> == null:
-                    - narrate "<red> ERROR: .Invalid player username OR the player is offline."
+                    - narrate "<red> ERROR: Invalid player username OR the player is offline."
                     - stop
                 - if <[username].is_op||<context.server>>:
                     - narrate "<red> ERROR: This user is an operator. This command only work for non-operators"
@@ -104,9 +98,6 @@ Command_Raid_Town:
                     - stop
                 - if <context.args.size> < 4:
                     - narrate "<yellow>#<red> ERROR: Not enough arguments."
-                    - narrate "<yellow>-<red> To add raid points to a user: /raidtown points add <yellow>username <yellow>number"
-                    - narrate "<yellow>-<red> To remove raid points to a user: /raidtown points remove <yellow>username <yellow>number"
-                    - narrate "<yellow>-<red> To check the raid points of a user: /raidtown points info <yellow>username"
                     - stop
                 - define points <context.args.get[4]>
                 - if !<[points].is_integer>:
@@ -144,7 +135,6 @@ Command_Raid_Town:
                     - stop
                 - if <context.args.size> < 3:
                     - narrate "<yellow>#<red> ERROR: Not enough arguments."
-                    - narrate "<yellow>-<red> To start a raid: /raidtown raid start <yellow>number"
                     - stop
                 - define points <context.args.get[3]>
                 - if !<[points].is_integer>:
@@ -201,13 +191,7 @@ Command_Raid_Town:
                 - flag server raidtime:!
                 - flag server raid_active:!
                 - stop
-        - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate "<yellow>-<red> To add raid points to a user: /raidtown points add <yellow>username <yellow>number"
-        - narrate "<yellow>-<red> To remove raid points from a user: /raidtown points remove <yellow>username <yellow>number"
-        - narrate "<yellow>-<red> To check the raid points of a user: /raidtown points info <yellow>username"
-        - narrate "<yellow>-<red> To add or remove the permission to start a raid of a user: /raidtown points permission <yellow>username"
-        - narrate "<yellow>-<red> To start a raid: /raidtown raid start <yellow>number"
-        - narrate "<yellow>-<red> To stop the current raid: /raidtown raid stop"
+        - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax."
 
 Raid_Town_Script:
     type: world

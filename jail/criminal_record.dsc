@@ -48,9 +48,9 @@ Command_Criminal_Record:
         - if <context.args.size> < 2:
             - goto syntax_error
         - define action <context.args.get[1]>
-        - define username <server.match_player[<context.args.get[2]>]||null>
+        - define username <server.match_offline_player[<context.args.get[2]>]||null>
         - if <[username]> == null:
-            - narrate "<red> ERROR: Invalid player username OR the player is offline."
+            - narrate "<red> ERROR: Invalid player username."
             - stop
         - if <[action]> == check:
             - if !<player.is_op||<context.server>> && !<player.has_permission[criminalrecord.check]>:

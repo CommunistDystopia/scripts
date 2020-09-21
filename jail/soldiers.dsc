@@ -137,7 +137,7 @@ Command_Soldier_Admin:
                 - run List_Task_Script def:server|<[jail_name]>_wanteds|Wanted|<[list_page]>|true
                 - stop
             - if <[secondary_action]> == add || <[secondary_action]> == remove:
-                - define username <server.match_player[<context.args.get[4]>]||null>
+                - define username <server.match_offline_player[<context.args.get[4]>]||null>
                 - if <[username]> == null:
                     - narrate "<red> ERROR: Invalid player username OR the player is offline."
                     - stop
@@ -159,7 +159,7 @@ Command_Soldier_Admin:
         - if <[action]> == add || <[action]> == remove:
             - if <context.args.size> < 3:
                 - goto syntax_error
-            - define username <server.match_player[<context.args.get[3]>]||null>
+            - define username <server.match_offline_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
@@ -249,7 +249,7 @@ Command_Soldier:
                 - run List_Task_Script def:server|<[jail_name]>_wanteds|Wanted|<[list_page]>
                 - stop
             - if <[secondary_action]> == add:
-                - define username <server.match_player[<context.args.get[3]>]||null>
+                - define username <server.match_offline_player[<context.args.get[3]>]||null>
                 - if <[username]> == null:
                     - narrate "<red> ERROR: Invalid player username OR the player is offline."
                     - stop

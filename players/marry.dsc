@@ -99,7 +99,7 @@ MarryInfo_Command_Script:
         - if <context.args.size> < 1:
             - narrate "<white> USAGE: <yellow>/marryinfo [username]"
             - stop
-        - define username <server.match_player[<context.args.get[1]>]||null>
+        - define username <server.match_offline_player[<context.args.get[1]>]||null>
         - if <[username]> == null:
             - narrate "<red> ERROR: <white>Invalid player username OR the player is offline."
             - stop
