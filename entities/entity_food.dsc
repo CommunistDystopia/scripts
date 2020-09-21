@@ -34,7 +34,7 @@ Entity_Food_Script:
                 - flag <context.entity> last_food:!
                 - flag <context.entity> baby_time:!
         on system time hourly:
-            - foreach <world[world].entities[<script[Entity_Food_Data].data_key[entities].keys>]> as:living_being:
+            - foreach <world[Coolia].entities[<script[Entity_Food_Data].data_key[entities].keys>]||<world[world].entities[<script[Entity_Food_Data].data_key[entities].keys>]>> as:living_being:
                 - if !<[living_being].has_flag[last_food]>:
                     - flag <[living_being]> last_food:!
                     - flag <[living_being]> baby_time:!

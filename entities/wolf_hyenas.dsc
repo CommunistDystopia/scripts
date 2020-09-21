@@ -16,7 +16,7 @@ Wolf_Hyenas_Script:
     debug: false
     events:
         on system time secondly every:15:
-            - foreach <world[world].entities[wolf]> as:wolf:
+            - foreach <world[Coolia].entities[wolf]||<world[world].entities[wolf]>> as:wolf:
                 - if !<[wolf].is_tamed>:
                     - attack <[wolf]> target:cancel
                     - adjust <[wolf]> angry:false

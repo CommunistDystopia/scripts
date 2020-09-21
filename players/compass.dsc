@@ -36,7 +36,7 @@ Compass_Command:
             - compass <[username].location>
             - narrate "<green> Starting to track... <blue><[username].name>"
         - if <context.args.size> == 3:
-            - define location <location[<context.args.get[1]>,<context.args.get[2]>,<context.args.get[3]>,world]||null>
+            - define location <location[<context.args.get[1]>,<context.args.get[2]>,<context.args.get[3]>,<player.world.name>]||null>
             - if <[location]> == null:
                 - narrate "<red> ERROR: Invalid location. Please use a valid one"
                 - stop
