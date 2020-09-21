@@ -123,7 +123,7 @@ Command_Soldier_Admin:
             - if <context.args.size> < 3:
                 - goto syntax_error
             - define list_page <context.args.get[3]>
-            - run List_Task_Script def:server|<[jail_name]>_soldiers|Soldier|<[list_page]>|true
+            - run List_Task_Script def:server|<[jail_name]>_soldiers|Soldier|<[list_page]>|true|Jail
             - stop
         - if <[action]> == wanted:
             - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
@@ -134,7 +134,7 @@ Command_Soldier_Admin:
             - define secondary_action <context.args.get[3]>
             - if <[secondary_action]> == list:
                 - define list_page <context.args.get[4]>
-                - run List_Task_Script def:server|<[jail_name]>_wanteds|Wanted|<[list_page]>|true
+                - run List_Task_Script def:server|<[jail_name]>_wanteds|Wanted|<[list_page]>|true|Jail
                 - stop
             - if <[secondary_action]> == add || <[secondary_action]> == remove:
                 - define username <server.match_offline_player[<context.args.get[4]>]||null>
@@ -246,7 +246,7 @@ Command_Soldier:
             - define secondary_action <context.args.get[2]>
             - if <[secondary_action]> == list:
                 - define list_page <context.args.get[3]>
-                - run List_Task_Script def:server|<[jail_name]>_wanteds|Wanted|<[list_page]>
+                - run List_Task_Script def:server|<[jail_name]>_wanteds|Wanted|<[list_page]>|Jail
                 - stop
             - if <[secondary_action]> == add:
                 - define username <server.match_offline_player[<context.args.get[3]>]||null>

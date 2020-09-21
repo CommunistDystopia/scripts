@@ -1,13 +1,13 @@
 List_Task_Script:
     type: task
     debug: false
-    definitions: target|flag_name|member|list_page|containPlayers
+    definitions: target|flag_name|member|list_page|containPlayers|context_name|after_name
     script:
         - if <[list_page].is_integer>:
             - define flag_values 0
             - if <[target]> == server:
                 - if !<server.has_flag[<[flag_name]>]>:
-                    - narrate "<red> ERROR: The server doesn't have any <[member]>s."
+                    - narrate "<red> ERROR: The <[context_name]||server> doesn't have any <[member]>s."
                     - stop
                 - define flag_values <server.flag[<[flag_name]>]>
             - else:
@@ -21,10 +21,10 @@ List_Task_Script:
                     - if <[containPlayers]>:
                         - narrate "<green> - <[member]> <[loop_index]>: <blue><[value].name>"
                     - else:
-                        - if <[value].after[<[member]>_].length> == 0:
+                        - if <[value].after[<[after_name]||<[member]>>_].length> == 0:
                             - narrate "<green> - <[member]> <[loop_index]>: <blue><[value]>"
                         - else:
-                            - narrate "<green> - <[member]> <[loop_index]>: <blue><[value].after[<[member]>_]>"
+                            - narrate "<green> - <[member]> <[loop_index]>: <blue><[value].after[<[after_name]||<[member]>>_]>"
                 - stop
             - else:
                 - define lower_limit <[list_page].mul[10]>
@@ -43,8 +43,8 @@ List_Task_Script:
                     - if <[containPlayers]>:
                         - narrate "<green> - <[member]> <[loop_index].sub[1].add[<[lower_limit]>]>: <blue><[value].name>"
                     - else:
-                        - if <[value].after[<[member]>_].length> == 0:
+                        - if <[value].after[<[after_name]||<[member]>>_].length> == 0:
                             - narrate "<green> - <[member]> <[loop_index].sub[1].add[<[lower_limit]>]>: <blue><[value]>"
                         - else:
-                            - narrate "<green> - <[member]> <[loop_index].sub[1].add[<[lower_limit]>]>: <blue><[value].after[<[member]>_]>"
+                            - narrate "<green> - <[member]> <[loop_index].sub[1].add[<[lower_limit]>]>: <blue><[value].after[<[after_name]||<[member]>>_]>"
                 - stop

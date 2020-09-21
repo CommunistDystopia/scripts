@@ -187,7 +187,7 @@ Command_Slaves:
             - stop
         - if <[action]> == list && <context.args.size> == 3:
             - define list_page <context.args.get[3]>
-            - run List_Task_Script def:server|<[jail_name]>_slaves|Slave|<[list_page]>|true
+            - run List_Task_Script def:server|<[jail_name]>_slaves|Slave|<[list_page]>|true|Jail
             - stop
         - if <[action]> == remove && <context.args.size> == 3:
             - define username <server.match_offline_player[<context.args.get[3]>]||null>
