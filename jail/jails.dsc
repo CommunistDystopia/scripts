@@ -61,8 +61,8 @@ Command_Jail:
             - stop
         - define action <context.args.get[1]>
         - define name <context.args.get[2]>
-        - if <[name].ends_with[_spawn]> || <[name].ends_with[prison]> || <[name].contains_all_text[jail]> || <[name].contains_all_text[region]>:
-            - narrate "<red> ERROR: Invalid jail name. To avoid conflicts with other plugins avoid using that name."
+        - if <[name].contains_any[_|prison|jail|region|room|null]>:
+            - narrate "<red> ERROR: Invalid jail name. To avoid conflicts with other plugins don't use that name."
             - stop
         - define jail_name jail_<[name]>
         - if <[action]> == create:
