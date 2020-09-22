@@ -86,6 +86,6 @@ Block_Security_Script:
             - if !<player.is_op>:
                 - determine cancelled
         on player right clicks block in:region_* priority:-1 ignorecancelled:true:
-            - if !<player.is_op>:
+            - if <context.click_type> == RIGHT_CLICK_BLOCK && !<player.is_op>:
                 - if <context.location.material.name> == CHEST || <context.location.material.name> == BARREL || <context.location.material.name> == DISPENSER || <context.location.material.name> == DROPPER || <context.location.material.name.contains_any_text[SHULKER_BOX]>:
                     - determine cancelled
