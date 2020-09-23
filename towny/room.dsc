@@ -44,10 +44,10 @@ Command_AdminTownRoom:
     tab complete:
         - choose <context.args.size>:
             - case 0:
-                - determine <list[list|tax|create|delete|set|kick|info]>
+                - determine <list[list|tax|create|delete|set|kick|info|toggle|price|limit]>
             - case 1:
                 - if "!<context.raw_args.ends_with[ ]>":
-                    - determine <list[list|tax|create|delete|set|kick|info].filter[starts_with[<context.args.first>]]>
+                    - determine <list[list|tax|create|delete|set|kick|info|toggle|price|limit].filter[starts_with[<context.args.first>]]>
     permission: townroom.all
     aliases:
         - atrooms
@@ -76,16 +76,16 @@ Command_TownRoom:
                 - define rooms <server.flag[<player.town.name>_rooms].parse[after[<player.town.name>_rooms_]]>
             - choose <context.args.size>:
                 - case 0:
-                    - determine <list[list|tax|create|delete|set|kick|info|toggle|price]>
+                    - determine <list[list|tax|create|delete|set|kick|info|toggle|price|limit]>
                 - case 1:
                     - if "!<context.raw_args.ends_with[ ]>":
-                        - determine <list[list|tax|create|delete|set|kick|info|toggle|price].filter[starts_with[<context.args.first>]]>
+                        - determine <list[list|tax|create|delete|set|kick|info|toggle|price|limit].filter[starts_with[<context.args.first>]]>
                     - else:
                         - if <context.args.get[1]> == list:
                             - determine 0
                         - if <context.args.get[1]> == tax:
                             - determine <list[0].include[<[rooms]>]>
-                        - if <context.args.get[1].contains_any[delete|set|kick|info|toggle|price]>:
+                        - if <context.args.get[1].contains_any[delete|set|kick|info|toggle|price|limit]>:
                             - determine <[rooms]>
                 - case 2:
                     - if "!<context.raw_args.ends_with[ ]>":
@@ -93,7 +93,7 @@ Command_TownRoom:
                             - determine 0
                         - if <context.args.get[1]> == tax:
                             - determine <list[0].include[<[rooms]>]>
-                        - if <context.args.get[1].contains_any[delete|set|kick|info|toggle|price]>:
+                        - if <context.args.get[1].contains_any[delete|set|kick|info|toggle|price|limit]>:
                             - determine <[rooms]>
                     - else:
                         - determine <server.online_players.parse[name]>
