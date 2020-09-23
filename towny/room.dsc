@@ -317,7 +317,7 @@ TownRoom_Script:
                     - if <server.has_flag[<[room]>_Players]> && <server.flag[<[room]>_Players].contains[<player>]>:
                         - determine cancelled:false
                     - else:
-                        - if !<player.is_op> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canDestroy]>:
+                        - if !<player.is_op> && <player> != <player.town.mayor> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canDestroy]>:
                             - determine cancelled
         after player places block in:*_Rooms_* bukkit_priority:HIGHEST ignorecancelled:true:
             - if <player.has_town>:
@@ -327,7 +327,7 @@ TownRoom_Script:
                         - modifyblock <context.location> <context.material.name>
                         - stop
                     - else:
-                        - if !<player.is_op> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canBuild]>:
+                        - if !<player.is_op> && <player> != <player.town.mayor> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canBuild]>:
                             - determine cancelled
         on system time hourly every:24:
             - foreach <towny.list_towns> as:town:
