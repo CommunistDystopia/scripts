@@ -295,6 +295,10 @@ TownRoom_Task_Script:
             - if <cuboid[<[town]>_Rooms_<[target]>]||null> == null:
                 - narrate "<red> ERROR: <white>The room <yellow><[target]> <white>doesn't exist for the town <yellow><[town]>"
                 - stop
+            - narrate " <gold>### <white>Room <yellow><[target]> <gold>- <white>Information <gold>###"
+            - foreach <server.flag[<[town]>_Rooms_<[target]>].as_map>:
+                - narrate " <gold># <yellow><[key].to_titlecase>: <white><[value]>"
+            - narrate " <gold>### <white>Roommates <gold>###"
             - if <server.flag[<[town]>_Rooms_<[target]>_Players].size> < 10:
                 - run List_Task_Script def:server|<[town]>_Rooms_<[target]>_Players|Roommate|0|true|Room
             - else:
@@ -318,7 +322,9 @@ TownRoom_Script:
                         - determine cancelled:false
                     - else:
                         - if !<player.is_op> && <player> != <player.town.mayor> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canDestroy]>:
-                            - determine cancelled
+                            - determine cancelled passively
+                            - ratelimit <player> 5s
+                            - narrate "<red>[TownRooms] <white>You can't destroy here."
         after player places block in:*_Rooms_* bukkit_priority:HIGHEST ignorecancelled:true:
             - if <player.has_town>:
                 - foreach <context.location.cuboids.parse[note_name].filter[starts_with[<player.town.name>_]]> as:room:
@@ -328,7 +334,11 @@ TownRoom_Script:
                         - stop
                     - else:
                         - if !<player.is_op> && <player> != <player.town.mayor> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canBuild]>:
-                            - determine cancelled
+                            - determine cancelled passively
+                            - modifyblock <context.location> material:air
+                            - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.add[1]>
+                            - ratelimit <player> 5s
+                            - narrate "<red>[TownRooms] <white>You can't build here."
         on system time hourly every:24:
             - foreach <towny.list_towns> as:town:
                 - if <server.has_flag[<[town].name>_rooms]> && <server.has_flag[<[town].name>_rooms_tax]>:
