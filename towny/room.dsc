@@ -7,7 +7,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/09/22
+# @date 2020/09/23
 # @denizen-build REL-1714
 # @dependency TownyAdvanced/Towny
 #
@@ -339,6 +339,14 @@ TownRoom_Script:
                             - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.add[1]>
                             - ratelimit <player> 5s
                             - narrate "<red>[TownRooms] <white>You can't build here."
+        on player enters *_Rooms_*:
+            - if <context.area.has_town>:
+                - ratelimit <player> 5s
+                - narrate "<green><bold> You're entering <context.area.list_towns.first.mayor.name>'s room"
+        on player exits *_Rooms_*:
+            - if <context.area.has_town>:
+                - ratelimit <player> 5s
+                - narrate "<red><bold> You're leaving <context.area.list_towns.first.mayor.name>'s room"
         on system time hourly every:24:
             - foreach <towny.list_towns> as:town:
                 - if <server.has_flag[<[town].name>_rooms]> && <server.has_flag[<[town].name>_rooms_tax]>:
