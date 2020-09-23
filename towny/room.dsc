@@ -96,7 +96,10 @@ Command_TownRoom:
                         - if <context.args.get[1].contains_any[delete|set|kick|info|toggle|price|limit]>:
                             - determine <[rooms]>
                     - else:
-                        - determine <server.online_players.parse[name]>
+                        - if <context.args.get[1]> == toggle:
+                            - determine <list[sell|build|destroy]>
+                        - else:
+                            - determine <server.online_players.parse[name]>
     permission: townroom.town
     aliases:
         - trooms
@@ -204,7 +207,7 @@ TownRoom_Task_Script:
                 - flag server <[town]>_Rooms_<[target]>:<server.flag[<[town]>_Rooms_<[target]>].as_map.with[name].as[<[target]>]>
                 - narrate "<green> Room <yellow><[target]> <green>setup correctly for the town <yellow><[town]> <green>with the template of the room <yellow><[room_template]>"
             - else:
-                - flag server <[town]>_Rooms_<[target]>:<map[name/<[target]>|price/0|isSellable/false|tax/0]>
+                - flag server <[town]>_Rooms_<[target]>:<map[name/<[target]>|price/0|isSellable/false|tax/0|canBuild/true|canDestroy/true]>
                 - narrate "<green> Room <yellow><[target]> <green>setup correctly for the town <yellow><[town]>"
             - stop
         - if <[action]> == price:
@@ -225,12 +228,23 @@ TownRoom_Task_Script:
             - if <cuboid[<[town]>_Rooms_<[target]>]||null> == null:
                 - narrate "<red> ERROR: <white>The room <yellow><[target]> <white>doesn't exist for the town <yellow><[town]>"
                 - stop
-            - if <server.flag[<[town]>_Rooms_<[target]>].as_map.get[isSellable]>:
-                - flag server <[town]>_Rooms_<[target]>:<server.flag[<[town]>_Rooms_<[target]>].as_map.with[isSellable].as[false]>
-                - narrate "<green> The room <yellow><[target]> <green>in town <yellow><[town]> <green>changed to <red>not be sellable"
+            - define secondary_action <context.args.get[<[args_used].add[3]>]>
+            - define toggle_target <empty>
+            - choose <[secondary_action]>:
+                - case sell:
+                    - define toggle_target isSellable
+                - case build:
+                    - define toggle_target canBuild
+                - case destroy:
+                    - define toggle_target canDestroy
+                - default:
+                    - goto syntax_error
+            - if <server.flag[<[town]>_Rooms_<[target]>].as_map.get[<[toggle_target]>]>:
+                - flag server <[town]>_Rooms_<[target]>:<server.flag[<[town]>_Rooms_<[target]>].as_map.with[<[toggle_target]>].as[false]>
+                - narrate "<green> The room <yellow><[target]> <green>in town <yellow><[town]> <green>changed to <red>not be <[secondary_action]>able"
             - else:
-                - flag server <[town]>_Rooms_<[target]>:<server.flag[<[town]>_Rooms_<[target]>].as_map.with[isSellable].as[true]>
-                - narrate "<green> The room <yellow><[target]> <green>in town <yellow><[town]> <green>changed to <yellow>be sellable"
+                - flag server <[town]>_Rooms_<[target]>:<server.flag[<[town]>_Rooms_<[target]>].as_map.with[<[toggle_target]>].as[true]>
+                - narrate "<green> The room <yellow><[target]> <green>in town <yellow><[town]> <green>changed to <yellow>be <[secondary_action]>able"
             - stop
         - if <[action]> == delete:
             - if <cuboid[<[town]>_Rooms_<[target]>]||null> == null:
@@ -290,6 +304,7 @@ TownRoom_Task_Script:
                 - define list_page <context.args.get[<[args_used].add[3]>]>
                 - run List_Task_Script def:server|<[town]>_Rooms_<[target]>_Players|Roommate|<[list_page]>|true|Room
             - stop
+        - mark syntax_error
         - narrate "<red>ERROR: <white>ERROR: Syntax error. Follow the command syntax."
 
 TownRoom_Script:
@@ -301,6 +316,9 @@ TownRoom_Script:
                 - foreach <context.location.cuboids.parse[note_name].filter[starts_with[<player.town.name>_]]> as:room:
                     - if <server.has_flag[<[room]>_Players]> && <server.flag[<[room]>_Players].contains[<player>]>:
                         - determine cancelled:false
+                    - else:
+                        - if !<player.is_op> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canDestroy]>:
+                            - determine cancelled
         after player places block in:*_Rooms_* bukkit_priority:HIGHEST ignorecancelled:true:
             - if <player.has_town>:
                 - foreach <context.location.cuboids.parse[note_name].filter[starts_with[<player.town.name>_]]> as:room:
@@ -308,6 +326,9 @@ TownRoom_Script:
                         - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.sub[1]>
                         - modifyblock <context.location> <context.material.name>
                         - stop
+                    - else:
+                        - if !<player.is_op> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canBuild]>:
+                            - determine cancelled
         on system time hourly every:24:
             - foreach <towny.list_towns> as:town:
                 - if <server.has_flag[<[town].name>_rooms]> && <server.has_flag[<[town].name>_rooms_tax]>:
