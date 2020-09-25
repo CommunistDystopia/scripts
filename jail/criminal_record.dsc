@@ -9,7 +9,7 @@
 # @author devnodachi
 # @date 2020/08/06
 # @denizen-build REL-1714
-# @dependency devnodachi/jails devnodachi/slaves
+# @dependency devnodachi/jails devnodachi/prisoners
 #
 # Commands
 # /criminalrecord check <username> <#> - Check the criminal record of the player

@@ -83,7 +83,7 @@ Command_Jail:
             - flag server prison_jails:|:<[jail_name]>
             - narrate "<green> Jail <blue><[name]> <green>created!"
             - narrate "<green> Remember to set the <red>spawn of the Jail"
-            - narrate "<green> With <red>/slaves spawn <yellow>jailname"
+            - narrate "<green> With <red>/prisoners spawn <yellow>jailname"
             - stop
         - if <[action]> == list:
             - define list_page <context.args.get[2]>
@@ -96,13 +96,13 @@ Command_Jail:
             - note remove as:<[jail_name]>
             - note remove as:<[jail_name]>_spawn
             - flag server prison_jails:<-:<[jail_name]>
-            - define jail_slaves <[jail_name]>_slaves
+            - define jail_prisoners <[jail_name]>_prisoners
             - define jail_soldiers <[jail_name]>_soldiers
             - define jail_wanted <[jail_name]>_wanteds
-            - if <server.has_flag[<[jail_slaves]>]>:
-                - foreach <server.flag[<[jail_slaves]>]> as:slave:
-                    - execute as_server "slaves remove <[slave].flag[owner].after[jail_]> <[slave].name>" silent
-                - flag server <[jail_slaves]>:!
+            - if <server.has_flag[<[jail_prisoners]>]>:
+                - foreach <server.flag[<[jail_prisoners]>]> as:prisoner:
+                    - execute as_server "prisoners remove <[prisoner].flag[owner].after[jail_]> <[prisoner].name>" silent
+                - flag server <[jail_prisoners]>:!
             - if <server.has_flag[<[jail_soldiers]>]>:
                 - foreach <server.flag[<[jail_soldiers]>]> as:soldier:
                     - flag <[soldier]> soldier_jail:!

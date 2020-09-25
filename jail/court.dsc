@@ -2,7 +2,7 @@
 # |
 # | C O U R T
 # |
-# | Give slaves a chance to be free.
+# | Give prisoners a chance to be free.
 # | Open jobs for the Judge and Lawyer groups.
 # |
 # +----------------------
@@ -10,17 +10,17 @@
 # @author devnodachi
 # @date 2020/08/02
 # @denizen-build REL-1714
-# @dependency devnodachi/jails devnodachi/slaves
+# @dependency devnodachi/jails devnodachi/prisoners
 #
 # Commands
-# - Slave Commands
-# /court request trial - The slave request a trial
-# /court request lawyer - The slave request a lawyer
+# - Prisoner Commands
+# /court request trial - The prisoner request a trial
+# /court request lawyer - The prisoner request a lawyer
 # - Judge/SupremeWarden Commands
-# /court start <username> - The Judge/SW starts a court with the Slave.
+# /court start <username> - The Judge/SW starts a court with the Prisoner.
 # /court request witness <username> - The Judge/SW request the players to be witness.
-# /court declare guilty - The Judge/SW declares a slave guilty
-# /court declare innocent - The Judge/SW declares a slave innocent.
+# /court declare guilty - The Judge/SW declares a prisoner guilty
+# /court declare innocent - The Judge/SW declares a prisoner innocent.
 # /court remove witness <username> - The Judge/SW removes a witness from the stand.
 # /court remove lawyer <username> - The Judge/SW removes a laywer from the court.
 # - VIP Commands
@@ -47,7 +47,7 @@ Command_Court:
                     - if <context.args.get[1]> == request:
                         - determine <list[trial|lawyer|witness]>
                     - if <context.args.get[1]> == start:
-                        - determine <server.online_players.filter[in_group[slave]].parse[name]>
+                        - determine <server.online_players.filter[in_group[prisoner]].parse[name]>
                     - if <context.args.get[1]> == declare:
                         - determine <list[guilty|innocent]>
                     - if <context.args.get[1]> == remove:
@@ -58,7 +58,7 @@ Command_Court:
                         - if <context.args.get[1]> == request:
                             - determine <list[trial|lawyer|witness]>
                         - if <context.args.get[1]> == start:
-                            - determine <server.online_players.filter[in_group[slave]].parse[name]>
+                            - determine <server.online_players.filter[in_group[prisoner]].parse[name]>
                         - if <context.args.get[1]> == declare:
                             - determine <list[guilty|innocent]>
                         - if <context.args.get[1]> == remove:
@@ -71,8 +71,8 @@ Command_Court:
             - if !<server.has_flag[court_active]>:
                 - narrate "<red> ERROR: There is not a court active"
                 - stop
-            - if <player.in_group[slave]>:
-                - narrate "<red> ERROR: Slaves can't witness a Court. Even <yellow>VIP <red>slaves"
+            - if <player.in_group[prisoner]>:
+                - narrate "<red> ERROR: Slaves can't witness a Court. Even <yellow>VIP <red>prisoners"
                 - stop
             - if !<player.in_group[vip]> && !<player.in_group[ultravip]> && !<player.in_group[supremevip]> && !<player.in_group[godvip]>:
                 - narrate "<red> ERROR: Only VIPs can spectate a Court"
@@ -84,7 +84,7 @@ Command_Court:
             - if !<server.has_flag[court_active]>:
                 - narrate "<red> ERROR: There is not a court active"
                 - stop
-            - if <player.in_group[slave]>:
+            - if <player.in_group[prisoner]>:
                 - narrate "<red> ERROR: Slaves can't witness a Court"
                 - stop
             - if <server.has_flag[court_witness]> && <server.flag[court_witness].contains_all_case_sensitive_text[<player.uuid>]>:
@@ -104,7 +104,7 @@ Command_Court:
         - define target <context.args.get[2]>
         - if <[action]> == request:
             - if <[target]> == trial:
-                - if !<player.in_group[slave]> && !<player.has_flag[slave_timer]>:
+                - if !<player.in_group[prisoner]> && !<player.has_flag[prisoner_timer]>:
                     - narrate "<red>You do not have permission for that command."
                     - stop
                 - define Online_SupremeWardens <server.online_players.filter[in_group[supremwarden]]>
@@ -114,30 +114,30 @@ Command_Court:
                     - narrate "<white> Please consider contacting them on <blue>Discord"
                     - stop
                 - if !<[Online_SupremeWardens].is_empty>:
-                    - narrate "<yellow> COURT: <white>The Slave <red><player.name> <white> is requesting a <red>trial" targets:<[Online_SupremeWardens]>
+                    - narrate "<yellow> COURT: <white>The Prisoner <red><player.name> <white> is requesting a <red>trial" targets:<[Online_SupremeWardens]>
                     - narrate "<yellow> COURT: <white>Do <red>/court start <player.name> <white>to start the court with the player" targets:<[Online_SupremeWardens]>
                 - if !<[Online_Judges].is_empty>:
-                    - narrate "<yellow> COURT: <white>The Slave <red><player.name> <white> is requesting a <red>trial" targets:<[Online_Judges]>
+                    - narrate "<yellow> COURT: <white>The Prisoner <red><player.name> <white> is requesting a <red>trial" targets:<[Online_Judges]>
                     - narrate "<yellow> COURT: <white>Do <red>/court start <player.name> <white>to start the court with the player" targets:<[Online_Judges]>
                 - narrate "<green> Request sent. <white>Please wait for any of the online SupremeWardens or Judges to accept your request"
                 - stop
             - if <[target]> == lawyer:
-                - if !<player.in_group[slave]>:
+                - if !<player.in_group[prisoner]>:
                     - narrate "<red>You do not have permission for that command."
                     - stop
                 - if !<server.has_flag[court_active]>:
                     - narrate "<red> ERROR: There isn't a court active"
                     - narrate "<white> Maybe do you want to do <red>/court request trial <white>first"
                     - stop
-                - if !<server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
-                    - narrate "<red> ERROR: There is a court active but you aren't the slave of the court"
+                - if !<server.flag[court_prisoner].contains_all_case_sensitive_text[<player.uuid>]>:
+                    - narrate "<red> ERROR: There is a court active but you aren't the prisoner of the court"
                     - stop
                 - define Online_Lawyers <server.online_players.filter[in_group[lawyer]]>
                 - if <[Online_Lawyers].is_empty>:
                     - narrate "<red> ERROR: All the Lawyers are offline"
                     - narrate "<white> Please consider contacting them on <blue>Discord"
                     - stop
-                - narrate "<yellow> COURT: <white>The slave <red><player.name> <white>is requesting a Lawyer" targets:<[Online_Lawyers]>
+                - narrate "<yellow> COURT: <white>The prisoner <red><player.name> <white>is requesting a Lawyer" targets:<[Online_Lawyers]>
                 - narrate "<yellow> COURT: <white>Do <red>/court lawyer <player.name>" targets:<[Online_Lawyers]>
                 - narrate "<green> Request sent. <white>Please wait for any of the online Laywers to accept your request"
                 - stop
@@ -157,7 +157,7 @@ Command_Court:
                 - if <[username]> == null:
                     - narrate "<red> ERROR: Invalid player username OR the player is offline."
                     - stop
-                - if <[username].in_group[slave]>:
+                - if <[username].in_group[prisoner]>:
                     - narrate "<red> ERROR: Slaves can't be witness in a Court."
                     - stop
                 - if <server.has_flag[court_witness]>:
@@ -180,17 +180,17 @@ Command_Court:
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
-            - if !<[username].in_group[slave]> && !<[username].has_flag[slave_timer]>:
-                - narrate "<red> ERROR: This user is not a valid Slave."
+            - if !<[username].in_group[prisoner]> && !<[username].has_flag[prisoner_timer]>:
+                - narrate "<red> ERROR: This user is not a valid Prisoner."
                 - stop
-            - flag server court_slave:<[username].uuid>
+            - flag server court_prisoner:<[username].uuid>
             - flag server court_lead:<player.uuid>
             - flag server court_active:true
-            - narrate "<yellow> COURT: <green>The Court has started <red>slave. In 5 seconds you will join the Court." targets:<[username]>
-            - teleport <[username]> <location[court_slave_player_spot]>
+            - narrate "<yellow> COURT: <green>The Court has started <red>prisoner. In 5 seconds you will join the Court." targets:<[username]>
+            - teleport <[username]> <location[court_prisoner_player_spot]>
             - teleport <player> <location[court_lead_spot]>
             - narrate "<yellow> COURT: <white>Welcome to the Court. Just another day on the job"
-            - create player <[username].name> <location[court_slave_spot]> save:playernpc
+            - create player <[username].name> <location[court_prisoner_spot]> save:playernpc
             - wait 5s
             - adjust <[username]> spectate:<entry[playernpc].created_npc>
             - flag <[username]> court_npc:<entry[playernpc].created_npc.id>
@@ -205,18 +205,18 @@ Command_Court:
             - if !<server.flag[court_lead].contains_all_case_sensitive_text[<player.uuid>]>:
                 - narrate "<red> ERROR: You are not the lead of the current court"
                 - stop
-            - define slave <player[<server.flag[court_slave]>]>
+            - define prisoner <player[<server.flag[court_prisoner]>]>
             - if <[target]> == guilty || <[target]> == innocent:
                 - if <[target]> == guilty:
-                    - teleport <[slave]> <location[<[slave].flag[owner]>_spawn]>
-                    - flag <[slave]> slave_timer:+:<script[Slaves_Config].data_key[court_fail_timer_add]>
-                    - narrate "<white> The Slave <red><[slave].name> <white>is declared <red>Guilty" targets:<server.online_players>
-                    - narrate "<white> Welcome back to the Jail! With <red>2 hours <white>more." targets:<[slave]>
+                    - teleport <[prisoner]> <location[<[prisoner].flag[owner]>_spawn]>
+                    - flag <[prisoner]> prisoner_timer:+:<script[Slaves_Config].data_key[court_fail_timer_add]>
+                    - narrate "<white> The Prisoner <red><[prisoner].name> <white>is declared <red>Guilty" targets:<server.online_players>
+                    - narrate "<white> Welcome back to the Jail! With <red>2 hours <white>more." targets:<[prisoner]>
                 - if <[target]> == innocent:
-                    - execute as_server "slaves remove <[slave].flag[owner].after[jail_]> <[slave].name>" silent
-                    - narrate "<white> The Slave <red><[slave].name> <white>is declared <green>Innocent" targets:<server.online_players>
-                    - narrate "<green> You're free! <white>/t spawn out!" targets:<[slave]>
-                - run Court_Task_Script def:<[slave]>
+                    - execute as_server "prisoners remove <[prisoner].flag[owner].after[jail_]> <[prisoner].name>" silent
+                    - narrate "<white> The Prisoner <red><[prisoner].name> <white>is declared <green>Innocent" targets:<server.online_players>
+                    - narrate "<green> You're free! <white>/t spawn out!" targets:<[prisoner]>
+                - run Court_Task_Script def:<[prisoner]>
                 - stop
         - if <[action]> == remove:
             - if !<player.is_op> && !<player.in_group[supremewarden]> && !<player.in_group[judge]>:
@@ -262,8 +262,8 @@ Command_Court:
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
-            - if !<server.flag[court_slave].contains_all_case_sensitive_text[<[username].uuid>]>:
-                - narrate "<red> ERROR: The player is not the <white>Slave <red>of the court"
+            - if !<server.flag[court_prisoner].contains_all_case_sensitive_text[<[username].uuid>]>:
+                - narrate "<red> ERROR: The player is not the <white>Prisoner <red>of the court"
                 - stop
             - if <server.has_flag[court_lawyer]>:
                 - narrate "<red> ERROR: The active court already has a lawyer"
@@ -274,15 +274,15 @@ Command_Court:
             - stop
         - mark syntax_error
         - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
-        - if <player.is_op> || <player.in_group[slave]>:
+        - if <player.is_op> || <player.in_group[prisoner]>:
             - narrate "<yellow>-<red> To request a trail in a court: <white>/court request trail"
             - narrate "<yellow>-<red> To request a lawyer in a court: <white>/court request lawyer"
             - stop
         - if <player.is_op> || <player.in_group[supremewarden]> || <player.in_group[judge]>:
-            - narrate "<yellow>-<red> To start a Court with a slave: <white>/court start <yellow>username"
+            - narrate "<yellow>-<red> To start a Court with a prisoner: <white>/court start <yellow>username"
             - narrate "<yellow>-<red> To request witness: <white>/court request witness"
-            - narrate "<yellow>-<red> To declare the slave guilty: <white>/court declare guilty"
-            - narrate "<yellow>-<red> To declare the slave innocent: <white>/court declare innocent"
+            - narrate "<yellow>-<red> To declare the prisoner guilty: <white>/court declare guilty"
+            - narrate "<yellow>-<red> To declare the prisoner innocent: <white>/court declare innocent"
             - narrate "<yellow>-<red> To remove a witness: <white>/court remove witness <yellow>username"
             - narrate "<yellow>-<red> To remove a lawyer: <white>/court remove lawyer <yellow>username"
         - if <player.is_op> || <player.in_group[vip]> || <player.in_group[ultravip]> || <player.in_group[supremevip]> || <player.in_group[godvip]>:
@@ -302,34 +302,34 @@ Court_Script:
                         - remove <npc[<player.flag[court_npc]>]>
                         - flag player court_npc:!
                     - flag server court_witness:!
-                - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]> || <server.flag[court_lead].contains_all_case_sensitive_text[<player.uuid>]>:
+                - if <server.flag[court_prisoner].contains_all_case_sensitive_text[<player.uuid>]> || <server.flag[court_lead].contains_all_case_sensitive_text[<player.uuid>]>:
                     - narrate "<yellow> COURT: <white>The player <player.name> left the server while in a court" targets:<server.online_players>
-                    - if <player.in_group[slave]>:
-                        - narrate "<yellow> COURT: <white>The player is the <red>Slave <white>of the court" targets:<server.online_players>
+                    - if <player.in_group[prisoner]>:
+                        - narrate "<yellow> COURT: <white>The player is the <red>Prisoner <white>of the court" targets:<server.online_players>
                     - if <player.is_op> || <player.in_group[supremewarden]> || <player.in_group[judge]>:
                         - narrate "<yellow> COURT: <white>The player is the <yellow>Lead <white>of the court" targets:<server.online_players>
                     - narrate "<yellow> COURT: <white>Wait 1 minute for him or the Court will end with no result" targets:<server.online_players>
                     - wait 1m
                     - if !<player.is_online>:
-                        - run Court_Task_Script def:<player[<server.flag[court_slave]>]>
+                        - run Court_Task_Script def:<player[<server.flag[court_prisoner]>]>
                         - narrate "<yellow> COURT: <white>The Court ended without a result" targets:<server.online_players>
         after player join:
             - wait 5s
             - if <player.is_online>:
                 - if <server.has_flag[court_active]>:
-                    - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
+                    - if <server.flag[court_prisoner].contains_all_case_sensitive_text[<player.uuid>]>:
                         - adjust <player> spectate:<npc[<player.flag[court_npc]>]>
 
 Court_Task_Script:
     type: task
     debug: false
-    definitions: slave
+    definitions: prisoner
     script:
-        - if <[slave].is_online>:
-            - adjust <[slave]> spectate:<[slave]>
-        - remove <npc[<[slave].flag[court_npc]>]>
-        - flag <[slave]> court_npc:!
-        - flag server court_slave:!
+        - if <[prisoner].is_online>:
+            - adjust <[prisoner]> spectate:<[prisoner]>
+        - remove <npc[<[prisoner].flag[court_npc]>]>
+        - flag <[prisoner]> court_npc:!
+        - flag server court_prisoner:!
         - if <server.has_flag[court_witness]>:
             - define witness <player[<server.flag[court_witness]>]>
             - if <[witness].is_online> && <[witness].has_flag[court_npc]>:

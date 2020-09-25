@@ -9,7 +9,7 @@
 # @author devnodachi
 # @date 2020/08/15
 # @denizen-build REL-1714
-# @soft-dependency devnodachi/slaves
+# @soft-dependency devnodachi/prisoners
 #
 # Commands
 # /lead releaseall - Release all leaded players
@@ -98,7 +98,7 @@ Player_Lead_Script:
         after player joins:
             - wait 5s
             - if <player.is_online> && <player.has_flag[spawn_on_jail]>:
-                - if <player.in_group[slave]>:
+                - if <player.in_group[prisoner]>:
                     - narrate "<red> You tried to escape from the lead of the <yellow>Supreme Warden<red>. Good try"
                     - teleport <player> <location[<player.flag[owner]>_spawn]>
                     - flag <player> spawn_on_jail:!
@@ -128,7 +128,7 @@ Player_Lead_Check_Task:
         - if !<[isValidGroup]>:
             - narrate "<red> You can't lead that player!"
             - stop
-        - if <[username].in_group[slave]>:
+        - if <[username].in_group[prisoner]>:
             - if <[username].has_flag[owner]>:
                 - if <player.in_group[godvip]> && !<[username].flag[owner].starts_with[jail_]>:
                     - if !<[username].flag[owner].contains_all_case_sensitive_text[<player.uuid>]>:
@@ -174,7 +174,7 @@ Player_Lead_Stop_Task:
                     - flag <[username]> lead_owner:!
                     - flag <[username]> lead_block_limit:!
                     - flag <[username]> lead_queue:!
-                    - if <[username].is_online> && <[username].in_group[slave]> && <[username].has_flag[owner]> && <[username].flag[owner].starts_with[jail_]>:
+                    - if <[username].is_online> && <[username].in_group[prisoner]> && <[username].has_flag[owner]> && <[username].flag[owner].starts_with[jail_]>:
                         - teleport <[username]> <location[<[username].flag[owner]>_spawn]>
                         - narrate "<yellow> <player.name> <red>released you. <green>Welcome back to Jail" targets:<[username]>
                     - narrate "<green> The Lead on <red><[username].name> <green>stopped"
@@ -192,7 +192,7 @@ Player_Lead_Stop_All_Task:
                 - flag <[username]> lead_owner:!
                 - flag <[username]> lead_block_limit:!
                 - flag <[username]> lead_queue:!
-                - if <[username].is_online> && <[username].in_group[slave]> && <[username].has_flag[owner]> && <[username].flag[owner].starts_with[jail_]>:
+                - if <[username].is_online> && <[username].in_group[prisoner]> && <[username].has_flag[owner]> && <[username].flag[owner].starts_with[jail_]>:
                     - teleport <[username]> <location[<[username].flag[owner]>_spawn]>
                     - narrate "<yellow> <player.name> <red>released you. <green>Welcome back to Jail" targets:<[username]>
             - flag <player> players_in_lead:!

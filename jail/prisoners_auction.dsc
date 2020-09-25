@@ -1,19 +1,19 @@
 # +----------------------
 # |
-# | SLAVES AUCTION
+# | PRISONERS AUCTION
 # |
-# | Sell slaves in jail to others.
+# | Sell prisoners in jail to others.
 # |
 # +----------------------
 #
 # @author devnodachi
 # @date 2020/08/02
 # @denizen-build REL-1714
-# @dependency devnodachi/jails devnodachi/slaves
+# @dependency devnodachi/jails devnodachi/prisoners
 #
 # Commands
-# /slaveshop sell <slavename> - Starts an slave auction. [SupremeWarden]
-# /slaveshop bid <slavename> <amount> - Place a bid on an active auction. [Godvip]
+# /prisonershop sell <prisonername> - Starts an prisoner auction. [SupremeWarden]
+# /prisonershop bid <prisonername> <amount> - Place a bid on an active auction. [Godvip]
 # Additional notes
 # - If a Godvip tries to cheat, the auction will be canceled
 # Server flags created here
@@ -23,11 +23,11 @@
 Command_Slave_Auction:
     type: command
     debug: false
-    name: slaveauction
+    name: prisonerauction
     aliases:
-        - slaveauc
-    description: Minecraft slave auction system.
-    usage: /slaveauction
+        - prisonerauc
+    description: Minecraft prisoner auction system.
+    usage: /prisonerauction
     tab complete:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.in_group[godvip]>:
             - stop
@@ -38,28 +38,28 @@ Command_Slave_Auction:
                 - if "!<context.raw_args.ends_with[ ]>":
                     - determine <list[sell|bid].filter[starts_with[<context.args.first>]]>
                 - else:
-                    - determine <server.online_players.filter[in_group[slave]].parse[name]>
+                    - determine <server.online_players.filter[in_group[prisoner]].parse[name]>
             - case 2:
                 - if "!<context.raw_args.ends_with[ ]>":
-                    - determine <server.online_players.filter[in_group[slave]].parse[name]>
+                    - determine <server.online_players.filter[in_group[prisoner]].parse[name]>
     script:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]> && !<player.in_group[godvip]>:
             - narrate "<red>You do not have permission for that command"
             - stop
         - if <context.args.size> < 2:
             - narrate "<yellow>#<red><red> ERROR: Not enough arguments. Follow the command syntax:"
-            - narrate "<yellow>-<red><red> [SupremeWarden] To start an auction use: /slaveshop sell <yellow>username"
-            - narrate "<yellow>-<red><gold> [Godvip] <red>To place a bid use: /slaveshop bid <yellow>username <yellow>amount"
+            - narrate "<yellow>-<red><red> [SupremeWarden] To start an auction use: /prisonershop sell <yellow>username"
+            - narrate "<yellow>-<red><gold> [Godvip] <red>To place a bid use: /prisonershop bid <yellow>username <yellow>amount"
         - define action <context.args.get[1]>
-        - define slave <server.match_player[<context.args.get[2]>]||null>
-        - if <[slave]> == null:
+        - define prisoner <server.match_player[<context.args.get[2]>]||null>
+        - if <[prisoner]> == null:
             - narrate "<red> ERROR: Invalid player username OR the player is offline."
             - stop
-        - if !<[slave].in_group[slave]> || !<[slave].has_flag[owner]>:
-            - narrate "<red> ERROR: This user isn't a slave"
+        - if !<[prisoner].in_group[prisoner]> || !<[prisoner].has_flag[owner]>:
+            - narrate "<red> ERROR: This user isn't a prisoner"
             - stop
-        - if !<[slave].has_flag[slave_timer]> && <[slave].has_flag[owner]> && <[slave].in_group[slave]>:
-            - narrate "<red> ERROR: <yellow><[slave].name> <red>is already gotten by <gold>Godvip <red>or a <blue>SupremeWarden"
+        - if !<[prisoner].has_flag[prisoner_timer]> && <[prisoner].has_flag[owner]> && <[prisoner].in_group[prisoner]>:
+            - narrate "<red> ERROR: <yellow><[prisoner].name> <red>is already gotten by <gold>Godvip <red>or a <blue>SupremeWarden"
             - stop
         - if <[action]> == sell:
             - if !<player.is_op> && !<player.in_group[supremewarden]>:
@@ -73,8 +73,8 @@ Command_Slave_Auction:
                 - narrate "<red> No <gold>Godvips <red>are online right now. Try when there is a <gold>Godvip <red>online"
                 - stop
             - narrate "<green> Starting an auction... Sending a message to the <gold>Godvips<green>..."
-            - narrate "<gold> A <red>Slave <gold>auction has started! Starting money: 1" targets:<[online_godvips]>
-            - narrate "<green>Use /slaveshop bid <yellow><[slave].name> amount <green>to place your offer" targets:<[online_godvips]>
+            - narrate "<gold> A <red>Prisoner <gold>auction has started! Starting money: 1" targets:<[online_godvips]>
+            - narrate "<green>Use /prisonershop bid <yellow><[prisoner].name> amount <green>to place your offer" targets:<[online_godvips]>
             - flag server auction_highest_bid:1
             - wait 15s
             - narrate "<gold> The winner is..."
@@ -93,18 +93,18 @@ Command_Slave_Auction:
             - define highest_bidder <player[<server.flag[auction_highest_bidder]>]>
             - if <[highest_bidder].money> < <server.flag[auction_highest_bid]>:
                 - narrate "<red> Do you think that you can trick this plugin? Try again" targets:<[highest_bidder]>
-                - narrate "<red> The player <[highest_bidder].name> tried to buy the slave but he spent the money before the auction finished" targets:<[online_godvips_end]>|<[player]>
+                - narrate "<red> The player <[highest_bidder].name> tried to buy the prisoner but he spent the money before the auction finished" targets:<[online_godvips_end]>|<[player]>
                 - flag server auction_highest_bidder:!
                 - flag server auction_highest_bid:!
                 - stop
             - take from:<[highest_bidder].inventory> money quantity:<server.flag[auction_highest_bid]>
-            - flag server <[slave].flag[owner]>_slaves:<-:<[slave]>
-            - flag <[slave]> owner:<[highest_bidder].uuid>
-            - flag <[slave]> slave_timer:!
+            - flag server <[prisoner].flag[owner]>_prisoners:<-:<[prisoner]>
+            - flag <[prisoner]> owner:<[highest_bidder].uuid>
+            - flag <[prisoner]> prisoner_timer:!
             - if <[highest_bidder].is_online>:
-                - teleport <[slave]> <[highest_bidder].location>
-            - narrate "<gold> <[highest_bidder].name>!!! Congratulations. <red><[slave].name> <gold>is now your slave" targets:<[online_godvips_end]>
-            - narrate "<green> The auction is finished. The <red>slave <green>was <gold>sold"
+                - teleport <[prisoner]> <[highest_bidder].location>
+            - narrate "<gold> <[highest_bidder].name>!!! Congratulations. <red><[prisoner].name> <gold>is now your prisoner" targets:<[online_godvips_end]>
+            - narrate "<green> The auction is finished. The <red>prisoner <green>was <gold>sold"
             - flag server auction_highest_bidder:!
             - flag server auction_highest_bid:!
             - stop
@@ -124,6 +124,6 @@ Command_Slave_Auction:
             - narrate "<green> You sucessfully placed a bid by the amount of <yellow><[amount]>!"
             - stop
         - narrate "<yellow>#<red><red> ERROR: Syntax error. Follow the command syntax:"
-        - narrate "<yellow>-<red><red> [SupremeWarden] To start an auction use: /slaveshop sell <yellow>username"
-        - narrate "<yellow>-<red><gold> [Godvip] <red>To place a bid use: /slaveshop bid <yellow>username <yellow>amount"
+        - narrate "<yellow>-<red><red> [SupremeWarden] To start an auction use: /prisonershop sell <yellow>username"
+        - narrate "<yellow>-<red><gold> [Godvip] <red>To place a bid use: /prisonershop bid <yellow>username <yellow>amount"
         

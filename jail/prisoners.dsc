@@ -2,7 +2,7 @@
 # |
 # | S L A V E S
 # |
-# | Send slaves to the jails.
+# | Send prisoners to the jails.
 # |
 # +----------------------
 #
@@ -12,25 +12,25 @@
 # @dependency devnodachi/jails
 #
 # Commands
-# /slaves spawn <jailname> - Sets the spawn point of the slave in the player position.
-# /slaves list <jailname> <#> - List the slaves in this jail.
-# /slaves add <jailname> <username> - Adds a slaves to a jail.
-# /slaves remove <jailname> <username> - Removes a slaves from a Jail.
-# /slaves addmax <jailname> <username> - Adds a slaves to this jail. (It's meant for the max security jail)
-# /slaves removemax <jailname> <username> - Removes a slaves from this Jail. (It's meant for the max security jail)
-# /slaves time <jailname> info <username> - Checks the time in minutes of a slave.
-# /slaves time <jailname> add <username> <#> - Adds time in hours to a slave. (Each number is 1 hour)
-# /slaves time <jailname> remove <username> <#> - Remove time in hours to a slave. (Each number is 1 hour)
-# /slaves pickaxe - Replaces your hand with a slave pickaxe.
+# /prisoners spawn <jailname> - Sets the spawn point of the prisoner in the player position.
+# /prisoners list <jailname> <#> - List the prisoners in this jail.
+# /prisoners add <jailname> <username> - Adds a prisoners to a jail.
+# /prisoners remove <jailname> <username> - Removes a prisoners from a Jail.
+# /prisoners addmax <jailname> <username> - Adds a prisoners to this jail. (It's meant for the max security jail)
+# /prisoners removemax <jailname> <username> - Removes a prisoners from this Jail. (It's meant for the max security jail)
+# /prisoners time <jailname> info <username> - Checks the time in minutes of a prisoner.
+# /prisoners time <jailname> add <username> <#> - Adds time in hours to a prisoner. (Each number is 1 hour)
+# /prisoners time <jailname> remove <username> <#> - Remove time in hours to a prisoner. (Each number is 1 hour)
+# /prisoners pickaxe - Replaces your hand with a prisoner pickaxe.
 # Notables created here
 # - jail_<name>_spawn [Used in Jails]
 
 Command_Slaves:
     type: command
     debug: false
-    name: slaves
-    description: Minecraft slave system.
-    usage: /slaves
+    name: prisoners
+    description: Minecraft prisoner system.
+    usage: /prisoners
     tab complete:
         - if !<player.is_op||<context.server>> && !<player.in_group[supremewarden]>:
             - stop
@@ -71,7 +71,7 @@ Command_Slaves:
             - narrate "<red>You do not have permission for that command."
             - stop
         - if <context.args.size> == 1 && <context.args.get[1]> == pickaxe:
-            - give slave_pickaxe to:<player.inventory>
+            - give prisoner_pickaxe to:<player.inventory>
             - stop
         - if <context.args.size> < 2:
             - goto syntax_error
@@ -91,12 +91,12 @@ Command_Slaves:
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
-            - if !<[username].in_group[slave]> && !<[username].has_flag[slave_timer]>:
-                - narrate "<red> ERROR: This player isn't a valid slave."
+            - if !<[username].in_group[prisoner]> && !<[username].has_flag[prisoner_timer]>:
+                - narrate "<red> ERROR: This player isn't a valid prisoner."
                 - stop
             - if <[secondary_action]> == add || <[secondary_action]> == remove || <[secondary_action]> == info:
                 - if <[secondary_action]> == info:
-                    - narrate "<green> The remaining time of the slave <red><[username].name> <green>is <yellow><[username].flag[slave_timer]> <green>minutes"
+                    - narrate "<green> The remaining time of the prisoner <red><[username].name> <green>is <yellow><[username].flag[prisoner_timer]> <green>minutes"
                     - stop
                 - if <context.args.size> < 5:
                     - narrate "<yellow>#<red> ERROR: Not enough arguments. Follow the command syntax."
@@ -105,22 +105,22 @@ Command_Slaves:
                 - if !<[timer].is_integer>:
                     - narrate "<red> ERROR: The time must be a integer number!"
                 - if <[secondary_action]> == add:
-                    - if <[username].flag[slave_timer].add[<[timer].mul[60]>]> < 0:
+                    - if <[username].flag[prisoner_timer].add[<[timer].mul[60]>]> < 0:
                         - narrate "<red> ERROR: The user can't have negative time!"
                         - stop
-                    - flag <[username]> slave_timer:+:<[timer].mul[60]>
-                    - narrate "<green> Added <blue><[timer]> hours to the slave <red><[username].name>"
+                    - flag <[username]> prisoner_timer:+:<[timer].mul[60]>
+                    - narrate "<green> Added <blue><[timer]> hours to the prisoner <red><[username].name>"
                     - narrate "<green> The <yellow>jail <green>added <blue><[timer]> <green>hours to your time in jail" targets:<[username]>
-                    - narrate "<green> Remaining time in Jail: <blue><[username].flag[slave_timer]> <green>minutes" targets:<[username]>
+                    - narrate "<green> Remaining time in Jail: <blue><[username].flag[prisoner_timer]> <green>minutes" targets:<[username]>
                     - stop
                 - if <[secondary_action]> == remove:
-                    - if <[username].flag[slave_timer].sub[<[timer].mul[60]>]> < 0:
+                    - if <[username].flag[prisoner_timer].sub[<[timer].mul[60]>]> < 0:
                         - narrate "<red> ERROR: The user can't have negative time!"
                         - stop
-                    - flag <[username]> slave_timer:-:<[timer].mul[60]>
-                    - narrate "<green> Removed <red><[timer]> hours to the slave <red><[username].name>"
+                    - flag <[username]> prisoner_timer:-:<[timer].mul[60]>
+                    - narrate "<green> Removed <red><[timer]> hours to the prisoner <red><[username].name>"
                     - narrate "<green> The <yellow>jail <green>removed <red><[timer]> <green>hours to your time in jail" targets:<[username]>
-                    - narrate "<green> Remaining time in Jail: <blue><[username].flag[slave_timer]> <green>minutes" targets:<[username]>
+                    - narrate "<green> Remaining time in Jail: <blue><[username].flag[prisoner_timer]> <green>minutes" targets:<[username]>
                     - stop
         - if <[action]> == add:
             - if <context.args.size> < 3:
@@ -129,35 +129,35 @@ Command_Slaves:
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
-            - define jail_slaves <[jail_name]>_slaves
+            - define jail_prisoners <[jail_name]>_prisoners
             - define jail_spawn <[jail_name]>_spawn
             - if !<location[<[jail_spawn]>]||null> == null:
-                - narrate "<red> ERROR: Please set the jail spawn with /slaves spawn <yellow><[jail_name]> <red>while standing inside the jail"
+                - narrate "<red> ERROR: Please set the jail spawn with /prisoners spawn <yellow><[jail_name]> <red>while standing inside the jail"
                 - stop
-            - flag server <[jail_slaves]>:|:<[username]>
+            - flag server <[jail_prisoners]>:|:<[username]>
             - flag <[username]> owner:<[jail_name]>
-            - flag <[username]> slave_timer:<script[Slaves_Config].data_key[slave_timer]>
+            - flag <[username]> prisoner_timer:<script[Slaves_Config].data_key[prisoner_timer]>
             - define record "Jail [<util.time_now.to_utc.format>]"
             - flag <[username]> criminal_record:|:<[record]>
             - if !<[username].groups.is_empty>:
-                - flag <[username]> slave_groups:|:<[username].groups>
-            - execute as_server "lp user <[username].name> parent set slave" silent
+                - flag <[username]> prisoner_groups:|:<[username].groups>
+            - execute as_server "lp user <[username].name> parent set prisoner" silent
             - if <[username].is_online>:
                 - teleport <[username]> <location[<[jail_spawn]>]>
-                - narrate "<green> Welcome to the jail <red>SLAVE!" targets:<[username]>
+                - narrate "<green> Welcome to the jail <red>PRISONER!" targets:<[username]>
             - if <[username].has_flag[marry]> && <[username].flag[marry].as_player.is_online> && <[username].flag[marry].as_player.has_flag[marry_jail]>:
                 - flag <[username].flag[marry].as_player> marry_jail:!
-                - execute as_server "slaves add <[name]> <[username].flag[marry].as_player.name>" silent
+                - execute as_server "prisoners add <[name]> <[username].flag[marry].as_player.name>" silent
                 - narrate "<white> Your couple is in <red>JAIL <white>with you. Sweet <green>home<white>." targets:<[username]>|<[username].flag[marry].as_player>
-            - narrate "<green> Slave <blue><[username].name> <green>added to the Jail!"
+            - narrate "<green> Prisoner <blue><[username].name> <green>added to the Jail!"
             - stop
         - if <[action]> == addmax || <[action]> == removemax:
             - define username <server.match_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
-            - if !<[username].in_group[slave]> && !<[username].has_flag[slave_timer]>:
-                - narrate "<red> ERROR: This player isn't a valid slave."
+            - if !<[username].in_group[prisoner]> && !<[username].has_flag[prisoner_timer]>:
+                - narrate "<red> ERROR: This player isn't a valid prisoner."
                 - stop
             - if <[action]> == addmax:
                 - if <location[<[jail_name]>_spawn]||null> == null:
@@ -172,7 +172,7 @@ Command_Slaves:
                 - if !<[username].has_flag[non_max_jail]>:
                     - narrate "<red> ERROR: This player is not in a high security Jail."
                     - stop
-                - flag <[username]> slave_max_timer:!
+                - flag <[username]> prisoner_max_timer:!
                 - flag <[username]> owner:<[username].flag[non_max_jail]>
                 - flag <[username]> non_max_jail:!
                 - teleport <[username]> <location[<[username].flag[owner]>_spawn]>
@@ -180,35 +180,35 @@ Command_Slaves:
                 - stop
         - if <[action]> == spawn:
             - if !<cuboid[<[jail_name]>].contains_location[<player.location>]>:
-                - narrate "<red> ERROR: Stand on the jail boundary to set the slave spawn."
+                - narrate "<red> ERROR: Stand on the jail boundary to set the prisoner spawn."
                 - stop
             - note <player.location> as:<[jail_name]>_spawn
-            - narrate "<green> Slave spawn set for the jail <[name]>."
+            - narrate "<green> Prisoner spawn set for the jail <[name]>."
             - stop
         - if <[action]> == list && <context.args.size> == 3:
             - define list_page <context.args.get[3]>
-            - run List_Task_Script def:server|<[jail_name]>_slaves|Slave|<[list_page]>|true|Jail
+            - run List_Task_Script def:server|<[jail_name]>_prisoners|Prisoner|<[list_page]>|true|Jail
             - stop
         - if <[action]> == remove && <context.args.size> == 3:
             - define username <server.match_offline_player[<context.args.get[3]>]||null>
             - if <[username]> == null:
                 - narrate "<red> ERROR: Invalid player username OR the player is offline."
                 - stop
-            - if !<[username].in_group[slave]>:
-                - narrate "<red> ERROR: This player isn't a slave."
+            - if !<[username].in_group[prisoner]>:
+                - narrate "<red> ERROR: This player isn't a prisoner."
                 - stop
-            - define jail_slaves <[jail_name]>_slaves
-            - flag server <[jail_slaves]>:<-:<[username]>
+            - define jail_prisoners <[jail_name]>_prisoners
+            - flag server <[jail_prisoners]>:<-:<[username]>
             - flag <[username]> owner:!
-            - flag <[username]> slave_timer:!
+            - flag <[username]> prisoner_timer:!
             - flag <[username]> non_max_jail:!
-            - flag <[username]> slave_max_timer:!
-            - if <[username].has_flag[slave_groups]>:
-                - foreach <[username].flag[slave_groups]> as:group:
+            - flag <[username]> prisoner_max_timer:!
+            - if <[username].has_flag[prisoner_groups]>:
+                - foreach <[username].flag[prisoner_groups]> as:group:
                     - execute as_server "lp user <[username].name> parent add <[group]>" silent
-            - flag <[username]> slave_groups:!
-            - execute as_server "lp user <[username].name> parent remove slave" silent
-            - narrate "<green> Slave <blue><[username].name> <green>removed!"
+            - flag <[username]> prisoner_groups:!
+            - execute as_server "lp user <[username].name> parent remove prisoner" silent
+            - narrate "<green> Prisoner <blue><[username].name> <green>removed!"
             - stop
         - mark syntax_error
         - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax."
@@ -218,46 +218,46 @@ Slave_Script:
     debug: false
     events:
         after player respawns:
-            - if <player.in_group[slave]> && <player.has_flag[owner]>:
-                - if <player.has_flag[slave_timer]>:
+            - if <player.in_group[prisoner]> && <player.has_flag[owner]>:
+                - if <player.has_flag[prisoner_timer]>:
                     - if <server.has_flag[court_active]>:
-                        - if <server.flag[court_slave].contains_all_case_sensitive_text[<player.uuid>]>:
+                        - if <server.flag[court_prisoner].contains_all_case_sensitive_text[<player.uuid>]>:
                             - stop
                     - define owner_name_spawn <player.flag[owner]>_spawn
                     - teleport <player> <location[<[owner_name_spawn]>]>
-                    - narrate "<red> You died but you're a slave. Now you're with your owner."
+                    - narrate "<red> You died but you're a prisoner. Now you're with your owner."
                 - else:
                     - define owner <server.match_player[<player.flag[owner]>]||null>
                     - if <[owner]> != null:
                         - teleport <player> <[owner].location>
-                        - narrate "<red> You died but you're a slave. Now you're with your owner."
+                        - narrate "<red> You died but you're a prisoner. Now you're with your owner."
         on system time minutely:
             - foreach <server.online_players> as:server_player:
-                - if <[server_player].in_group[slave]> && <[server_player].has_flag[slave_timer]>:
+                - if <[server_player].in_group[prisoner]> && <[server_player].has_flag[prisoner_timer]>:
                     - if <[server_player].has_flag[owner]>:
                         - if <server.has_flag[court_active]>:
-                            - if <server.flag[court_slave].contains_all_case_sensitive_text[<[server_player].uuid>]>:
+                            - if <server.flag[court_prisoner].contains_all_case_sensitive_text[<[server_player].uuid>]>:
                                 - foreach next
                         - define owner <[server_player].flag[owner]>
-                        - flag <[server_player]> slave_timer:-:1
-                        - if <[server_player].flag[slave_timer]> <= 0.0:
-                            - execute as_server "slaves remove <[owner].after[jail_]> <[server_player].name>" silent
-                            - narrate "<green> You are free <red>SLAVE" targets:<[server_player]>
+                        - flag <[server_player]> prisoner_timer:-:1
+                        - if <[server_player].flag[prisoner_timer]> <= 0.0:
+                            - execute as_server "prisoners remove <[owner].after[jail_]> <[server_player].name>" silent
+                            - narrate "<green> You are free <red>PRISONER" targets:<[server_player]>
                             - stop
                     - if <[server_player].has_flag[non_max_jail]>:
-                        - flag <[server_player]> slave_max_timer:+:1
-                        - if <[server_player].flag[slave_max_timer]> >= <script[Slaves_Config].data_key[slave_max_timer]>:
-                            - flag <[server_player]> slave_max_timer:!
+                        - flag <[server_player]> prisoner_max_timer:+:1
+                        - if <[server_player].flag[prisoner_max_timer]> >= <script[Slaves_Config].data_key[prisoner_max_timer]>:
+                            - flag <[server_player]> prisoner_max_timer:!
                             - flag <[server_player]> owner:<[server_player].flag[non_max_jail]>
                             - flag <[server_player]> non_max_jail:!
                             - teleport <[server_player]> <location[<[server_player].flag[owner]>_spawn]>
-                            - narrate "<green> You are free <red>SLAVE <green>of the max security jail" targets:<[server_player]>
+                            - narrate "<green> You are free <red>PRISONER <green>of the max security jail" targets:<[server_player]>
                         - else:
-                            - define time_remaining <script[Slaves_Config].data_key[slave_max_timer].sub[<[server_player].flag[slave_max_timer]>]>
-                            - actionbar "<red> SLAVE: <green>Your time remaining in the max security jail is: <yellow><[time_remaining]> minutes" targets:<[server_player]>
+                            - define time_remaining <script[Slaves_Config].data_key[prisoner_max_timer].sub[<[server_player].flag[prisoner_max_timer]>]>
+                            - actionbar "<red> PRISONER: <green>Your time remaining in the max security jail is: <yellow><[time_remaining]> minutes" targets:<[server_player]>
         on command:
             - if <context.source_type> == PLAYER:
-                - if <player.in_group[slave]> && <player.has_flag[slave_timer]>:
+                - if <player.in_group[prisoner]> && <player.has_flag[prisoner_timer]>:
                     - if <context.command> == tpa:
                         - determine FULFILLED
                     - if <context.args.size> < 1:
@@ -266,7 +266,7 @@ Slave_Script:
                         - if <context.args.get[1]> == spawn:
                             - determine FULFILLED
 
-slave_pickaxe:
+prisoner_pickaxe:
     type: item
     debug: false
     material: iron_pickaxe
@@ -274,9 +274,9 @@ slave_pickaxe:
         repair_cost: 99
         hides: attributes|enchants
         enchantments: unbreaking,3
-    display name: <red>Slave Pickaxe
+    display name: <red>Prisoner Pickaxe
     lore:
         - <gray>Mine with this
-        - <gray>pickaxe... <red>SLAVE!
+        - <gray>pickaxe... <red>PRISONER!
         - <gray>Your resources are
         - <gray>the jail resources.

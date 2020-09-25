@@ -9,7 +9,7 @@
 # @author devnodachi
 # @date 2020/09/19
 # @denizen-build REL-1714
-# @dependency devnodachi/slaves
+# @dependency devnodachi/prisoners
 #
 
 Marry_Command_Script:
@@ -86,7 +86,7 @@ Marry_Script:
                 - wait 3s
                 - if <player.is_online>:
                     - flag <player> marry_jail:!
-                    - execute as_server "slaves add <player.flag[marry].as_player.flag[marry_jail].after[jail_]> <player.name>" silent
+                    - execute as_server "prisoners add <player.flag[marry].as_player.flag[marry_jail].after[jail_]> <player.name>" silent
                     - narrate "<white> Your couple is in <red>JAIL<white>... Welcome to your new <green>HOME<white>."
 
 MarryInfo_Command_Script:

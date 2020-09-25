@@ -2,8 +2,8 @@ Player_Lead_Config:
     type: data
     groups:
         supremewarden:
-            - slave
+            - prisoner
         godvip:
-            - slave
+            - prisoner
         labordep:
             - worker

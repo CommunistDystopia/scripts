@@ -15,7 +15,7 @@ Townless_Player_Script:
     debug: false
     events:
         on player respawns:
-            - if !<player.in_group[slave]>:
+            - if !<player.in_group[prisoner]>:
                 - if <player.town||null> == null:
                     - if !<player.in_group[outlaw]>:
                         - group add outlaw

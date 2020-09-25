@@ -33,7 +33,7 @@
 # - A SupremeWarden must add himself to a jail as a soldier
 # - If a Soldier/SupremeWarden with a Jail linked kills a Insurgent, he revives in jail
 # Player flags created here
-# - slave_timer [Used in Jails, Slaves]
+# - prisoner_timer [Used in Jails, Slaves]
 # - owner [Used in Jails, Slaves]
 # - soldier_jail [Used in Jails]
 # Notables created here
@@ -278,7 +278,7 @@ jailstick:
     display name: <blue>Jailstick
     lore:
         - <gray>Defend your country <blue>SOLDIER!
-        - <gray>Use this to make someone a slave
+        - <gray>Use this to make someone a prisoner
         - <gray>in the jail that you belong.
         - <red>Lost on death
 
@@ -293,8 +293,8 @@ guard_sword:
         - vanishing_curse:1
     display name: <blue>Guard Sword
     lore:
-        - <gray>Only does damage to slaves.
-        - <gray>Kill a slave to send them to
+        - <gray>Only does damage to prisoners.
+        - <gray>Kill a prisoner to send them to
         - <gray>the max security jail.
         - <red>Lost on death
 
@@ -316,13 +316,13 @@ Soldier_Script:
                 - flag <player> soldier_jail:<server.flag[default_soldier_jail]>
                 - flag server <server.flag[default_soldier_jail]>_soldiers:|:<player>
             - define jail <player.flag[soldier_jail]>
-            - if <context.entity.in_group[slave]>:
-                - if !<context.entity.has_flag[slave_timer]> || <context.entity.flag[owner]> != <[jail]>:
-                    - narrate "<red> ERROR: This slave is property of someone!"
+            - if <context.entity.in_group[prisoner]>:
+                - if !<context.entity.has_flag[prisoner_timer]> || <context.entity.flag[owner]> != <[jail]>:
+                    - narrate "<red> ERROR: This prisoner is property of someone!"
                     - stop
-                - flag <context.entity> slave_timer:+:<script[Slaves_Config].data_key[slave_timer]>
-                - narrate "<green> Slave: <red><context.entity.name> <green>time extended by <blue><script[Slaves_Config].data_key[slave_timer]> minutes"
-                - narrate "<red> Your time got extended by <yellow><script[Slaves_Config].data_key[slave_timer]> minutes <red>SLAVE" targets:<context.entity>
+                - flag <context.entity> prisoner_timer:+:<script[Slaves_Config].data_key[prisoner_timer]>
+                - narrate "<green> Prisoner: <red><context.entity.name> <green>time extended by <blue><script[Slaves_Config].data_key[prisoner_timer]> minutes"
+                - narrate "<red> Your time got extended by <yellow><script[Slaves_Config].data_key[prisoner_timer]> minutes <red>PRISONER" targets:<context.entity>
                 - cooldown 10s script:Soldier_Script
                 - stop
             - if <context.entity.in_group[insurgent]> || <context.entity.in_group[civilian]> || <context.entity.in_group[default]> || <context.entity.in_group[vip]> || <context.entity.in_group[ultravip]> || <context.entity.in_group[supremevip]> || <context.entity.in_group[godvip]>:
@@ -338,7 +338,7 @@ Soldier_Script:
                 - cooldown 10s script:Soldier_Script
         on player damages player with:guard_sword:
             - if <context.damager.has_flag[soldier_jail]>:
-                - if <context.entity.in_group[slave]> && <context.entity.has_flag[slave_timer]>:
+                - if <context.entity.in_group[prisoner]> && <context.entity.has_flag[prisoner_timer]>:
                     - stop
             - determine cancelled
         on player kills player:
@@ -349,33 +349,33 @@ Soldier_Script:
                     - flag <context.damager> soldier_jail:<server.flag[default_soldier_jail]>
                 - else:
                     - stop
-            - if <context.entity.in_group[slave]>:
+            - if <context.entity.in_group[prisoner]>:
                 - define killer_item <context.damager.inventory.slot[<context.damager.held_item_slot>]>
                 - if <[killer_item].has_script> && <[killer_item].script.name.contains_all_text[guard_sword]>:
-                    - if <context.entity.has_flag[slave_timer]>:
+                    - if <context.entity.has_flag[prisoner_timer]>:
                         - if <context.entity.has_flag[non_max_jail]>:
-                            - flag <context.entity> slave_max_timer:-:<script[Slaves_Config].data_key[slave_max_timer]>
+                            - flag <context.entity> prisoner_max_timer:-:<script[Slaves_Config].data_key[prisoner_max_timer]>
                             - stop
                         - if <context.entity.has_flag[owner]>:
-                            - execute as_server "slaves addmax <script[Soldiers_Config].data_key[max_security_jail]> <context.entity.name>" silent
+                            - execute as_server "prisoners addmax <script[Soldiers_Config].data_key[max_security_jail]> <context.entity.name>" silent
                             - stop
                 - stop
             - if !<context.damager.is_op> && !<context.damager.in_group[supremewarden]> && !<context.damager.in_group[soldier]> && !<context.damager.in_group[general]>:
                 - stop
             - define jail <context.damager.flag[soldier_jail]>
-            - define jail_slaves <[jail]>_slaves
+            - define jail_prisoners <[jail]>_prisoners
             - define jail_wanted <[jail]>_wanteds
             - if <server.has_flag[<[jail_wanted]>]>:
                 - if <server.flag[<[jail_wanted]>].find[<context.entity>]> != -1:
                     - flag server <[jail_wanted]>:<-:<context.entity>
                     - if <context.entity.has_flag[marry]>:
                         - flag <context.entity.flag[marry].as_player> marry_jail:<[jail]>
-                    - execute as_server "slaves add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
+                    - execute as_server "prisoners add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
                     - stop
             - if <context.entity.in_group[insurgent]>:
                 - if <context.entity.has_flag[marry]>:
                     - flag <context.entity.flag[marry].as_player> marry_jail:<[jail]>
-                - execute as_server "slaves add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
+                - execute as_server "prisoners add <context.damager.flag[soldier_jail].after[jail_]> <context.entity.name>" silent
                 - stop
     # thanks to @mcmonkey for the idea
         on player drops jailstick:
