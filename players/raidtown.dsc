@@ -77,12 +77,12 @@ Command_Raid_Town:
                     - stop
                 - if <[action]> == permission:
                     - if !<[username].has_permission[raid.start]>:
-                        - execute as_server "lp user <[username].name> permission set raid.start" silent
+                        - permission add raid.start player:<[username]>
                         - flag <[username]> raid_points:1
                         - narrate "<green> Added the permission <yellow>raid.start <green>to <blue><[username].name><green>. The user have <yellow>1 <green>raid point by default."
                         - narrate "<blue> <player.name> <green>added the <yellow>raid.start <green>permission to you!" targets:<[username]>
                         - stop
-                    - execute as_server "lp user <[username].name> permission unset raid.start" silent
+                    - permission remove raid.start player:<[username]>
                     - flag <[username]> raid_points:!
                     - narrate "<green> Removed the permission <red>raid.start <green>to <blue><[username].name>"
                     - narrate "<blue> <player.name> <green>removed the <red>raid.start <green>permission to you!" targets:<[username]>

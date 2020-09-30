@@ -78,7 +78,7 @@ Written_Exam_Task:
             - flag <player> college_current_stage:++
             - execute as_player "college <[target]>"
         - else:
-            - execute as_server "lp user <player.name> parent add <player.flag[college_current_exam]>"
+            - group add <player.flag[college_current_exam]>
             - teleport <player> <location[<player.flag[college_current_exam]>_college_spawn]>
             - narrate "<green> ! -> CONGRATULATIONS to <yellow><player.name> <green>for graduating as <yellow><player.flag[college_current_exam].to_titlecase>" targets:<server.online_players>
             - narrate "<green> ! -> <white>It's time to <red>work <white>and get some <green>money"

@@ -58,9 +58,9 @@ Command_Slavevip:
             - flag <[prisoner]> owner:!
             - if <[prisoner].has_flag[prisoner_groups]>:
                 - foreach <[prisoner].flag[prisoner_groups]> as:group:
-                    - execute as_server "lp user <[prisoner].name> parent add <[group]>" silent
+                    - group add <[group]> player:<[prisoner]>
             - flag <[prisoner]> prisoner_groups:!
-            - execute as_server "lp user <[prisoner].name> parent remove prisoner" silent
+            - group remove prisoner player:<[prisoner]>
             - narrate "<green> The prisoner <red><[prisoner].name> <green>is now free!"
             - stop
         - mark syntax_error

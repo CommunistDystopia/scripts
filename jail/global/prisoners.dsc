@@ -141,7 +141,7 @@ Command_Slaves:
             - flag <[username]> criminal_record:|:<[record]>
             - if !<[username].groups.is_empty>:
                 - flag <[username]> prisoner_groups:|:<[username].groups>
-            - execute as_server "lp user <[username].name> parent set prisoner" silent
+            - group add prisoner player:<[username]>
             - if <[username].is_online>:
                 - teleport <[username]> <location[<[jail_spawn]>]>
                 - narrate "<green> Welcome to the jail <red>PRISONER!" targets:<[username]>
@@ -205,9 +205,9 @@ Command_Slaves:
             - flag <[username]> prisoner_max_timer:!
             - if <[username].has_flag[prisoner_groups]>:
                 - foreach <[username].flag[prisoner_groups]> as:group:
-                    - execute as_server "lp user <[username].name> parent add <[group]>" silent
+                    - group add <[group]> player:<[username]>
             - flag <[username]> prisoner_groups:!
-            - execute as_server "lp user <[username].name> parent remove prisoner" silent
+            - group remove prisoner player:<[username]>
             - narrate "<green> Prisoner <blue><[username].name> <green>removed!"
             - stop
         - mark syntax_error

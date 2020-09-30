@@ -55,7 +55,7 @@ Command_Labordep:
                 - if <[username].in_group[<[job]>]>:
                     - narrate "<red> ERROR: <yellow><[username].name> <red>has a job."
                     - stop
-            - execute as_server "lp user <[username].name> parent add worker"
+            - group add worker player:<[username]>
             - narrate "<green> You were selected for labour under <yellow><player.name>'s authority." targets:<[username]>
             - teleport <[username]> <player.location>
             - narrate "<yellow> <[username].name> <green>is ready to work and teleported to you."

@@ -263,7 +263,7 @@ Soldier_College_Reward_Task:
     type: task
     debug: false
     script:
-        - execute as_server "lp user <player.name> parent add <player.flag[college_current_exam]>"
+        - group add <player.flag[college_current_exam]>"
         - teleport <player> <location[<player.flag[college_current_exam]>_college_spawn]>
         - narrate "<green> ! -> CONGRATULATIONS to <yellow><player.name> <green>for graduating as <yellow><player.flag[college_current_exam].to_titlecase>" targets:<server.online_players>
         - narrate "<green> ! -> <white>It's time to <red>work <white>and get some <green>money"
