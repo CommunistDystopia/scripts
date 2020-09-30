@@ -185,8 +185,8 @@ Command_Slaves:
             - note <player.location> as:<[jail_name]>_spawn
             - narrate "<green> Prisoner spawn set for the jail <[name]>."
             - stop
-        - if <[action]> == list && <context.args.size> == 3:
-            - define list_page <context.args.get[3]>
+        - if <[action]> == list:
+            - define list_page <context.args.get[3]||null>
             - run List_Task_Script def:server|<[jail_name]>_prisoners|Prisoner|<[list_page]>|true|Jail
             - stop
         - if <[action]> == remove && <context.args.size> == 3:
