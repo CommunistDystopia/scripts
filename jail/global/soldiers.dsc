@@ -120,9 +120,7 @@ Command_Soldier_Admin:
             - narrate "<blue> <[name]> <green>is now the default jail of the soldiers!"
             - stop
         - if <[action]> == list:
-            - if <context.args.size> < 3:
-                - goto syntax_error
-            - define list_page <context.args.get[3]>
+            - define list_page <context.args.get[3]||null>
             - run List_Task_Script def:server|<[jail_name]>_soldiers|Soldier|<[list_page]>|true|Jail
             - stop
         - if <[action]> == wanted:
@@ -241,13 +239,13 @@ Command_Soldier:
             - narrate "<red> ERROR: Jail <[jail_name].after[jail_]> doesn't exist."
             - stop
         - if <[action]> == wanted:
-            - if <context.args.size> < 3:
-                - goto syntax_error
             - define secondary_action <context.args.get[2]>
             - if <[secondary_action]> == list:
-                - define list_page <context.args.get[3]>
-                - run List_Task_Script def:server|<[jail_name]>_wanteds|Wanted|<[list_page]>|Jail
+                - define list_page <context.args.get[3]||null>
+                - run List_Task_Script def:server|<[jail_name]>_wanteds|Wanted|<[list_page]>|true|Jail
                 - stop
+            - if <context.args.size> < 3:
+                - goto syntax_error
             - if <[secondary_action]> == add:
                 - define username <server.match_offline_player[<context.args.get[3]>]||null>
                 - if <[username]> == null:

@@ -86,7 +86,7 @@ Command_Jail:
             - narrate "<green> With <red>/prisoners spawn <yellow>jailname"
             - stop
         - if <[action]> == list:
-            - define list_page <context.args.get[2]>
+            - define list_page <context.args.get[2]||null>
             - run List_Task_Script def:server|prison_jails|Jail|<[list_page]>|false
             - stop
         - if <[action]> == delete:
