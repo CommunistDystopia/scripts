@@ -78,9 +78,9 @@ BorderPrisoner_Task:
             - flag server <[town]>_border_prisoners:<-:<[username]>
             - flag <[username]> border_prisoner:!
             - flag <[username]> border_prisoner_timer:!
-            - narrate "<green> Prisoner <yellow><[username].name> <red>removed <green>from the jail of the border <yellow><[town]>"
+            - narrate "<green> Prisoner <yellow><[username].name> <red>removed <green>from the jail of the border"
             - if <[username].is_online>:
-                - narrate "<yellow>[<[town]>] <white>You are free of the border jail!" targets:<[username]>
+                - narrate "<yellow>[Border] <white>You are free of the border jail!" targets:<[username]>
             - stop
         - narrate "<red>ERROR: <white>Syntax error. Follow the command syntax."
 
@@ -101,7 +101,7 @@ BorderPrisoner_Script:
                 - if <[server_player].flag[border_prisoner_timer]> == 0:
                     - flag server <[server_player].flag[border_prisoner]>_border_prisoners:<-:<[server_player]>
                     - flag <[server_player].as_player> border_prisoner_timer:!
-                    - narrate "<yellow>[<[server_player].flag[border_prisoner]>] <white>You are free of the border jail!" targets:<[server_player]>
+                    - narrate "<yellow>[Border] <white>You are free of the border jail!" targets:<[server_player]>
                     - flag <[server_player].as_player> border_prisoner:!
         on command:
             - if <context.source_type> == PLAYER:

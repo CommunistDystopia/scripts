@@ -76,15 +76,15 @@ BorderWanted_Task:
                 - narrate "<red> ERROR: <white>The player is the Mayor. What are you doing!?"
                 - stop
             - if <server.has_flag[<[town]>_border_wanteds]> && <server.flag[<[town]>_border_wanteds].contains[<[username]>]>:
-                - narrate "<red> ERROR: <white>The player is a wanted of the town border"
+                - narrate "<red> ERROR: <white>The player is a wanted of the border"
                 - stop
             - flag server <[town]>_border_wanteds:|:<[username]>
-            - narrate "<green> Player <yellow><[username].name> <green>added as a Wanted of the town border <yellow><[town]>"
+            - narrate "<green> Player <yellow><[username].name> <green>added as a Wanted of the border"
             - stop
         - if <[action]> == remove:
             - flag server <[town]>_border_wanteds:<-:<[username]>
-            - narrate "<green> Player <yellow><[username].name> <red>removed <green>as a Wanted of the town border <yellow><[town]>"
+            - narrate "<green> Player <yellow><[username].name> <red>removed <green>as a Wanted of the border"
             - if <[username].is_online>:
-                - narrate "<yellow>[<[town]>] <white>You were <red>removed <white>from the Border Wanteds!"
+                - narrate "<yellow>[Border] <white>You were <red>removed <white>from the Border Wanteds!"
             - stop
         - narrate "<red>ERROR: <white>Syntax error. Follow the command syntax."

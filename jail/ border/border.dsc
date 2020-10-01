@@ -51,7 +51,7 @@ Command_Border:
                 - stop
             - flag server <[town]>_border:region_<[blocksec]>
             - narrate "<green> The area has been marked as a town border of the town <yellow><[town]>"
-            - narrate "<white> Do <yellow>/border spawn <white>inside the area to set the spawn of the border"
+            - narrate "<white> Do <yellow>/border [town] spawn <white>inside the area to set the spawn of the border"
             - stop
         - if <[action]> == remove:
             - if !<server.has_flag[<[town]>_border]>:
