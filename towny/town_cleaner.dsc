@@ -16,6 +16,5 @@ TownCleaner_Script:
     events:
         on ta command:
             - if <context.args.size> == 3 && <context.args.get[3]> == delete:
-                - execute as_server "border <context.args.get[2]> remove"
                 - execute as_server "townjail <context.args.get[2]> remove"
                 - narrate "<red> The town <yellow><context.args.get[2]> <red>data has been removed..."
