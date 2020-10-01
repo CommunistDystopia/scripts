@@ -14,12 +14,21 @@ Townless_Player_Script:
     type: world
     debug: false
     events:
-        on player respawns:
+        on player dies in:region_puertospawn:
+            - if <player.has_town> && <player.town.name> == puerto_bayamos:
+                - flag <player> puerto_bayamos_border:true
+        after player respawns:
+            - if <location[puerto_bayamos_border_spawn]||null> == null || <location[townless_spawn]||null> == null:
+                - narrate "<red> ERROR: <white> The townless or puerto bayamos border spawn point doesn't exist. Open a ticket in Discord for help."
+                - stop
             - if !<player.in_group[prisoner]>:
-                - if <player.town||null> == null:
+                - if <player.has_flag[puerto_bayamos_border]>:
+                    - flag <player> puerto_bayamos_border:!
+                    - teleport <player> <location[puerto_bayamos_border_spawn]>
+                - if !<player.has_town>:
                     - if !<player.in_group[outlaw]>:
                         - group add outlaw
-                    - determine <location[townless_spawn]>
+                    - teleport <player> <location[townless_spawn]>
                 - else:
                     - if <player.in_group[outlaw]>:
                         - group remove outlaw
