@@ -217,7 +217,7 @@ Slave_Script:
     type: world
     debug: false
     events:
-        after player respawns:
+        after player respawns priority:-1:
             - if <player.in_group[prisoner]> && <player.has_flag[owner]>:
                 - if <player.has_flag[prisoner_timer]>:
                     - if <server.has_flag[court_active]>:
