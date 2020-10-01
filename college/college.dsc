@@ -92,8 +92,9 @@ College_Script:
                 - stop
             - determine cancelled
         after player logs in for the first time:
-            - ~yaml load:data/college/config.yml id:college_data
-            - flag <player> college_lock_timer:<yaml[college_data].read[college_lock_timer]>
+            - if <server.has_file[data/college/config.yml]>:
+                - ~yaml load:data/college/config.yml id:college_data
+                - flag <player> college_lock_timer:<yaml[college_data].read[college_lock_timer]>
         on system time minutely:
             - foreach <server.online_players> as:server_player:
                 - if <[server_player].has_flag[college_lock_timer]>:
