@@ -103,6 +103,20 @@ cuboid_tool_status_task:
     - playeffect effect:flame at:<[cuboid].shell> offset:0 targets:<player>
     - playeffect effect:barrier at:<[cuboid].outline> offset:0 targets:<player>
 
+cuboid_show_task:
+    type: task
+    debug: false
+    definitions: cuboid
+    script:
+    - define min "<aqua><[cuboid].min.xyz.replace[,].with[<gray>, <aqua>]><green>"
+    - define max "<aqua><[cuboid].max.xyz.replace[,].with[<gray>, <aqua>]><green>"
+    - define size "<aqua><[cuboid].size.xyz.replace[,].with[<gray>, <aqua>]><green>"
+    - define volume <aqua><[cuboid].volume><green>
+    - define message "<green>Cuboid selection: from <[min]> to <[max]> (size <[size]>, volume <[volume]>)"
+    - narrate <[message]>
+    - playeffect effect:flame at:<[cuboid].shell> offset:0 targets:<player>
+    - playeffect effect:barrier at:<[cuboid].outline> offset:0 targets:<player>
+
 cuboid_tool_world:
     type: world
     debug: false
