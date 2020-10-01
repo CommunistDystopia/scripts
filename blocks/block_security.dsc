@@ -7,12 +7,13 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/02
+# @date 2020/10/01
 # @denizen-build REL-1714
 # @dependency mcmonkey/cuboid_tool
 #
 # Commands
 # /blocksecurity create <name>
+# /blocksecurity check <name>
 # /blocksecurity delete <name>
 # /blocksecurity list <#>
 # After selecting with the cuboid tool, save the region with this name.
@@ -33,21 +34,21 @@ Block_Security_Command:
             - stop
         - choose <context.args.size>:
             - case 0:
-                - determine <list[create|delete|list]>
+                - determine <list[create|delete|list|check]>
             - case 1:
                 - if "!<context.raw_args.ends_with[ ]>":
-                    - determine <list[create|delete|list].filter[starts_with[<context.args.first>]]>
+                    - determine <list[create|delete|list|check].filter[starts_with[<context.args.first>]]>
     script:
     - if !<player.is_op||<context.server>>:
         - narrate "<red>You do not have permission for that command."
         - stop
+    - define action <context.args.get[1]>
+    - if <[action]> == list:
+        - run List_Task_Script def:server|block_security_regions|Region|<context.args.get[2]||null>|false
+        - stop
     - if <context.args.size> < 2:
         - goto syntax_error
-    - define action <context.args.get[1]>
     - define value <context.args.get[2]>
-    - if <[action]> == list:
-        - run List_Task_Script def:server|block_security_regions|Region|<[value]>|false
-        - stop
     - if <[action]> == create:
         - if !<player.has_flag[ctool_selection]>:
             - narrate "<red> ERROR: You don't have any region selected."
@@ -61,6 +62,13 @@ Block_Security_Command:
         - narrate "<green>Block Security Region <aqua><[value]><green> added with <[message]>."
         - flag <player> ctool_selection:!
         - stop
+    - if <[action]> == check:
+        - if <cuboid[region_<[value]>]||null> == null:
+            - narrate "<red> ERROR: That block security region doesn't exist"
+            - stop
+        - narrate "<green> Loading region data..."
+        - ~run cuboid_show_task def:<cuboid[region_<[value]>]>
+        - stop
     - if <[action]> == delete:
         - if <cuboid[region_<[value]>]||null> == null:
             - narrate "<red> ERROR: That block security region doesn't exist"
@@ -70,11 +78,8 @@ Block_Security_Command:
         - narrate "<green> Block Security Region <red><[value]> <green>removed"
         - stop
     - mark syntax_error
-    - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax:"
-    - narrate "<yellow>-<white> To create a block security region: /blocksecurity create <yellow>name"
-    - narrate "<yellow>-<white> To delete a block security region: /blocksecurity delete <yellow>name"
-    - narrate "<yellow>-<white> To list the block security regions: /blocksecurity list"
-    
+    - narrate "<yellow>#<red> ERROR: Syntax error. Follow the command syntax."
+
 Block_Security_Script:
     type: world
     debug: false
