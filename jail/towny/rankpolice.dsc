@@ -124,10 +124,10 @@ RankPolice_Script:
             - if !<context.damager.has_town>:
                 - stop
             - define town <context.damager.town.name>
-            - if !<server.has_flag[<[town]>_townjail_wanteds]>:
-                - stop
             - if <context.damager.town.mayor> == <context.damager> || <context.damager.has_permission[townjail.rankpolice.arrest]>:
-                - if <server.flag[<[town]>_townjail_wanteds].contains[<context.entity>]>:
+                - if <server.has_flag[<[town]>_townjail_prisoners]> && <server.flag[<[town]>_townjail_prisoners].contains[<context.entity>]>:
+                    - stop
+                - if <server.has_flag[<[town]>_townjail_wanteds]> && <server.flag[<[town]>_townjail_wanteds].contains[<context.entity>]>:
                     - flag server <[town]>_townjail_wanteds:<-:<context.entity>
                     - flag server <[town]>_townjail_prisoners:|:<context.entity>
                     - flag <context.entity> townjail_prisoner_timer:600

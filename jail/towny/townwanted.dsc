@@ -75,6 +75,9 @@ TownWanted_Task:
             - if <[username]> == <town[<[town]>].mayor>:
                 - narrate "<red> ERROR: <white>The player is the Mayor. What are you doing!?"
                 - stop
+            - if <server.has_flag[<[town]>_townjail_prisoners]> && <server.flag[<[town]>_townjail_prisoners].contains[<[username]>]>:
+                - narrate "<red> ERROR: <white>The player is a prisoner of the town"
+                - stop
             - if <server.has_flag[<[town]>_townjail_wanteds]> && <server.flag[<[town]>_townjail_wanteds].contains[<[username]>]>:
                 - narrate "<red> ERROR: <white>The player is a wanted of the town"
                 - stop
