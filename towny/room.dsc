@@ -183,17 +183,14 @@ TownRoom_Task_Script:
             - if !<player.has_flag[ctool_selection]>:
                 - narrate "<red> ERROR: <white>You don't have any area selected for the room"
                 - stop
-            - if !<player.flag[ctool_selection].as_cuboid.has_town>:
-                - narrate "<red> ERROR: <white>The area selected doesn't contain the town <[town]>"
-                - stop
-            - else:
-                - if <player.flag[ctool_selection].as_cuboid.list_towns.parse[name].filter[contains_all_text[<[town]>]].size> != 1:
-                    - narrate "<red> ERROR: <white>You are selecting multiple towns. Please pick an area within the town <[town]> for the room"
+            - define ctool_chunks_cuboid <player.flag[ctool_selection].as_cuboid.partial_chunks.parse[cuboid]>
+            - foreach <[ctool_chunks_cuboid]> as:cuboid:
+                - if !<[cuboid].as_cuboid.has_town>:
+                    - narrate "<red> ERROR: <white>You can't make a jail in the wilderness!"
                     - stop
-                - else:
-                    - if !<player.flag[ctool_selection].as_cuboid.min.has_town> || !<player.flag[ctool_selection].as_cuboid.max.has_town>:
-                        - narrate "<red> ERROR: <white>The area selected should contain only the town <[town]>"
-                        - stop
+                - if <[cuboid].as_cuboid.has_town> && <[cuboid].as_cuboid.list_towns.parse[name].exclude[<[town]>].size> > 0:
+                    - narrate "<red> ERROR: <white>Your town should be the only one selected!"
+                    - stop
             - note <player.flag[ctool_selection]> as:<[town]>_Rooms_<[target]>
             - inject cuboid_tool_status_task
             - flag <player> ctool_selection:!
