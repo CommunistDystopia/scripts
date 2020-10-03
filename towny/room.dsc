@@ -1,6 +1,6 @@
 # +----------------------
 # |
-# | TOWNROOMS
+# | ROOMS
 # |
 # | Rooms in Towny towns.
 # |
@@ -20,27 +20,27 @@
 # [TownName]_Rooms_Tax - The default tax of the rooms in a town.
 # [TownName]_Rooms_Limit - The limit of players per room in a town.
 # - Commands
-# /townrooms create [room_name] - Selected with ctool.
-# /townrooms delete [room_name]
-# /townrooms tax (room_name) [amount]
-# /townrooms set [room_name] [username]
-# /townrooms kick [room_name] [username]
-# /townrooms price [room_name] [amount]
-# /townrooms toggle [room_name] - If the room can be sellable. [Default: false]
-# /townrooms info [room_name] - List all the players living in that room.
-# /townrooms list - List all the rooms in a town.
-# /townrooms list - List all the rooms in a town.
+# /rooms create [room_name] - Selected with ctool.
+# /rooms delete [room_name]
+# /rooms tax (room_name) [amount]
+# /rooms set [room_name] [username]
+# /rooms kick [room_name] [username]
+# /rooms price [room_name] [amount]
+# /rooms toggle [room_name] - If the room can be sellable. [Default: false]
+# /rooms info [room_name] - List all the players living in that room.
+# /rooms list - List all the rooms in a town.
+# /rooms list - List all the rooms in a town.
 # ---
 # () = optional
 # [] = required
 # --
 
-Command_AdminTownRoom:
+Command_AdminRoom:
     type: command
     debug: false
-    name: atownrooms
+    name: arooms
     description: Minecraft Towny Rooms [Admin] system.
-    usage: /atownrooms
+    usage: /arooms
     tab complete:
         - choose <context.args.size>:
             - case 0:
@@ -48,7 +48,7 @@ Command_AdminTownRoom:
             - case 1:
                 - if "!<context.raw_args.ends_with[ ]>":
                     - determine <list[list|tax|create|delete|set|kick|info|toggle|price|limit].filter[starts_with[<context.args.first>]]>
-    permission: townroom.all
+    permission: room.all
     aliases:
         - atrooms
     script:
@@ -61,14 +61,14 @@ Command_AdminTownRoom:
             - stop
         - define action <context.args.get[2]>
         - define args_used:1
-        - inject TownRoom_Task_Script
+        - inject Room_Task_Script
 
-Command_TownRoom:
+Command_Room:
     type: command
     debug: false
-    name: townrooms
+    name: rooms
     description: Minecraft Towny Rooms system.
-    usage: /townrooms
+    usage: /rooms
     tab complete:
         - if <player.has_town>:
             - define rooms <empty>
@@ -100,7 +100,7 @@ Command_TownRoom:
                             - determine <list[sell|build|destroy]>
                         - else:
                             - determine <server.online_players.parse[name]>
-    permission: townroom.town
+    permission: room.town
     aliases:
         - trooms
     script:
@@ -113,9 +113,9 @@ Command_TownRoom:
             - narrate "<red> ERROR: <white>You don't belong to a Town."
             - stop
         - define args_used:0
-        - inject TownRoom_Task_Script
+        - inject Room_Task_Script
 
-TownRoom_Task_Script:
+Room_Task_Script:
     type: task
     debug: false
     script:
@@ -124,13 +124,13 @@ TownRoom_Task_Script:
                 - narrate "<white> The town <yellow><[town]> <white>have <red>0 rooms"
                 - stop
             - if <server.flag[<[town]>_Rooms].size> < 10:
-                - run List_Task_Script def:server|<[town]>_Rooms|Room|0|false|server|<[town]>_Rooms
+                - run List_Task_Script def:server|<[town]>_Rooms|Room|0|false|server|<[town]>_Rooms_
             - else:
                 - if <context.args.size> < <[args_used].add[2]>:
                     - narrate "<red>ERROR: <white>ERROR: Not enough arguments. Follow the command syntax."
                     - stop
                 - define list_page <context.args.get[<[args_used].add[2]>]>
-                - run List_Task_Script def:server|<[town]>_Rooms|Room|<[list_page]>|false|server|<[town]>_Rooms
+                - run List_Task_Script def:server|<[town]>_Rooms|Room|<[list_page]>|false|server|<[town]>_Rooms_
             - stop
         - if <context.args.size> < <[args_used].add[2]>:
             - narrate "<red>ERROR: <white>ERROR: Not enough arguments. Follow the command syntax."
@@ -153,13 +153,14 @@ TownRoom_Task_Script:
                 - narrate "<green> The new <yellow>Tax <green>for the room <yellow><[target]> <green>in <yellow><[town]> <green>will be <yellow>$<[tax]>"
                 - stop
         - if <[action]> == limit:
-            - if !<[target].is_integer>:
+            - define limit <context.args.get[<[args_used].add[2]>]>
+            - if !<[limit].is_integer>:
                 - narrate "<red> ERROR: <white>The limit should be a integer number."
                 - stop
-            - if <[target]> < 1:
+            - if <[limit]> < 1:
                 - narrate "<red> ERROR: <white>The limit should be at least 1."
                 - stop
-            - flag server <[town]>_Rooms_Limit:<[target]>
+            - flag server <[town]>_Rooms_Limit:<[limit]>
             - narrate "<green> The new <yellow>Limit <green>of players per room <green>in <yellow><[town]> <green>will be <yellow><[target]>"
             - stop
         - if <[action]> == create:
@@ -168,11 +169,11 @@ TownRoom_Task_Script:
                 - stop
             - if !<server.has_flag[<[town]>_Rooms_Tax]>:
                 - flag server <[town]>_Rooms_Tax:0
-                - narrate "<green> The tax of the rooms is set to <yellow>0<green>. To change it do <yellow>/townrooms tax [number]"
+                - narrate "<green> The tax of the rooms is set to <yellow>0<green>. To change it do <yellow>/rooms tax [number]"
                 - narrate "<white> The tax is configured the first time you (try to) create a room by default"
             - if !<server.has_flag[<[town]>_Rooms_Limit]>:
                 - flag server <[town]>_Rooms_Limit:1
-                - narrate "<green> The limit of players per room is set to <yellow>1<green>. To change it do <yellow>/townrooms limit [number]"
+                - narrate "<green> The limit of players per room is set to <yellow>1<green>. To change it do <yellow>/rooms limit [number]"
                 - narrate "<white> The limit of players is configured the first time you (try to) create a room by default"
             - if <[target].contains_any[_|prison|jail|region|room|null]>:
                 - narrate "<red> ERROR: <white>Invalid room name. To avoid conflicts with other plugins don't use that name."
@@ -186,7 +187,7 @@ TownRoom_Task_Script:
             - define ctool_chunks_cuboid <player.flag[ctool_selection].as_cuboid.partial_chunks.parse[cuboid]>
             - foreach <[ctool_chunks_cuboid]> as:cuboid:
                 - if !<[cuboid].as_cuboid.has_town>:
-                    - narrate "<red> ERROR: <white>You can't make a jail in the wilderness!"
+                    - narrate "<red> ERROR: <white>You can't make a room in the wilderness!"
                     - stop
                 - if <[cuboid].as_cuboid.has_town> && <[cuboid].as_cuboid.list_towns.parse[name].exclude[<[town]>].size> > 0:
                     - narrate "<red> ERROR: <white>Your town should be the only one selected!"
@@ -219,7 +220,7 @@ TownRoom_Task_Script:
                 - narrate "<red> ERROR: <white>The price should be a number."
                 - stop
             - flag server <[town]>_Rooms_<[target]>:<server.flag[<[town]>_Rooms_<[target]>].as_map.with[price].as[<[price]>]>
-            - narrate "<green> The new <yellow>Price <green>for the room <yellow><[target]> <green>in <yellow><[town]> <green>will be <yellow>$<[amount]>"
+            - narrate "<green> The new <yellow>Price <green>for the room <yellow><[target]> <green>in <yellow><[town]> <green>will be <yellow>$<[price]>"
             - stop
         - if <[action]> == toggle:
             - if <cuboid[<[town]>_Rooms_<[target]>]||null> == null:
@@ -252,6 +253,7 @@ TownRoom_Task_Script:
             - flag server <[town]>_Rooms_<[target]>:!
             - if <server.has_flag[<[town]>_Rooms_<[target]>_Players]>:
                 - foreach <server.flag[<[town]>_Rooms_<[target]>_Players]> as:roommate:
+                    - flag <[roommate]> Owned_Rooms:<-:<[town]>_<[target]>
                     - if <[roommate].as_player.is_online>:
                         - narrate "<green> The room <yellow><[target]> <green>has been <red>deleted <green>correctly in the town <yellow><[town]>" targets:<[roommate].as_player>
                 - flag server <[town]>_Rooms_<[target]>_Players:!
@@ -274,8 +276,10 @@ TownRoom_Task_Script:
                         - narrate "<red> ERROR: <white> The limit of players per room in the town is <yellow><server.flag[<[town]>_Rooms_Limit]><white>. The room is at that limit."
                         - stop
                     - flag server <[town]>_Rooms_<[target]>_Players:|:<[username]>
+                    - flag <[username]> Owned_Rooms:|:<[town]>_<[target]>
                 - else:
                     - flag server <[town]>_Rooms_<[target]>_Players:|:<[username]>
+                    - flag <[username]> Owned_Rooms:|:<[town]>_<[target]>
                 - narrate "<green> The player <yellow><[username].name> <green>was added to the room <yellow><[target]> <green>in the town <yellow><[town]>"
                 - if <[username].is_online>:
                     - narrate "<green> You were added to the room <yellow><[target]> <green>in the town <yellow><[town]>" targets:<[username]>
@@ -308,7 +312,7 @@ TownRoom_Task_Script:
         - mark syntax_error
         - narrate "<red>ERROR: <white>ERROR: Syntax error. Follow the command syntax."
 
-TownRoom_Script:
+Room_Script:
     type: world
     debug: false
     events:
@@ -321,7 +325,7 @@ TownRoom_Script:
                         - if !<player.is_op> && <player> != <player.town.mayor> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canDestroy]>:
                             - determine cancelled passively
                             - ratelimit <player> 5s
-                            - narrate "<red>[TownRooms] <white>You can't destroy here."
+                            - narrate "<red>[Rooms] <white>You can't destroy here."
         after player places block in:*_Rooms_* bukkit_priority:HIGHEST ignorecancelled:true:
             - if <player.has_town>:
                 - foreach <context.location.cuboids.parse[note_name].filter[starts_with[<player.town.name>_]]> as:room:
@@ -335,7 +339,7 @@ TownRoom_Script:
                             - modifyblock <context.location> material:air
                             - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.add[1]>
                             - ratelimit <player> 5s
-                            - narrate "<red>[TownRooms] <white>You can't build here."
+                            - narrate "<red>[Rooms] <white>You can't build here."
         on player enters *_Rooms_*:
             - if <context.area.has_town>:
                 - ratelimit <player> 5s
@@ -355,12 +359,54 @@ TownRoom_Script:
                                     - define tax <server.flag[<[room]>].as_map.get[Tax]>
                                 - if <[roommate].as_player.money> < <[tax]>:
                                     - flag server <[room]>_Players:<-:<[roommate]>
+                                    - define room_name <[room].after[Rooms_]>
+                                    - flag <[roommate]> Owned_Rooms:<-:<[town].name>_<[room_name]>
                                     - if <[roommate].is_online>:
                                         - narrate "<red> [Somalia] <white>You were kicked out of your room in <yellow><[town].name> <white>because you don't have enough money to pay the tax." targets:<[roommate].as_player>
                                 - else:
                                     - money take quantity:<[tax]> players:<[roommate].as_player>
                                     - if <[roommate].is_online>:
                                         - narrate "<red> [Somalia] <white>You have paid your taxes for your room in <yellow><[town].name><white>. Glory to Somalia!" targets:<[roommate].as_player>
+
+####################
+## Player Commands
+####################
+
+Command_LeaveRoom:
+    type: command
+    debug: false
+    name: leaveroom
+    description: Minecraft Town Room System.
+    usage: /leaveroom
+    script:
+        - if !<player.has_flag[Owned_Rooms]>:
+            - narrate "<red> ERROR: <white>You don't own a room. Use <yellow>/roomshop <white>to buy a room permit"
+        - if <context.args.size> < 1:
+            - narrate "<red> ERROR: <white>You should specify the name of the room to leave!"
+            - stop
+        - define room_name <context.args.get[1]>
+        - define room <player.flag[Owned_Rooms].filter[ends_with[_<[room_name]>]].get[1]||null>
+        - if <[room]> == null:
+            - narrate "<red> ERROR: <white>You don't own that room!"
+            - narrate "<white> Do <yellow>/checkrooms <white>to check which rooms you own"
+            - stop
+        - flag <player> Owned_Rooms:<-:<[room]>
+        - define room_town <[room].before[_<[room_name]>]>
+        - if <server.has_flag[<[room_town]>_Rooms_<[room_name]>_Players]> && <server.flag[<[room_town]>_Rooms_<[room_name]>_Players].contains[<player>]>:
+            - flag server <[room_town]>_Rooms_<[room_name]>_Players:<-:<player>
+        - narrate "<green> You have <red>left <green>the room <yellow><[room_name]><green>"
+
+Command_CheckRoom:
+    type: command
+    debug: false
+    name: checkrooms
+    description: Minecraft Town Room System.
+    usage: /checkrooms
+    script:
+        - if !<player.has_flag[Owned_Rooms]>:
+            - narrate "<red> ERROR: <white>You don't own a room. Use <yellow>/roomshop <white>to buy a room permit"
+            - stop
+        - run List_Task_Script def:<player>|owned_rooms|Room|0|false|player|_
 
 ####################
 ## Room Shop
@@ -375,6 +421,7 @@ Command_RoomShop:
     script:
         - if !<player.has_town>:
             - narrate "<red> ERROR: <white>You don't have a Town to buy a room. Please join a Town."
+            - stop
         - run Inventory_RoomShop_Open_Task def:1
 
 Inventory_RoomShop:
@@ -396,8 +443,8 @@ Inventory_RoomShop_Open_Task:
         - flag player RoomShop_Page:<[page]>
         - define sellable_rooms <list[]>
         - define town <player.town.name>
-        - if !<server.has_flag[<[town]>_Rooms]> || !<server.has_flag[<[town]>_Rooms_Tax]>:
-            - narrate "<red> ERROR: <white>The server doesn't have rooms set."
+        - if !<server.has_flag[<[town]>_Rooms]>:
+            - narrate "<red> ERROR: <white>The Mayor doesn't have rooms set."
             - stop
         - define tax <server.flag[<[town]>_Rooms_Tax]>
         - define limit <server.flag[<[town]>_Rooms_Limit]>
@@ -430,8 +477,8 @@ RoomShop_Script:
     debug: false
     events:
         on player clicks in Inventory_RoomShop priority:1:
-            - ratelimit <player> 1s
             - determine passively cancelled
+            - ratelimit <player> 10s
             - if <player.has_town> && <context.item.material.name> == paper:
                     - define rooms_limit <server.flag[<player.town.name>_Rooms_Limit]>
                     - define room_flag_base <player.town.name>_Rooms_<context.item.display>
@@ -449,8 +496,11 @@ RoomShop_Script:
                         - if <player.money> >= <[room_data].get[price]>:
                             - money take quantity:<[room_data].get[price]>
                             - flag server <[room_flag_base]>_Players:|:<player>
+                            - flag <player> Owned_Rooms:|:<player.town.name>_<context.item.display>
                             - narrate "<green> You bought the permit to live in the room <yellow><[room_data].get[name]> <green>in <yellow><player.town.name>"
                             - run Inventory_RoomShop_Open_Task def:<player.flag[RoomShop_Page]>
+                        - else:
+                            - narrate "<red> ERROR: <white>You don't have enough money to buy that room!"
         on player drags in Inventory_RoomShop priority:1:
             - determine cancelled
         on player clicks RoomShop_arrow_left in Inventory_RoomShop:

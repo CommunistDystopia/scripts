@@ -20,10 +20,10 @@ List_Task_Script:
                 - if <[containPlayers]>:
                     - narrate "<green> - <[member]> <[loop_index]>: <blue><[value].name>"
                 - else:
-                    - if <[value].after[<[after_name]||<[member]>>_].length> == 0:
+                    - if <[value].after[<[after_name]||<[member]>>].length> == 0:
                         - narrate "<green> - <[member]> <[loop_index]>: <blue><[value]>"
                     - else:
-                        - narrate "<green> - <[member]> <[loop_index]>: <blue><[value].after[<[after_name]||<[member]>>_]>"
+                        - narrate "<green> - <[member]> <[loop_index]>: <blue><[value].after[<[after_name]||<[member]>>]>"
             - stop
         - else:
             - if !<[list_page].is_integer>:
