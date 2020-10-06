@@ -47,7 +47,7 @@ Entity_Food_Script:
             - define world_animals <world[world].entities[<[data].data_key[entities]>]||null>
             - if <[world_animals]> != null:
                 - foreach <[world_animals]> as:animal:
-                    - if <[animal].has_flag[time_left]> && <util.time_now.duration_since[<time[<[animal].flag[time_left]>]>].in_hours> < <[data].data_key[eating_threshold]>:
+                    - if <[animal].has_flag[time_left]> && <time[<[animal].flag[time_left]>].duration_since[<util.time_now.to_utc>].in_hours> < <[data].data_key[eating_threshold]>:
                         - if <util.time_now.is_after[<time[<[animal].flag[time_left]>]>]>:
                             - hurt 999 <[animal]>
                             - stop

@@ -21,7 +21,7 @@ Entity_Food_Data:
     time_left: 1d
     # When the animal will start to eat?
     # 24-10 = 14 hours
-    eating_threshold: 10
+    eating_threshold: 7
     # Block limit to check for food
     block_limit: 10
     # How many times the animal will check for nearby food after reaching the destination?
