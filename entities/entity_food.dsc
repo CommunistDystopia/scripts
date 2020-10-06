@@ -44,7 +44,7 @@ Entity_Food_Script:
                 - determine <context.drops.parse_tag[<[parse_value].with[quantity=<[parse_value].quantity.mul[2]>]>]>
         on system time minutely:
             - define data <script[Entity_Food_Data]>
-            - define world_animals <world[world].entities[<[data].data_key[entities]>]||null>
+            - define world_animals <world[Coolia].entities[<[data].data_key[entities]>]||<world[world].entities[<[data].data_key[entities]>]>>
             - if <[world_animals]> != null:
                 - foreach <[world_animals]> as:animal:
                     - if <[animal].has_flag[time_left]> && <time[<[animal].flag[time_left]>].duration_since[<util.time_now.to_utc>].in_hours> < <[data].data_key[eating_threshold]>:
