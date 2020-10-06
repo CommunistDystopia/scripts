@@ -49,8 +49,6 @@ Command_AdminRoom:
                 - if "!<context.raw_args.ends_with[ ]>":
                     - determine <list[list|tax|create|delete|set|kick|info|toggle|price|limit].filter[starts_with[<context.args.first>]]>
     permission: room.all
-    aliases:
-        - atrooms
     script:
         - if <context.args.size> < 2:
             - narrate "<red>ERROR: <white>ERROR: Not enough arguments. Follow the command syntax."
@@ -101,8 +99,6 @@ Command_Room:
                         - else:
                             - determine <server.online_players.parse[name]>
     permission: room.town
-    aliases:
-        - trooms
     script:
         - if <context.args.size> < 1:
             - narrate "<red>ERROR: <white>ERROR: Not enough arguments. Follow the command syntax."

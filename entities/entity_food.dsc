@@ -5,7 +5,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/23
+# @date 2020/10/04
 # @denizen-build REL-1714
 #
 
@@ -13,73 +13,66 @@ Entity_Food_Script:
     type: world
     debug: false
     events:
+        on player right clicks GRASS_BLOCK with:BONE_MEAL:
+            - determine passively cancelled
+            - if <context.location.above[1].material.name> == AIR:
+                - modifyblock <context.location.above[1]> GRASS
+                - take material:BONE_MEAL from:<player.inventory>
+        on player right clicks GRASS with:BONE_MEAL:
+            - determine passively cancelled
+            - if <context.location.above[1].material.name> == AIR:
+                - modifyblock <context.location> TALL_GRASS
+                - take material:BONE_MEAL from:<player.inventory>
         on entity despawns:
-            - define isValidPlayer <context.entity.is_player||null>
-            - define isValidNPC <context.entity.is_npc||null>
-            - if <[isValidPlayer]> != null && <[isValidPlayer]>:
+            - if <context.entity.is_player||null> != null && <context.entity.is_player>:
                 - stop
-            - if <[isValidNPC]> != null && <[isValidNPC]>:
+            - if <context.entity.is_npc||null> != null && <context.entity.is_npc>:
                 - stop
-            - if <context.entity.has_flag[last_food]>:
-                - flag <context.entity> last_food:!
-                - flag <context.entity> baby_time:!
+            - if <context.entity.has_flag[time_left]>:
+                - flag <context.entity> time_left:!
         on entity death:
-            - define isValidPlayer <context.entity.is_player||null>
-            - define isValidNPC <context.entity.is_npc||null>
-            - if <[isValidPlayer]> != null && <[isValidPlayer]>:
+            - if <context.entity.is_player||null> != null && <context.entity.is_player>:
                 - stop
-            - if <[isValidNPC]> != null && <[isValidNPC]>:
+            - if <context.entity.is_npc||null> != null && <context.entity.is_npc>:
                 - stop
-            - if <context.entity.has_flag[last_food]>:
-                - flag <context.entity> last_food:!
-                - flag <context.entity> baby_time:!
-        on system time hourly:
-            - foreach <world[Coolia].entities[<script[Entity_Food_Data].data_key[entities].keys>]||<world[world].entities[<script[Entity_Food_Data].data_key[entities].keys>]>> as:living_being:
-                - if !<[living_being].has_flag[last_food]>:
-                    - flag <[living_being]> last_food:!
-                    - flag <[living_being]> baby_time:!
-                    - hurt 999 <[living_being]>
-                    - foreach next
-                - define actual_time <util.time_now.to_utc>
-                - if <[actual_time].is_after[<[living_being].flag[last_food]>]>:
-                    - flag <[living_being]> last_food:!
-                    - flag <[living_being]> baby_time:!
-                    - hurt 999 <[living_being]>
-                - if <[living_being].has_flag[baby_time]> && <[actual_time].is_after[<[living_being].flag[baby_time]>]>:
-                    - flag <[living_being]> baby_time:!
-                    - spawn <[living_being].entity_type> <[living_being].location> save:baby
-                    - age <entry[baby].spawned_entity> baby
-        on player right clicks MUSHROOM_COW with:bowl:
-            - determine cancelled
-        on player right clicks entity:
-            - inject Entity_Food_Task instantly
-        on entity breeds:
-            - determine cancelled
-
-Entity_Food_Task:
-    type: task
-    debug: false
-    script:
-        - if !<context.entity.is_spawned>:
-            - stop
-        - if <context.entity.tameable> && !<context.entity.is_tamed>:
-            - stop
-        - ratelimit <player> 2s
-        - determine cancelled passively
-        - define data <script[Entity_Food_Data].data_key[entities]>
-        - if <[data].keys.find[<context.entity.entity_type>]> == -1:
-            - stop
-        - if <[data].get[<context.entity.entity_type>].get[food].find[<context.item.material.name>]> == -1:
-            - stop
-        - define quantity <[data].get[<context.entity.entity_type>].get[quantity]>
-        - if <context.item.quantity> < <[quantity]>:
-            - stop
-        - take material:<context.item.material.name> quantity:<[quantity]> from:<player.inventory>
-        - if !<context.entity.has_flag[baby_time]>:
-            - flag <context.entity> baby_time:<util.time_now.add[2d].to_utc>
-        - flag <context.entity> last_food:<util.time_now.add[1d].to_utc>
-        - repeat 5:
-            - if !<context.entity.is_spawned>:
-                - repeat stop
-            - playeffect heart at:<context.entity.location> quantity:10
-            - wait 1s
+            - if <context.entity.has_flag[time_left]>:
+                - flag <context.entity> time_left:!
+        on SHEEP|COW|CHICKEN|PIG|MUSHROOM_COW|RABBIT|HORSE|DONKEY|LLAMA spawns:
+            - flag <context.entity> time_left:<util.time_now.to_utc.add[<script[Entity_Food_Data].data_key[time_left]>]>
+        on SHEEP|COW|CHICKEN|PIG|MUSHROOM_COW|RABBIT|HORSE|DONKEY|LLAMA dies:
+            - if !<context.drops.is_empty>:
+                - determine <context.drops.parse_tag[<[parse_value].with[quantity=<[parse_value].quantity.mul[2]>]>]>
+        on system time minutely:
+            - define data <script[Entity_Food_Data]>
+            - define world_animals <world[world].entities[<[data].data_key[entities]>]||null>
+            - if <[world_animals]> != null:
+                - foreach <[world_animals]> as:animal:
+                    - if <[animal].has_flag[time_left]> && <util.time_now.duration_since[<time[<[animal].flag[time_left]>]>].in_hours> < <[data].data_key[eating_threshold]>:
+                        - if <util.time_now.is_after[<time[<[animal].flag[time_left]>]>]>:
+                            - hurt 999 <[animal]>
+                            - stop
+                        - define block <[animal].location.find.surface_blocks[HAY_BLOCK].within[<[data].data_key[block_limit]>].first||null>
+                        - if <[block]> == null:
+                            - define block <[animal].location.find.surface_blocks[<[data].data_key[food_type].keys>].within[<[data].data_key[block_limit]>].first||null>
+                        - if <[block]> != null:
+                            - define material_name <[block].material.name>
+                            - define tries 0
+                            - ~walk <[animal]> <[block]>
+                            - while <[block].material.name> == <[material_name]> && <[animal].location.find.blocks[<[block].material.name>].within[1].first||null> == null && <[tries]> <= <[data].data_key[food_check_tries]>:
+                                - define tries <[loop_index]>
+                                - wait 10T
+                            - if <[block].material.name> != <[material_name]> || <[tries]> > <[data].data_key[food_check_tries]>:
+                                - stop
+                            - flag <[animal]> time_left:<time[<[animal].flag[time_left]>].add[<[data].data_key[food_type].get[<[block].material.name>]>]>
+                            - if <[block].material.name> == GRASS_BLOCK:
+                                - modifyblock <[block]> DIRT
+                            - else:
+                                - modifyblock <[block]> AIR
+                            - if <[animal].entity_type> == SHEEP:
+                                - animate <[animal]> animation:SHEEP_EAT
+                            - else:
+                                - repeat 3:
+                                    - if !<[animal].is_spawned>:
+                                        - repeat stop
+                                    - playeffect heart at:<[animal].location> quantity:10
+                                    - wait 1s
