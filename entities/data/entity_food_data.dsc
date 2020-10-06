@@ -14,8 +14,8 @@ Entity_Food_Data:
     # How much time each type of food will give?
     food_type:
         GRASS_BLOCK: 15m
-        GRASS: 20m
-        TALL_GRASS: 45m
+        GRASS: 5m
+        TALL_GRASS: 15m
         HAY_BLOCK: 2h
     # Time left before the animal dies
     time_left: 1d
