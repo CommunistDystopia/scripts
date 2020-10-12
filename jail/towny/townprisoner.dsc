@@ -94,7 +94,7 @@ TownPrisoner_Script:
                     - stop
                 - narrate "<white> Welcome to the jail <yellow>Prisoner <white>of the town <yellow><player.flag[townjail_prisoner]>"
                 - teleport <player> <location[<player.flag[townjail_prisoner]>_townjail_spawn]>
-        on system time secondly:
+        on delta time secondly:
             - foreach <server.online_players.filter[has_flag[townjail_prisoner]]> as:server_player:
                 - flag <[server_player].as_player> townjail_prisoner_timer:--
                 - actionbar "<yellow>Time Remaining in Town Jail: <red><[server_player].flag[townjail_prisoner_timer]>s" targets:<[server_player]>

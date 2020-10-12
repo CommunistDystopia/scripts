@@ -95,7 +95,7 @@ College_Script:
             - if <server.has_file[data/college/config.yml]>:
                 - ~yaml load:data/college/config.yml id:college_data
                 - flag <player> college_lock_timer:<yaml[college_data].read[college_lock_timer]>
-        on system time minutely:
+        on delta time minutely:
             - foreach <server.online_players> as:server_player:
                 - if <[server_player].has_flag[college_lock_timer]>:
                     - flag <[server_player]> college_lock_timer:-:1

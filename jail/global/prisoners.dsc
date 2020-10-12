@@ -231,7 +231,7 @@ Slave_Script:
                     - if <[owner]> != null:
                         - teleport <player> <[owner].location>
                         - narrate "<red> You died but you're a prisoner. Now you're with your owner."
-        on system time minutely:
+        on delta time minutely:
             - foreach <server.online_players> as:server_player:
                 - if <[server_player].in_group[prisoner]> && <[server_player].has_flag[prisoner_timer]>:
                     - if <[server_player].has_flag[owner]>:

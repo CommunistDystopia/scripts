@@ -15,7 +15,7 @@ Wolf_Hyenas_Script:
     type: world
     debug: false
     events:
-        on system time secondly every:15:
+        on delta time secondly every:15:
             - foreach <world[Coolia].entities[wolf]||<world[world].entities[wolf]>> as:wolf:
                 - if !<[wolf].is_tamed>:
                     - attack <[wolf]> target:cancel

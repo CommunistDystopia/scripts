@@ -44,7 +44,7 @@ Entity_Food_Script:
         on SHEEP|COW|CHICKEN|PIG|MUSHROOM_COW|RABBIT|HORSE|DONKEY|LLAMA dies:
             - if !<context.drops.is_empty>:
                 - determine <context.drops.parse_tag[<[parse_value].with[quantity=<[parse_value].quantity.mul[2]>]>]>
-        on system time secondly every:5:
+        on delta time secondly every:5:
             - define data <script[Entity_Food_Data]>
             - define world_animals <world[Coolia].entities[<[data].data_key[entities]>]||<world[world].entities[<[data].data_key[entities]>]>>
             - if <[world_animals]> != null:

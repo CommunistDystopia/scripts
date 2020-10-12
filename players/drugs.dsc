@@ -96,7 +96,7 @@ Drugs_Script:
             - if <player.has_flag[drug_duration]>:
                 - if <player.is_online> && <player.flag[drug_used].contains[brown_brown]>:
                     - run Drug_Particle_Task def:brown_brown|<player>|<player.flag[drug_duration]>|3
-        on system time secondly:
+        on delta time secondly:
             - foreach <server.online_players> as:server_player:
                 - if <[server_player].has_flag[drug_duration]>:
                     - flag <[server_player]> drug_duration:-:1

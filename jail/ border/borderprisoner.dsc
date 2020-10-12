@@ -66,7 +66,7 @@ BorderPrisoner_Script:
                     - stop
                 - narrate "<white> Welcome to the jail <yellow>Prisoner <white>of the border <yellow><player.flag[border_prisoner]>"
                 - teleport <player> <location[border_jail_spawn]>
-        on system time secondly:
+        on delta time secondly:
             - foreach <server.online_players.filter[has_flag[border_prisoner]]> as:server_player:
                 - flag <[server_player].as_player> border_prisoner_timer:--
                 - actionbar "<yellow>Time Remaining in Border Jail: <red><[server_player].flag[border_prisoner_timer]>s" targets:<[server_player]>

@@ -13,7 +13,7 @@ Worker_Script:
     type: world
     debug: false
     events:
-        on system time minutely:
+        on delta time minutely:
             - if <server.has_file[data/college/config.yml]>:
                 - foreach <server.online_players> as:server_player:
                     - ~yaml load:data/college/config.yml id:college_data
