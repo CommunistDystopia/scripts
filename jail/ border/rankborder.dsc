@@ -46,33 +46,19 @@ Command_RankBorder:
                 - narrate "<red> ERROR: <white>The player is a Border Officer"
                 - stop
             - flag server border_officers:|:<[username]>
-            - narrate "<green> Request to be border sent to <yellow><[username].name>"
-            - narrate "<green> The request will expire in 1 hour."
+            - execute as_server "lp user <[username].name> parent add border" silent
+            - narrate "<green> Player <yellow><[username].name> <red>added <green>as a Border Officer"
             - if <[username].is_online>:
-                - narrate "<yellow>[Border] <white>You have a request to be a border officer. Do <yellow>/acceptborder <white>to accept" targets:<[username]>
-            - flag <[username]> border_request:true duration:1h
+                - narrate "<yellow>[Border] <green>Welcome to the border!" targets:<[username]>
             - stop
         - if <[action]> == remove:
             - flag server border_officers:<-:<[username]>
+            - execute as_server "lp user <[username].name> parent remove border" silent
             - narrate "<green> Player <yellow><[username].name> <red>removed <green>as a Border Officer"
             - if <[username].is_online>:
                 - narrate "<yellow>[Border] <white>You were <red>fired <white>as border officer!" targets:<[username]>
             - stop
         - narrate "<red>ERROR: <white>Syntax error. Follow the command syntax."
-
-Command_AcceptBorder:
-    type: command
-    debug: false
-    name: acceptborder
-    description: Minecraft Towny Jail [Border Officer] system.
-    usage: /acceptborder
-    script:
-        - if !<player.has_flag[border_request]>:
-            - narrate "<red> ERROR: <white>You don't have a request pending!"
-            - stop
-        - flag <player> border_request:!
-        - flag server border_borders:|:<player>
-        - narrate "<yellow>[Border] <green>Welcome to the border!"
 
 RankBorder_Script:
     type: world

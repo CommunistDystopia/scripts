@@ -134,7 +134,7 @@ Border_Destroy_Task:
                     - flag <[player].as_player> border_prisoner:!
                     - flag <[player].as_player> border_prisoner_timer:!
                 - if <[target]> == border:
-                    - group remove <[target]> player:<[player]>
+                    - execute as_server "lp user <[player].name> parent remove <[target]>" silent
                 - if <[player].as_player.is_online>:
                     - narrate "<yellow>[Border] <white>The border has been <red>removed<white>. You are removed from <yellow><[target]> officers" targets:<[player]>
             - flag server border_<[target]>s:!

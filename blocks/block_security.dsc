@@ -44,7 +44,7 @@ Block_Security_Command:
         - stop
     - define action <context.args.get[1]>
     - if <[action]> == list:
-        - run List_Task_Script def:server|block_security_regions|Region|<context.args.get[2]||null>|false
+        - run List_Task_Script def:server|block_security_regions|Region|<context.args.get[2]||null>|false|server|region_
         - stop
     - if <context.args.size> < 2:
         - goto syntax_error

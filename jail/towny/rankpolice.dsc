@@ -90,7 +90,7 @@ RankPolice_Task:
             - stop
         - if <[action]> == remove:
             - flag server <[town]>_townjail_polices:<-:<[username]>
-            - group remove police player:<[username]>
+            - execute as_server "lp user <player.name> parent remove police" silent
             - narrate "<green> Player <yellow><[username].name> <red>removed <green>as a Police of the town <yellow><[town]>"
             - if <[username].is_online>:
                 - narrate "<yellow>[<[town]>] <white>You were <red>fired <white>as police!" targets:<[username]>
@@ -113,7 +113,7 @@ Command_AcceptPolice:
             - stop
         - flag <player> police_request:!
         - flag server <player.town.name>_polices:|:<player>
-        - group add police player:<player>
+        - execute as_server "lp user <player.name> parent add police" silent
         - narrate "<yellow>[<player.town.name>] <green>Welcome to the police of the town!"
 
 RankPolice_Script:

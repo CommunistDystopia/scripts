@@ -132,7 +132,7 @@ TownJail_Destroy_Task:
                     - flag <[player].as_player> townjail_prisoner:!
                     - flag <[player].as_player> townjail_prisoner_timer:!
                 - if <[target]> == chief || <[target]> == police:
-                    - group remove <[target]> player:<[player]>
+                    - execute as_server "lp user <[player].name> parent remove <[target]>" silent
                 - if <[player].as_player.is_online>:
                     - narrate "<yellow>[<[town]>] <white>The town jail has been <red>removed<white>. You are removed from <yellow><[target]>" targets:<[player]>
             - flag server <[town]>_townjail_<[target]>s:!

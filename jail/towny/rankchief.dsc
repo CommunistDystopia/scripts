@@ -82,14 +82,14 @@ RankChief_Task:
                 - narrate "<red> ERROR: <white>The player is a Chief of the town <yellow><[town]>"
                 - stop
             - flag server <[town]>_townjail_chiefs:|:<[username]>
-            - group add chief player:<[username]>
+            - execute as_server "lp user <[username].name> parent add chief" silent
             - narrate "<green> Player <yellow><[username].name> <green>added as a Chief of the town <yellow><[town]>"
             - if <[username].is_online>:
                 - narrate "<yellow>[<[town]>] <green>Congratuations! You were added as the <yellow>Chief <green>of the town!" targets:<[username]>
             - stop
         - if <[action]> == remove:
             - flag server <[town]>_townjail_chiefs:<-:<[username]>
-            - group remove chief player:<[username]>
+            - execute as_server "lp user <[username].name> parent remove chief" silent
             - narrate "<green> Player <yellow><[username].name> <red>removed <green>as a Chief of the town <yellow><[town]>"
             - if <[username].is_online>:
                 - narrate "<yellow>[<[town]>] <white>You were <red>removed <white>as the <yellow>Chief <white>of the town!" targets:<[username]>

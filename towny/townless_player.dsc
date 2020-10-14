@@ -21,8 +21,8 @@ Townless_Player_Script:
             - if !<player.in_group[prisoner]>:
                 - if !<player.has_town>:
                     - if !<player.in_group[outlaw]>:
-                        - group add outlaw
+                        - execute as_server "lp user <player.name> parent add outlaw" silent
                     - teleport <player> <location[townless_spawn]>
                 - else:
                     - if <player.in_group[outlaw]>:
-                        - group remove outlaw
+                        - execute as_server "lp user <player.name> parent remove outlaw" silent
