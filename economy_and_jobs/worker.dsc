@@ -13,19 +13,14 @@ Worker_Script:
     type: world
     debug: false
     events:
-        on delta time minutely:
-            - if <server.has_file[data/college/config.yml]>:
+        on system time minutely:
                 - foreach <server.online_players> as:server_player:
-                    - ~yaml load:data/college/config.yml id:college_data
-                    - define hasJob <yaml[college_data].read[job_groups].shared_contents[<[server_player].groups>].is_empty||null>
-                    - if <[hasJob]> == null:
-                        - stop
-                    - if !<[hasJob]>:
+                    - if !<[server_player].in_group[outlaw]>:
                         - flag <[server_player]> worker_timer:+:1
                         - if <[server_player].flag[worker_timer]> >= 20:
                             - flag <[server_player]> worker_timer:0
                             - give 1_Bill quantity:5 to:<[server_player].inventory>
-                            - narrate "<white> You got paid <green>[5$] <white>for working <yellow>20 minutes" targets:<[server_player]>
+                            - narrate "<white> You recieved your <green>$5 <white>allowance for spending 20 minutes on the server." targets:<[server_player]>
         on player quits:
             - if <player.has_flag[worker_timer]>:
                 - flag <player> worker_timer:!
