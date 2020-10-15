@@ -70,7 +70,7 @@ Entity_Food_Script:
                             - define material_name <[block].material.name>
                             - define tries 0
                             - ~walk <[animal]> <[block]>
-                            - while <[block].material||null> != null && <[block].material.name> == <[material_name]> && !<[animal].location.find.blocks[<[block].material.name>].within[1].first.is_empty> && <[tries]> <= <[data].data_key[food_check_tries]>:
+                            - while <[block].material||null> != null && <[block].material.name> == <[material_name]> && !<[animal].location.find.blocks[<[block].material.name>].within[1].is_empty> && <[tries]> <= <[data].data_key[food_check_tries]>:
                                 - define tries <[loop_index]>
                                 - wait 10T
                             - if <[block].material||null> == null || <[block].material.name> != <[material_name]> || <[tries]> > <[data].data_key[food_check_tries]>:
