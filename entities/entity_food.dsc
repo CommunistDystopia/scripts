@@ -28,15 +28,15 @@ Entity_Food_Script:
                 - stop
             - if <context.entity.is_npc||null> != null && <context.entity.is_npc>:
                 - stop
-            - if <context.entity.has_flag[time_left]>:
-                - flag <context.entity> time_left:!
+            - flag <context.entity> time_left:!
+            - flag <context.entity> scared:!
         on entity death:
             - if <context.entity.is_player||null> != null && <context.entity.is_player>:
                 - stop
             - if <context.entity.is_npc||null> != null && <context.entity.is_npc>:
                 - stop
-            - if <context.entity.has_flag[time_left]>:
-                - flag <context.entity> time_left:!
+            - flag <context.entity> time_left:!
+            - flag <context.entity> scared:!
         after player right clicks SHEEP|COW|CHICKEN|PIG|MUSHROOM_COW|RABBIT|HORSE|DONKEY|LLAMA with:NAME_TAG:
             - if <context.entity.has_flag[time_left]> && <context.entity.custom_name||null> != null && <context.item.has_display>:
                 - adjust <context.entity> custom_name:<red>[<time[<context.entity.flag[time_left]>].duration_since[<util.time_now.to_utc>].in_hours.mul[100].div[24].round_to[0]><white><&chr[EFF1]><red>]<white><&sp><context.item.display>
@@ -49,6 +49,8 @@ Entity_Food_Script:
             - define world_animals <world[Coolia].entities[<[data].data_key[entities]>]||<world[world].entities[<[data].data_key[entities]>]>>
             - if <[world_animals]> != null:
                 - foreach <[world_animals]> as:animal:
+                    - if !<[animal].is_spawned> || !<[animal].location.chunk.is_loaded>:
+                        - stop
                     - if !<[animal].has_flag[time_left]>:
                         - flag <[animal]> time_left:<util.time_now.to_utc.add[<script[Entity_Food_Data].data_key[time_left]>]>
                     - define animal_name <red>[<time[<[animal].flag[time_left]>].duration_since[<util.time_now.to_utc>].in_hours.mul[100].div[24].round_to[0]><white><&chr[EFF1]><red>]
@@ -60,17 +62,18 @@ Entity_Food_Script:
                         - if <util.time_now.is_after[<time[<[animal].flag[time_left]>]>]>:
                             - hurt 999 <[animal]>
                             - stop
-                        - define block <[animal].location.find.surface_blocks[HAY_BLOCK].within[<[data].data_key[block_limit]>].first||null>
-                        - if <[block]> == null:
-                            - define block <[animal].location.find.surface_blocks[<[data].data_key[food_type].keys>].within[<[data].data_key[block_limit]>].first||null>
-                        - if <[block]> != null:
+                        - define blocks <[animal].location.find.surface_blocks[HAY_BLOCK].within[<[data].data_key[block_limit]>]>
+                        - if <[blocks].is_empty>:
+                            - define blocks <[animal].location.find.surface_blocks[<[data].data_key[food_type].keys>].within[<[data].data_key[block_limit]>]>
+                        - if !<[blocks].is_empty>:
+                            - define block <[blocks].first>
                             - define material_name <[block].material.name>
                             - define tries 0
                             - ~walk <[animal]> <[block]>
-                            - while <[block].material.name> == <[material_name]> && <[animal].location.find.blocks[<[block].material.name>].within[1].first||null> == null && <[tries]> <= <[data].data_key[food_check_tries]>:
+                            - while <[block].material||null> != null && <[block].material.name> == <[material_name]> && !<[animal].location.find.blocks[<[block].material.name>].within[1].first.is_empty> && <[tries]> <= <[data].data_key[food_check_tries]>:
                                 - define tries <[loop_index]>
                                 - wait 10T
-                            - if <[block].material.name> != <[material_name]> || <[tries]> > <[data].data_key[food_check_tries]>:
+                            - if <[block].material||null> == null || <[block].material.name> != <[material_name]> || <[tries]> > <[data].data_key[food_check_tries]>:
                                 - stop
                             - flag <[animal]> time_left:<time[<[animal].flag[time_left]>].add[<[data].data_key[food_type].get[<[block].material.name>]>]>
                             - adjust <[animal]> custom_name:<[animal_name]><[animal].custom_name.after[]]>
