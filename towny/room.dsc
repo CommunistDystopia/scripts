@@ -326,14 +326,14 @@ Room_Script:
             - if <player.has_town>:
                 - foreach <context.location.cuboids.parse[note_name].filter[starts_with[<player.town.name>_]]> as:room:
                     - if <server.has_flag[<[room]>_Players]> && <server.flag[<[room]>_Players].contains[<player>]>:
-                        - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.sub[1]>
+                        - take <player.held_item_slot> from:<player.inventory>
                         - modifyblock <context.location> <context.material.name>
                         - stop
                     - else:
                         - if !<player.is_op> && <player> != <player.town.mayor> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canBuild]>:
                             - determine cancelled passively
                             - modifyblock <context.location> material:air
-                            - inventory adjust slot:<player.held_item_slot> quantity:<player.inventory.slot[<player.held_item_slot>].quantity.add[1]>
+                            - give <player.held_item_slot> to:<player.inventory>
                             - ratelimit <player> 5s
                             - narrate "<red>[Rooms] <white>You can't build here."
         on player enters *_Rooms_*:
