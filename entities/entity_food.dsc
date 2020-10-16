@@ -13,6 +13,12 @@ Entity_Food_Script:
     type: world
     debug: false
     events:
+        on SHEEP|COW|CHICKEN|PIG|MUSHROOM_COW|RABBIT|HORSE|DONKEY|LLAMA prespawns:
+            - if <util.random.int[1].to[100]> > 10:
+                - determine cancelled
+        on SHEEP|COW|CHICKEN|PIG|MUSHROOM_COW|RABBIT|HORSE|DONKEY|LLAMA spawns:
+            - if <util.random.int[1].to[100]> > 10:
+                - determine cancelled
         on player right clicks GRASS_BLOCK with:BONE_MEAL:
             - determine passively cancelled
             - if <context.location.above[1].material.name> == AIR:
@@ -50,7 +56,7 @@ Entity_Food_Script:
             - if <[world_animals]> != null:
                 - foreach <[world_animals]> as:animal:
                     - if !<[animal].is_spawned> || !<[animal].location.chunk.is_loaded>:
-                        - stop
+                        - foreach next
                     - if !<[animal].has_flag[time_left]>:
                         - flag <[animal]> time_left:<util.time_now.to_utc.add[<script[Entity_Food_Data].data_key[time_left]>]>
                     - define animal_name <red>[<time[<[animal].flag[time_left]>].duration_since[<util.time_now.to_utc>].in_hours.mul[100].div[24].round_to[0]><white><&chr[EFF1]><red>]
@@ -61,20 +67,25 @@ Entity_Food_Script:
                     - if <time[<[animal].flag[time_left]>].duration_since[<util.time_now.to_utc>].in_hours> < <[data].data_key[eating_threshold]>:
                         - if <util.time_now.is_after[<time[<[animal].flag[time_left]>]>]>:
                             - hurt 999 <[animal]>
-                            - stop
-                        - define blocks <[animal].location.find.surface_blocks[HAY_BLOCK].within[<[data].data_key[block_limit]>]>
-                        - if <[blocks].is_empty>:
-                            - define blocks <[animal].location.find.surface_blocks[<[data].data_key[food_type].keys>].within[<[data].data_key[block_limit]>]>
+                            - foreach next
+                        - define location <[animal].location>
+                        - define block_limit <[data].data_key[block_limit]>
+                        - define materials <[data].data_key[food_type].keys>
+                        - define blocks <list[]>
+                        - inject Surface_Blocks_Task instantly
                         - if !<[blocks].is_empty>:
                             - define block <[blocks].first>
+                            - chunkload <[block].chunk>|<[block].chunk.add[0,1]>|<[block].chunk.add[0,-1]>|<[block].chunk.add[1,0]>|<[block].chunk.add[-1,0]>|<[block].chunk.add[1,1]>|<[block].chunk.add[-1,-1]> duration:10s
                             - define material_name <[block].material.name>
                             - define tries 0
                             - ~walk <[animal]> <[block]>
-                            - while <[block].material||null> != null && <[block].material.name> == <[material_name]> && !<[animal].location.find.blocks[<[block].material.name>].within[1].is_empty> && <[tries]> <= <[data].data_key[food_check_tries]>:
+                            - while <[animal].is_spawned> && <[block].material.name||null> != null && <[block].material.name> == <[material_name]> && <[tries]> <= <[data].data_key[food_check_tries]>:
+                                - if !<[animal].location.find.blocks[<[block].material.name>].within[1].is_empty>:
+                                    - while stop
                                 - define tries <[loop_index]>
                                 - wait 10T
-                            - if <[block].material||null> == null || <[block].material.name> != <[material_name]> || <[tries]> > <[data].data_key[food_check_tries]>:
-                                - stop
+                            - if !<[animal].is_spawned> || <[block].material.name||null> == null || <[block].material.name> != <[material_name]> || <[tries]> > <[data].data_key[food_check_tries]>:
+                                - foreach next
                             - flag <[animal]> time_left:<time[<[animal].flag[time_left]>].add[<[data].data_key[food_type].get[<[block].material.name>]>]>
                             - adjust <[animal]> custom_name:<[animal_name]><[animal].custom_name.after[]]>
                             - if <[block].material.name> == GRASS_BLOCK:
