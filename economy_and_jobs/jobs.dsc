@@ -76,7 +76,7 @@ Job_Group_Clear_Task:
                         - if <[username].has_flag[soldier_jail]>:
                             - flag server <[username].flag[soldier_jail]>_soldiers:<-:<[username]>
                             - flag <[username]> soldier_jail:!
-                    - group remove <[job]>
+                    - execute as_server "lp user <player.name> parent remove <[job]>" silent
                     - narrate " <red> Job <yellow><[job]> <red>quit"
                 - if <queue.player||null> != null && <queue.player> == <[username]>:
                     - narrate "<green> DONE! Job(s) removed. Go ahead and pick a new career if you want!"
@@ -107,7 +107,7 @@ Job_Script:
                             - flag <player> soldier_jail:!
                         - foreach <[player_jobs]> as:job:
                             - if <player.in_group[<[job]>]> && <[job]> != <[group]>:
-                                - group remove <[job]>
+                                - execute as_server "lp user <player.name> parent remove <[job]>" silent
                         - if <[group]> == soldier || <[group]> == conscript || <[group]> == supremewarden:
                             - if <server.has_flag[default_soldier_jail]>:
                                 - flag <player> soldier_jail:<server.flag[default_soldier_jail]>

@@ -58,9 +58,11 @@ Command_Slavevip:
             - flag <[prisoner]> owner:!
             - if <[prisoner].has_flag[prisoner_groups]>:
                 - foreach <[prisoner].flag[prisoner_groups]> as:group:
-                    - group add <[group]> player:<[prisoner]>
+                    - execute as_server "lp user <[prisoner].name> parent add <[group]>" silent
             - flag <[prisoner]> prisoner_groups:!
-            - group remove prisoner player:<[prisoner]>
+            - adjust <[username]> skin_blob:<[username].flag[prisoner_skin]>
+            - flag <[username]> prisoner_skin:!
+            - execute as_server "lp user <player.name> parent remove prisoner" silent
             - narrate "<green> The prisoner <red><[prisoner].name> <green>is now free!"
             - stop
         - mark syntax_error

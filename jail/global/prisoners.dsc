@@ -137,11 +137,13 @@ Command_Slaves:
             - flag server <[jail_prisoners]>:|:<[username]>
             - flag <[username]> owner:<[jail_name]>
             - flag <[username]> prisoner_timer:<script[Slaves_Config].data_key[prisoner_timer]>
+            - flag <[username]> prisoner_skin:<[username].skin_blob>
             - define record "Jail [<util.time_now.to_utc.format>]"
             - flag <[username]> criminal_record:|:<[record]>
             - if !<[username].groups.is_empty>:
                 - flag <[username]> prisoner_groups:|:<[username].groups>
-            - group add prisoner player:<[username]>
+            - execute as_server "lp user <[username].name> parent add prisoner" silent
+            - adjust <[username]> skin_blob:ewogICJ0aW1lc3RhbXAiIDogMTYwMTc1Nzg3NDE0MywKICAicHJvZmlsZUlkIiA6ICJmNjE1NzFmMjY1NzY0YWI5YmUxODcyMjZjMTEyYWEwYSIsCiAgInByb2ZpbGVOYW1lIiA6ICJGZWxpeF9NYW5nZW5zZW4iLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjA1YzliOTQ2NDQyMzI1YmE1NGE5NjFkZTNjZDI4NWQ0MjU1M2RhY2ZjZWVhOWYxYjA3MTJiZjllODY2OWVmNyIKICAgIH0KICB9Cn0=;xoW6fGg+qFvgj66gYabkzoyAA3s3CfiGhvWHyWHUEApgEUIFca8jLzaARd5oB9/rv5mLHLDTr01rZ1MH0QqhZsKhfKdRbAXjAQbJL49izWUXeri7x6K+ZgzSiPWMZnULWssOkAuK5qoptcLhm/btQbw+WZ3wirHg8VuL+Z4+Z47jyv68qGdPgqa+/xsbCrWKoXUjFb+SN7z5HMCHoje7ncSOKt+s1U1Od4iN1gtviGV/xiFdt0Ror/0kre2l6Hjy45IlN4McNsqoRCkV+OiCpDS0wiIrmo/sqlxBdyseNA+4LfxwD0C5TsEaQHqSJfm4w3ANvw7ytXBjd2joDIyjr8gNopcrwU56l4oe+KzKSSdHSEu0IMzbbhRPQeoezT9cqegKVZTv/iDNVSCcFNMtFyL6XprR6WEKkS6RqL0KNGyUuYPoE8zF9Ow7S7rmA9iRAuWtRpfUmQoIpb45MQbBd6ACTKeMkwm/c9x7XuW3vMXToQDecUxqVRoDc8thMHUQdNy1d33KjU/3nSYA61MfCU4wrn5sv+jGoZYBw2qt1wT5NhBDj4g9jQRyRQalSkHfiuAG6/WPVcNIw+mJYNb3mVhEUmuMXG1cfGavtHIV2ayzpVxT7xl4+raTpTjjz+4y/9upjfnxM5Ew3jMrlL4kx3vaayw5pOBlMwv6QP88IUE=
             - if <[username].is_online>:
                 - teleport <[username]> <location[<[jail_spawn]>]>
                 - narrate "<green> Welcome to the jail <red>PRISONER!" targets:<[username]>
@@ -205,9 +207,11 @@ Command_Slaves:
             - flag <[username]> prisoner_max_timer:!
             - if <[username].has_flag[prisoner_groups]>:
                 - foreach <[username].flag[prisoner_groups]> as:group:
-                    - group add <[group]> player:<[username]>
+                    - execute as_server "lp user <[username].name> parent add <[group]>" silent
             - flag <[username]> prisoner_groups:!
-            - group remove prisoner player:<[username]>
+            - execute as_server "lp user <[username].name> parent remove prisoner" silent
+            - adjust <[username]> skin_blob:<[username].flag[prisoner_skin]>
+            - flag <[username]> prisoner_skin:!
             - narrate "<green> Prisoner <blue><[username].name> <green>removed!"
             - stop
         - mark syntax_error
@@ -217,6 +221,9 @@ Slave_Script:
     type: world
     debug: false
     events:
+        after player joins:
+            - if <player.in_group[prisoner]>:
+                - adjust <player> skin_blob:ewogICJ0aW1lc3RhbXAiIDogMTYwMTc1Nzg3NDE0MywKICAicHJvZmlsZUlkIiA6ICJmNjE1NzFmMjY1NzY0YWI5YmUxODcyMjZjMTEyYWEwYSIsCiAgInByb2ZpbGVOYW1lIiA6ICJGZWxpeF9NYW5nZW5zZW4iLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjA1YzliOTQ2NDQyMzI1YmE1NGE5NjFkZTNjZDI4NWQ0MjU1M2RhY2ZjZWVhOWYxYjA3MTJiZjllODY2OWVmNyIKICAgIH0KICB9Cn0=;xoW6fGg+qFvgj66gYabkzoyAA3s3CfiGhvWHyWHUEApgEUIFca8jLzaARd5oB9/rv5mLHLDTr01rZ1MH0QqhZsKhfKdRbAXjAQbJL49izWUXeri7x6K+ZgzSiPWMZnULWssOkAuK5qoptcLhm/btQbw+WZ3wirHg8VuL+Z4+Z47jyv68qGdPgqa+/xsbCrWKoXUjFb+SN7z5HMCHoje7ncSOKt+s1U1Od4iN1gtviGV/xiFdt0Ror/0kre2l6Hjy45IlN4McNsqoRCkV+OiCpDS0wiIrmo/sqlxBdyseNA+4LfxwD0C5TsEaQHqSJfm4w3ANvw7ytXBjd2joDIyjr8gNopcrwU56l4oe+KzKSSdHSEu0IMzbbhRPQeoezT9cqegKVZTv/iDNVSCcFNMtFyL6XprR6WEKkS6RqL0KNGyUuYPoE8zF9Ow7S7rmA9iRAuWtRpfUmQoIpb45MQbBd6ACTKeMkwm/c9x7XuW3vMXToQDecUxqVRoDc8thMHUQdNy1d33KjU/3nSYA61MfCU4wrn5sv+jGoZYBw2qt1wT5NhBDj4g9jQRyRQalSkHfiuAG6/WPVcNIw+mJYNb3mVhEUmuMXG1cfGavtHIV2ayzpVxT7xl4+raTpTjjz+4y/9upjfnxM5Ew3jMrlL4kx3vaayw5pOBlMwv6QP88IUE=
         after player respawns priority:-1:
             - if <player.in_group[prisoner]> && <player.has_flag[owner]>:
                 - if <player.has_flag[prisoner_timer]>:
