@@ -339,11 +339,11 @@ Room_Script:
         on player enters *_Rooms_*:
             - if <context.area.has_town>:
                 - ratelimit <player> 5s
-                - narrate "<green><bold> You're entering <context.area.list_towns.first.mayor.name>'s room"
+                - narrate "<green><bold> You're entering <context.area.note_name.after[<context.area.list_towns.first.name>_Rooms_]>'s room"
         on player exits *_Rooms_*:
             - if <context.area.has_town>:
                 - ratelimit <player> 5s
-                - narrate "<red><bold> You're leaving <context.area.list_towns.first.mayor.name>'s room"
+                - narrate "<red><bold> You're leaving <context.area.note_name.after[<context.area.list_towns.first.name>_Rooms_]>'s room"
         on system time hourly every:24:
             - foreach <towny.list_towns> as:town:
                 - if <server.has_flag[<[town].name>_rooms]> && <server.has_flag[<[town].name>_rooms_tax]>:
