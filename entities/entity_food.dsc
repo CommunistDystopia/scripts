@@ -35,10 +35,12 @@ Entity_Food_Script:
             - flag <context.entity> scared:!
         after player right clicks entity with:NAME_TAG:
             - if <context.entity.has_flag[last_food]> && <context.item.has_display>:
-                - ~run Animal_Name_Task def:<context.entity>
+                - ~run Animal_Name_Task def:<context.entity>|<context.item.display>|true
                 - determine cancelled
-        on system time minutely:
+        on system time hourly:
             - foreach <world[Coolia].entities[<script[Entity_Food_Data].data_key[entities].keys>]||<world[world].entities[<script[Entity_Food_Data].data_key[entities].keys>]>> as:living_being:
+                - if !<[living_being].is_spawned>:
+                    - foreach next
                 - if !<[living_being].has_flag[last_food]>:
                     - flag <[living_being]> last_food:!
                     - hurt 999 <[living_being]>
@@ -46,7 +48,7 @@ Entity_Food_Script:
                     - flag <[living_being]> last_food:!
                     - hurt 999 <[living_being]>
                 - else:
-                    - run Animal_Name_Task def:<[living_being]>
+                    - ~run Animal_Name_Task def:<[living_being]>|null|false
         on player right clicks MUSHROOM_COW with:bowl:
             - determine cancelled
         on player right clicks entity:
@@ -72,7 +74,7 @@ Entity_Food_Task:
             - stop
         - take material:<context.item.material.name> quantity:<[quantity]> from:<player.inventory>
         - flag <context.entity> last_food duration:<script[Entity_Food_Data].data_key[default_time]>
-        - run Animal_Name_Task def:<context.entity>
+        - ~run Animal_Name_Task def:<context.entity>|null|false
         - repeat 5:
             - if !<context.entity.is_spawned>:
                 - repeat stop
@@ -82,10 +84,14 @@ Entity_Food_Task:
 Animal_Name_Task:
     type: task
     debug: false
-    definitions: animal
+    definitions: animal|display|name_tag
     script:
-        - define animal_name <red>[<[animal].flag[last_food].expiration.in_hours.round_to[0]>h<white><&chr[EFF1]><red>]
+        - define animal_name <red>[<[animal].flag[last_food].expiration.in_hours.round_to[0]>h<white><&chr[EFF1]><red>]<white>
         - if <[animal].custom_name||null> == null:
             - adjust <[animal]> custom_name:<[animal_name]>
         - else:
-            - adjust <[animal]> custom_name:<[animal_name]><[animal].custom_name.after[]]>
+            - if <[name_tag]>:
+                - adjust <[animal]> custom_name:<[animal_name]><[display]>
+            - else:
+                - adjust <[animal]> custom_name:<[animal_name]><[animal].custom_name>
+                
