@@ -238,7 +238,7 @@ Slave_Script:
                     - if <[owner]> != null:
                         - teleport <player> <[owner].location>
                         - narrate "<red> You died but you're a prisoner. Now you're with your owner."
-        on delta time minutely:
+        on system time secondly:
             - foreach <server.online_players> as:server_player:
                 - if <[server_player].in_group[prisoner]> && <[server_player].has_flag[prisoner_timer]>:
                     - if <[server_player].has_flag[owner]>:
@@ -247,12 +247,14 @@ Slave_Script:
                                 - foreach next
                         - define owner <[server_player].flag[owner]>
                         - flag <[server_player]> prisoner_timer:-:1
+                        - actionbar "<red> [Jail] <white>Time Remaining: <green><[server_player].flag[prisoner_timer]>m" targets:<[server_player]>
                         - if <[server_player].flag[prisoner_timer]> <= 0.0:
                             - execute as_server "prisoners remove <[owner].after[jail_]> <[server_player].name>" silent
                             - narrate "<green> You are free <red>PRISONER" targets:<[server_player]>
                             - stop
                     - if <[server_player].has_flag[non_max_jail]>:
                         - flag <[server_player]> prisoner_max_timer:+:1
+                        - actionbar "<red> [MaxSecurityJail] <white>Time Remaining: <green><[server_player].flag[prisoner_max_timer]>m" targets:<[server_player]>
                         - if <[server_player].flag[prisoner_max_timer]> >= <script[Slaves_Config].data_key[prisoner_max_timer]>:
                             - flag <[server_player]> prisoner_max_timer:!
                             - flag <[server_player]> owner:<[server_player].flag[non_max_jail]>
@@ -263,7 +265,7 @@ Slave_Script:
                             - define time_remaining <script[Slaves_Config].data_key[prisoner_max_timer].sub[<[server_player].flag[prisoner_max_timer]>]>
                             - actionbar "<red> PRISONER: <green>Your time remaining in the max security jail is: <yellow><[time_remaining]> minutes" targets:<[server_player]>
         on command:
-            - if <context.source_type> == PLAYER:
+            - if <context.source_type> == PLAYER && !<player.is_op>:
                 - if <player.in_group[prisoner]> && <player.has_flag[prisoner_timer]>:
                     - if <context.command> == tpa:
                         - determine FULFILLED

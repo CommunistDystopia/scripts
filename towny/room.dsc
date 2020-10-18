@@ -201,7 +201,7 @@ Room_Task_Script:
                 - flag server <[town]>_Rooms_<[target]>:<server.flag[<[town]>_Rooms_<[target]>].as_map.with[name].as[<[target]>]>
                 - narrate "<green> Room <yellow><[target]> <green>setup correctly for the town <yellow><[town]> <green>with the template of the room <yellow><[room_template]>"
             - else:
-                - flag server <[town]>_Rooms_<[target]>:<map[name/<[target]>|price/0|isSellable/false|tax/0|canBuild/true|canDestroy/true]>
+                - flag server <[town]>_Rooms_<[target]>:<map[name/<[target]>|price/0|isSellable/false|tax/0|canBuild/false|canDestroy/false]>
                 - narrate "<green> Room <yellow><[target]> <green>setup correctly for the town <yellow><[town]>"
             - stop
         - if <[action]> == price:
@@ -326,14 +326,22 @@ Room_Script:
             - if <player.has_town>:
                 - foreach <context.location.cuboids.parse[note_name].filter[starts_with[<player.town.name>_]]> as:room:
                     - if <server.has_flag[<[room]>_Players]> && <server.flag[<[room]>_Players].contains[<player>]>:
-                        - take <player.held_item_slot> from:<player.inventory>
+                        - if <context.hand> == HAND:
+                            - take <player.item_in_hand> quantity:1 from:<player.inventory>
+                        - else:
+                            - take <player.item_in_offhand> quantity:1 from:<player.inventory>
+                        - inventory update d:<player.inventory>
                         - modifyblock <context.location> <context.material.name>
                         - stop
                     - else:
                         - if !<player.is_op> && <player> != <player.town.mayor> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canBuild]>:
                             - determine cancelled passively
                             - modifyblock <context.location> material:air
-                            - give <player.held_item_slot> to:<player.inventory>
+                            - if <context.hand> == HAND:
+                                - give <player.item_in_hand> quantity:1 to:<player.inventory>
+                            - else:
+                                - give <player.item_in_offhand> quantity:1 to:<player.inventory>
+                            - inventory update d:<player.inventory>
                             - ratelimit <player> 5s
                             - narrate "<red>[Rooms] <white>You can't build here."
         on player enters *_Rooms_*:

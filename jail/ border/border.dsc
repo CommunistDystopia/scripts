@@ -154,3 +154,13 @@ Border_Script:
                     - stop
                 - if <location[border_spawn]||null> != null:
                     - teleport <player> <location[border_spawn]>
+        on command:
+            - if <context.source_type> == PLAYER && !<player.is_op>:
+                - if <server.has_flag[border]> && <cuboid[<server.flag[border]>]||null> != null && <cuboid[<server.flag[border]>].players.contains_any[<player>]>:
+                    - if <context.command> == tpa:
+                        - determine FULFILLED
+                    - if <context.args.size> < 1:
+                        - stop
+                    - if <context.command> == t || <context.command> == town:
+                        - if <context.args.get[1]> == spawn:
+                            - determine FULFILLED
