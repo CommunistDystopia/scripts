@@ -326,24 +326,17 @@ Room_Script:
             - if <player.has_town>:
                 - foreach <context.location.cuboids.parse[note_name].filter[starts_with[<player.town.name>_]]> as:room:
                     - if <server.has_flag[<[room]>_Players]> && <server.flag[<[room]>_Players].contains[<player>]>:
-                        - if <context.hand> == HAND:
-                            - take <player.item_in_hand> quantity:1 from:<player.inventory>
-                        - else:
-                            - take <player.item_in_offhand> quantity:1 from:<player.inventory>
-                        - inventory update d:<player.inventory>
-                        - modifyblock <context.location> <context.material.name>
                         - stop
-                    - else:
-                        - if !<player.is_op> && <player> != <player.town.mayor> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canBuild]>:
-                            - determine cancelled passively
-                            - modifyblock <context.location> material:air
-                            - if <context.hand> == HAND:
-                                - give <player.item_in_hand> quantity:1 to:<player.inventory>
-                            - else:
-                                - give <player.item_in_offhand> quantity:1 to:<player.inventory>
-                            - inventory update d:<player.inventory>
-                            - ratelimit <player> 5s
-                            - narrate "<red>[Rooms] <white>You can't build here."
+                    - if !<player.is_op> && <player> != <player.town.mayor> && <server.has_flag[<[room]>]> && !<server.flag[<[room]>].as_map.get[canBuild]>:
+                        - determine cancelled passively
+                        - modifyblock <context.location> material:air
+                        - if <context.hand> == HAND:
+                            - give <player.item_in_hand> quantity:1 to:<player.inventory>
+                        - else:
+                            - give <player.item_in_offhand> quantity:1 to:<player.inventory>
+                        - inventory update d:<player.inventory>
+                        - ratelimit <player> 5s
+                        - narrate "<red>[Rooms] <white>You can't build here."
         on player enters *_Rooms_*:
             - if <context.area.has_town>:
                 - ratelimit <player> 5s
