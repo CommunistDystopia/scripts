@@ -1,7 +1,7 @@
 Slaves_Config:
     type: data
     # Prisoner time (minutes) by default when added as prisoner (by command or killed by a Soldier)
-    prisoner_timer: 120
+    prisoner_timer: 90
     # Prisoner time (minutes) in the max security jail
     prisoner_max_timer: 5
     # Prisoner time (minutes) added by a jailstick
