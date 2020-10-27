@@ -100,11 +100,9 @@ Bank_Deposit_Check_Task:
     definitions: bill_name
     script:
         - if <player.flag[inventory_item_money]> < <player.flag[bank_deposit_amount]>:
-            - define <[bill_name]>_Slot <player.inventory.find_imperfect[<item[<[bill_name]>]>]>
-            - if <[<[bill_name]>_Slot]> != -1:
-                - define bill_value <[bill_name].before[_Bill]>
-                - define bill_total_value <player.inventory.slot[<[<[bill_name]>_Slot]>].quantity.mul[<[bill_value]>]>
-                - flag player inventory_item_money:+:<[bill_total_value]>
+            - define bill_value <[bill_name].before[_Bill]>
+            - define bill_total_value <player.inventory.quantity.scriptname[<[bill_name]>].mul[<[bill_value]>]>
+            - flag player inventory_item_money:+:<[bill_total_value]>
 
 Bank_Deposit_Task:
     type: task
@@ -112,21 +110,19 @@ Bank_Deposit_Task:
     definitions: bill_name
     script:
         - if <player.flag[bank_deposit_amount]> > 0:
-            - define <[bill_name]>_Slot <player.inventory.find_imperfect[<item[<[bill_name]>]>]>
-            - if <[<[bill_name]>_Slot]> != -1:
-                - define bill_quantity <player.inventory.slot[<[<[bill_name]>_Slot]>].quantity>
-                - define bill_value <[bill_name].before[_Bill]>
-                - define bill_total_value <[bill_quantity].mul[<[bill_value]>]>
-                - if <player.flag[bank_deposit_amount]> >= <[bill_total_value]>:
-                    - take <[bill_name]> quantity:<[bill_quantity]> from:<player.inventory>
-                    - flag <player> bank_deposit_amount:-:<[bill_total_value]>
-                    - money give quantity:<[bill_total_value]>
-                - else:
-                    - repeat <player.inventory.slot[<[<[bill_name]>_Slot]>].quantity>:
-                        - if <player.flag[bank_deposit_amount]> < <[bill_value]>:
-                            - repeat stop
-                        - take <[bill_name]> quantity:1 from:<player.inventory>
-                        - flag player bank_deposit_amount:-:<[bill_value]>
+            - define bill_quantity <player.inventory.quantity.scriptname[<[bill_name]>]>
+            - define bill_value <[bill_name].before[_Bill]>
+            - define bill_total_value <[bill_quantity].mul[<[bill_value]>]>
+            - if <player.flag[bank_deposit_amount]> >= <[bill_total_value]>:
+                - take <[bill_name]> quantity:<[bill_quantity]> from:<player.inventory>
+                - flag <player> bank_deposit_amount:-:<[bill_total_value]>
+                - money give quantity:<[bill_total_value]>
+            - else:
+                - repeat <[bill_quantity]>:
+                    - if <player.flag[bank_deposit_amount]> < <[bill_value]>:
+                        - repeat stop
+                    - take <[bill_name]> quantity:1 from:<player.inventory>
+                    - flag player bank_deposit_amount:-:<[bill_value]>
 
 Bank_Deposit_Change_Task:
     type: task
