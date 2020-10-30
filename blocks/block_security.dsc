@@ -7,7 +7,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/10/01
+# @date 2020/10/30
 # @denizen-build REL-1714
 # @dependency mcmonkey/cuboid_tool
 #
@@ -94,3 +94,6 @@ Block_Security_Script:
             - if <context.click_type> == RIGHT_CLICK_BLOCK && !<player.is_op>:
                 - if <context.location.material.name> == CHEST || <context.location.material.name> == BARREL || <context.location.material.name> == DISPENSER || <context.location.material.name> == DROPPER || <context.location.material.name.contains_any_text[SHULKER_BOX]>:
                     - determine cancelled
+        on player clicks ARMOR_STAND|ITEM_FRAME in:region_* priority:-1 ignorecancelled:true:
+            - if !<player.is_op>:
+                - determine cancelled

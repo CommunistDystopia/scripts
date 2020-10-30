@@ -7,7 +7,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/19
+# @date 2020/10/30
 # @denizen-build REL-1714
 # @dependency devnodachi/college
 #
@@ -110,7 +110,7 @@ Soldier_Stage_2_Task:
         - teleport <player> <location[soldier_stage_2_spawn]>
         - if !<player.is_op>:
             - inventory clear d:<player.inventory>
-        #- give material:BOW to:<player.inventory>
+        - give <crackshot.weapon[Desert_Eagle_CSP]> to:<player.inventory>
         - narrate "<white> Welcome to the second stage of the university, future member of the <red>Peoples Army"
         - define space " "
         - narrate "<white> To <green>PASS <white>this stage you need to <red>SHOOT <white>the <yellow><yaml[soldier_data].read[stages_config].get[2].get[target_block].to_titlecase.replace[_].with[<[space]>]> <red><[points]> TIMES <white> to <green>WIN!"
