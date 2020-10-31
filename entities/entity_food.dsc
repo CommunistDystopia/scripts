@@ -44,11 +44,8 @@ Entity_Food_Script:
                 - if !<[living_being].has_flag[last_food]>:
                     - flag <[living_being]> last_food:!
                     - hurt 999 <[living_being]>
-                - if <[living_being].flag[last_food].is_expired>:
-                    - flag <[living_being]> last_food:!
-                    - hurt 999 <[living_being]>
-                - else:
-                    - ~run Animal_Name_Task def:<[living_being]>|null|false
+                    - foreach next
+                - ~run Animal_Name_Task def:<[living_being]>|null|false
         on player right clicks MUSHROOM_COW with:bowl:
             - determine cancelled
         on player right clicks entity:
