@@ -118,14 +118,14 @@ Bank_Deposit_Task:
             - define bill_value <[bill_name].before[_Bill]>
             - define bill_total_value <[bill_quantity].mul[<[bill_value]>]>
             - if <player.flag[bank_deposit_amount]> >= <[bill_total_value]>:
-                - take <[bill_name]> quantity:<[bill_quantity]> from:<player.inventory>
+                - take scriptname:<[bill_name]> quantity:<[bill_quantity]> from:<player.inventory>
                 - flag <player> bank_deposit_amount:-:<[bill_total_value]>
                 - money give quantity:<[bill_total_value]>
             - else:
                 - repeat <[bill_quantity]>:
                     - if <player.flag[bank_deposit_amount]> < <[bill_value]>:
                         - repeat stop
-                    - take <[bill_name]> quantity:1 from:<player.inventory>
+                    - take scriptname:<[bill_name]> quantity:1 from:<player.inventory>
                     - money give quantity:<[bill_value]>
                     - flag player bank_deposit_amount:-:<[bill_value]>
 
