@@ -5,7 +5,7 @@
 # +----------------------
 #
 # @author devnodachi
-# @date 2020/08/21
+# @date 2020/11/03
 # @denizen-build REL-1714
 #
 
@@ -70,6 +70,9 @@ Deposit_Command:
         - if !<[deposit_amount].is_integer>:
             - narrate "<red> ERROR: <white>Please, deposit a exact number."
             - stop
+        - if <[deposit_amount]> < 0:
+            - narrate "<red> ERROR: <white>Please, deposit a positive amount."
+            - stop
         - flag <player> inventory_item_money:0
         - flag <player> bank_deposit_amount:<[deposit_amount]>
         - run Bank_Deposit_Check_Task def:1_Bill
@@ -88,6 +91,7 @@ Deposit_Command:
         - run Bank_Deposit_Task def:100_Bill
         - flag <player> bank_change:<player.flag[bank_deposit_amount]>
         - flag <player> bank_deposit_amount:!
+        - flag <player> inventory_item_money:!
         - run Bank_Deposit_Change_Task def:100_Bill
         - run Bank_Deposit_Change_Task def:20_Bill
         - run Bank_Deposit_Change_Task def:10_Bill
@@ -122,6 +126,7 @@ Bank_Deposit_Task:
                     - if <player.flag[bank_deposit_amount]> < <[bill_value]>:
                         - repeat stop
                     - take <[bill_name]> quantity:1 from:<player.inventory>
+                    - money give quantity:<[bill_value]>
                     - flag player bank_deposit_amount:-:<[bill_value]>
 
 Bank_Deposit_Change_Task:
@@ -132,7 +137,7 @@ Bank_Deposit_Change_Task:
         - if <player.flag[bank_change]> > 0:
             - define bill_value <[bill_name].before[_Bill]>
             - if <player.flag[bank_change]> < <[bill_value]>:
-                - if <player.inventory.find_imperfect[<item[<[bill_name]>]>]> != -1:
+                - if <player.inventory.find.scriptname[<item[<[bill_name]>]>]> != -1:
                     - flag player bank_change:<[bill_value].sub[<player.flag[bank_change]>]>
                     - take <[bill_name]> from:<player.inventory>
                     - money give quantity:<[bill_value]>
@@ -149,6 +154,18 @@ Bank_Deposit_Change_Task:
                             - give 1_Bill to:<player.inventory>
                             - money take quantity:1
                             - flag <player> bank_change:-:1
+
+####################
+## BANK
+## WORLD
+####################
+
+Bank_Script:
+    type: world
+    debug: false
+    events:
+        on player prepares anvil craft 1_Bill|10_Bill|20_Bill|100_Bill:
+            - determine <item[paper]>
 
 ####################
 ## BANK
