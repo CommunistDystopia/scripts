@@ -40,7 +40,7 @@ Machine_Task:
                                 - if <[machine_item]> == water_bucket || <[machine_item]> == lava_bucket:
                                     - give bucket to:<[machine_inventory]>
                             - else:
-                                - take <[machine_item]> from:<[machine_inventory]> quantity:<[item_quantity]>
+                                - take scriptname:<[machine_item]> from:<[machine_inventory]> quantity:<[item_quantity]>
                         - determine <item[<script[<[machine_name]>_Data].data_key[product]>]>
                         - stop
             - define machine_default_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Default]>
@@ -61,7 +61,7 @@ Machine_Task:
                     - if <[machine_item]> == water_bucket || <[machine_item]> == lava_bucket:
                         - give bucket to:<[machine_inventory]>
                 - else:
-                    - take <[machine_item]> from:<[machine_inventory]> quantity:<[item_quantity]>
+                    - take scriptname:<[machine_item]> from:<[machine_inventory]> quantity:<[item_quantity]>
             - determine <item[<script[<[machine_name]>_Data].data_key[product]>]>
 
 Fill_Machine_Task:
@@ -84,7 +84,7 @@ Fill_Machine_Task:
                             - else:
                                 - if !<[filler_inventory].contains[<[machine_item]>].quantity[<[item_quantity]>]>:
                                     - foreach next
-                                - take <[machine_item]> from:<[filler_inventory]> quantity:<[item_quantity]>
+                                - take scriptname:<[machine_item]> from:<[filler_inventory]> quantity:<[item_quantity]>
                             - give <[machine_item]> to:<[machine_inventory]> quantity:<[item_quantity]>
                             - narrate "<green> Machine filled. You lost <red><[item_quantity]> <[machine_item]>."
             - define machine_default_data <script[<[machine_name]>_Data].data_key[<[machine_name]>_Default]>
@@ -97,7 +97,7 @@ Fill_Machine_Task:
                 - else:
                     - if !<[filler_inventory].contains[<[machine_item]>].quantity[<[item_quantity]>]>:
                         - foreach next
-                    - take <[machine_item]> from:<[filler_inventory]> quantity:<[item_quantity]>
+                    - take scriptname:<[machine_item]> from:<[filler_inventory]> quantity:<[item_quantity]>
                 - give <[machine_item]> to:<[machine_inventory]> quantity:<[item_quantity]>
                 - narrate "<green> Machine filled. You lost <red><[item_quantity]> <[machine_item]>."
 
@@ -124,7 +124,7 @@ Filter_Machine_Task:
             - define required_items <[machine_default_data].get[required_items].keys>
             - if <[item_to_filter].has_script>:
                 - if <[required_items].find[<[item_to_filter].script.name>]> == -1:
-                    - take <[item_to_filter]> from:<[machine_inventory]>
+                    - take scriptname::<[item_to_filter]> from:<[machine_inventory]>
             - else:
                 - if <[required_items].find[<[item_to_filter].material.name>]> == -1:
-                    - take <[item_to_filter]> from:<[machine_inventory]>
+                    - take material:<[item_to_filter]> from:<[machine_inventory]>

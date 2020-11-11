@@ -1,6 +1,6 @@
 # +----------------------
 # |
-# | S L A V E S
+# | PRISONERS
 # |
 # | Send prisoners to the jails.
 # |

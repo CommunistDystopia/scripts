@@ -91,4 +91,3 @@ Animal_Name_Task:
                 - adjust <[animal]> custom_name:<[animal_name]><[display]>
             - else:
                 - adjust <[animal]> custom_name:<[animal_name]><[animal].custom_name>
-                

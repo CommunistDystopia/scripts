@@ -27,7 +27,7 @@ Town_Book_Script:
             - if <player.town||null> != null && <context.title.to_uppercase> == <player.town.name.to_uppercase>:
                     - if <player.is_op> || <player.has_permission[townbook.get]>:
                         - flag server current_town_book_player:<player>
-                        - take <player.item_in_hand>
+                        - take material:<player.item_in_hand>
                         - give town_book
         on player dies cause:STARVATION:
             - flag <player> deaths_by_starvation:++
@@ -50,5 +50,5 @@ Town_Book_Command:
             - stop
         - flag server current_town_book_player:<player>
         - if <player.item_in_hand.is_book>:
-            - take <player.item_in_hand>
+            - take material:<player.item_in_hand>
         - give town_book

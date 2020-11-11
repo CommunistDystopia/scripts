@@ -139,7 +139,7 @@ Bank_Deposit_Change_Task:
             - if <player.flag[bank_change]> < <[bill_value]>:
                 - if <player.inventory.find.scriptname[<item[<[bill_name]>]>]> != -1:
                     - flag player bank_change:<[bill_value].sub[<player.flag[bank_change]>]>
-                    - take <[bill_name]> from:<player.inventory>
+                    - take scriptname:<[bill_name]> from:<player.inventory>
                     - money give quantity:<[bill_value]>
                     - while <player.flag[bank_change]> > 0:
                         - if <player.flag[bank_change]> >= 20:
